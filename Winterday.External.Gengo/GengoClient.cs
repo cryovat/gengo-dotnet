@@ -30,6 +30,9 @@ namespace Winterday.External.Gengo
 {
 	using System;
 	using System.Net;
+	using System.Xml.Linq;
+
+	using Winterday.External.Gengo.Payloads;
 
 	public class GengoClient
 	{
@@ -37,6 +40,7 @@ namespace Winterday.External.Gengo
 		internal const string SandboxBaseUri = "http://api.gengo.com/v2/";
 
 		internal const string UriPartLanguages = "translate/service/languages";
+		internal const string UriPartLanguagePairs = "translate/service/language_pairs";
 
 		internal const string MimeTypeApplicationXml = "application/xml";
 
@@ -95,24 +99,49 @@ namespace Winterday.External.Gengo
 			_baseUri = new Uri (baseUri);
 		}
 
-		public IEnumerable<LanguagePair> GetLanguagePairs()
+		public IEnumerable<Language> GetLanguages()
 		{
-			throw new NotImplementedException ();
+			var xml = GetXmlResponse (UriPartLanguages, HttpMethod.Get, null);
+			
+			foreach (var e in xml.Elements ()) {
+				yield return Language.FromXContainer (e);
+			}
 		}
 
-		internal Uri BuildUri(String uriPart) {
+		public IEnumerable<LanguagePair> GetLanguagePairs()
+		{
+			var xml = GetXmlResponse (UriPartLanguagePairs, HttpMethod.Get, null);
+			
+			foreach (var e in xml.Elements ()) {
+				yield return LanguagePair.FromXContainer(e);
+			}
+		}
+
+		internal Uri BuildUri(String uriPart)
+		{
+			return BuildUri (uriPart, null);
+		}
+
+		internal Uri BuildUri(String uriPart, Dictionary<string, string> query) {
 			if (String.IsNullOrWhiteSpace ("uriPart"))
 				throw new ArgumentException ("Uri part not provided", "baseUri");
 
 			if (!Uri.IsWellFormedUriString (uriPart, UriKind.Relative))
 				throw new ArgumentException ("Uri part not valid relative uri", "baseUri");
 
-			return new Uri (_baseUri, uriPart);
+			return new Uri (_baseUri, uriPart + query.ToQueryString());
 		}
 
 		internal HttpWebRequest BuildRequest(String uriPart, HttpMethod method) {
+			return BuildRequest (uriPart, method, null);
+		}
 
-			var requestUri = BuildUri (uriPart);
+		internal HttpWebRequest BuildRequest(String uriPart, HttpMethod method, Dictionary<string, string> query) {
+
+			query = query ?? new Dictionary<string, string> ();
+			query ["api_key"] = _publicKey;
+
+			var requestUri = BuildUri (uriPart, query);
 			var request = WebRequest.Create (requestUri) as HttpWebRequest;
 
 			if (request == null)
@@ -120,8 +149,51 @@ namespace Winterday.External.Gengo
 
 			request.Method = method.ToMethodString ();
 			request.Accept = MimeTypeApplicationXml;
-			
+			request.Headers ["api_key"] = _publicKey;
+
 			return request;
+		}
+
+		internal XElement GetXmlResponse(String uriPart, HttpMethod method, Dictionary<string, string> query) {
+
+			var request = BuildRequest (uriPart, method, query);
+			var response = request.GetResponse ();
+
+			var root = XDocument.Load (response.GetResponseStream ()).Root;
+			var opstatElm = root.Element ("opstat");
+
+			if (opstatElm == null)
+				throw new InvalidOperationException ("Response XML did not contain opstat");
+
+			var opstat = opstatElm.Value.ToLower ();
+
+			var errElm = root.Element ("err");
+
+			var responseElm = root.Element ("response");
+
+			if (opstat == "error" && errElm == null) {
+				throw new GengoException (null, opstat, null);
+			}
+			if (opstat == "error" && errElm != null) {
+				var msgElm = errElm.Element ("msg");
+				var codeElm = errElm.Element ("code");
+
+				string message = null;
+				string code = null;
+
+				if (msgElm != null)
+					message = msgElm.Value;
+
+				if (codeElm != null)
+					code = codeElm.Value;
+
+				throw new GengoException (message, opstat, code);
+			}
+			if (responseElm != null) {
+				return responseElm;
+			}
+
+			return new XElement("response");
 		}
 	}
 }

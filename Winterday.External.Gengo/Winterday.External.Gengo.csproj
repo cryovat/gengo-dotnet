@@ -30,13 +30,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="GengoClient.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Enumerations.cs" />
-    <Compile Include="LanguagePair.cs" />
+    <Compile Include="GengoException.cs" />
+    <Compile Include="Payloads\Language.cs" />
+    <Compile Include="Payloads\LanguagePair.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Payloads\" />
+  </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 //
-// Extensions.cs
+// GengoException.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -26,63 +26,36 @@
 namespace Winterday.External.Gengo
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.Net;
-	using System.Text;
 
-	public static class Extensions
+	public class GengoException : Exception
 	{
-		public static decimal ToDecimal(this string value) {
-			if (string.IsNullOrWhiteSpace (value)) {
-				return 0;
+		readonly string _message;
+		readonly string _opStat;
+		readonly string _code;
+
+		public string Message {
+			get {
+				return _message;
 			}
-
-			decimal d;
-			Decimal.TryParse (value, NumberStyles.Number, CultureInfo.InvariantCulture, out d);
-
-			return d;
 		}
 
-		public static string ToQueryString(this Dictionary<string, string> dict)
+		public string OpStat {
+			get {
+				return _opStat;
+			}
+		}
+
+		public string ErrorCode {
+			get {
+				return _code;
+			}
+		}
+
+		public GengoException (string message, string opStat, string code)
 		{
-			if (dict == null) {
-				return string.Empty;
-			}
-
-			var sb = new StringBuilder ();
-
-			foreach (var pair in dict) {
-				if (!string.IsNullOrWhiteSpace (pair.Key))
-				{
-					if (sb.Length == 0) {
-						sb.Append ("?");
-					} else {
-						sb.Append ("&");
-					}
-
-					sb.Append (System.Uri.EscapeUriString (pair.Key));
-					sb.Append ("=");
-					sb.Append (System.Uri.EscapeUriString (pair.Value));
-				}
-			}
-
-			return sb.ToString ();
-		}
-
-		public static string ToMethodString(this HttpMethod method) {
-
-			switch (method) {
-			case HttpMethod.Delete:
-				return "DELETE";
-			case HttpMethod.Post:
-				return WebRequestMethods.Http.Post;
-			case HttpMethod.Update:
-				return "UPDATE";
-			default:
-				return WebRequestMethods.Http.Get;
-			}
-
+			_message = message ?? "An unknown error happened";
+			_opStat = opStat ?? "N/A";
+			_code = code ?? "N/A";
 		}
 	}
 }

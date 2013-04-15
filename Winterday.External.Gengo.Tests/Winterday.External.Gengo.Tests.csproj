@@ -33,10 +33,13 @@
     <Reference Include="nunit.framework">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GengoClientTests.cs" />
     <Compile Include="TestKeys.cs" />
+    <Compile Include="Payloads\LanguagePairTests.cs" />
+    <Compile Include="Payloads\LanguageTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -44,5 +47,8 @@
       <Project>{F036405F-5F39-4CB3-A701-BCD9D7FCAF95}</Project>
       <Name>Winterday.External.Gengo</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Payloads\" />
   </ItemGroup>
 </Project>

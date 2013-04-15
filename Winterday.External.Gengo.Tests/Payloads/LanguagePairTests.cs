@@ -1,5 +1,5 @@
 //
-// LanguagePair.cs
+// LanguagePairTests.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -23,59 +23,25 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-
-namespace Winterday.External.Gengo
+namespace Winterday.External.Gengo.Tests.Payloads
 {
-	public class LanguagePair
+	using NUnit.Framework;
+
+	[TestFixture()]
+	public class LanguagePairTests
 	{
-		readonly string _fromLanguage;
-		readonly string _toLanguage;
+		GengoClient client;
 
-		readonly string _tier;
-
-		readonly decimal _unitPrice;
-
-		public string FromLanguage {
-			get {
-				return _fromLanguage;
-			}
-		}
-
-		public string ToLanguage {
-			get {
-				return _toLanguage;
-			}
-		}
-
-		public string Tier {
-			get {
-				return _tier;
-			}
-		}
-
-		public decimal UnitPrice {
-			get {
-				return _unitPrice;
-			}
-		}
-
-		internal LanguagePair (string fromLanguage, string toLanguage, string tier, decimal unitPrice)
+		[TestFixtureSetUp]
+		public void SetUpAttribute()
 		{
-			if (string.IsNullOrWhiteSpace (fromLanguage))
-				throw new ArgumentException ("From Language not provided", "fromLanguage");
+			client = new GengoClient (TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
+		}
 
-			if (string.IsNullOrWhiteSpace (toLanguage))
-				throw new ArgumentException("To Language not provided", "toLanguage");
-
-			if (string.IsNullOrWhiteSpace (tier))
-			    throw new ArgumentException("Tier not provided", "tier");
-
-			_fromLanguage = fromLanguage;
-			_toLanguage = toLanguage;
-			_tier = tier;
-
-			_unitPrice = unitPrice;
+		[Test()]
+		public void TestGetLanguagePairs ()
+		{
+			Assert.IsNotEmpty (client.GetLanguagePairs ());
 		}
 	}
 }
