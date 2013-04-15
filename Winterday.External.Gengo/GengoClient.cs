@@ -1,5 +1,5 @@
 //
-// MyClass.cs
+// GengoClient.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -33,10 +33,12 @@ namespace Winterday.External.Gengo
 		internal const string ProductionBaseUri = "http://api.sandbox.gengo.com/v2/";
 		internal const string SandboxBaseUri = "http://api.gengo.com/v2/";
 
+		internal const string MimeTypeApplicationXml = "application/xml";
+
 		readonly string _privateKey;
 		readonly string _publicKey;
 
-		readonly string _baseUri; 
+		readonly Uri _baseUri; 
 
 		public GengoClient (string privateKey, string publicKey)
 		{
@@ -49,7 +51,7 @@ namespace Winterday.External.Gengo
 			_privateKey = privateKey;
 			_publicKey = publicKey;
 
-			_baseUri = ProductionBaseUri;
+			_baseUri = new Uri(ProductionBaseUri);
 		}
 
 		public GengoClient (string privateKey, string publicKey, ClientMode mode)
@@ -63,16 +65,53 @@ namespace Winterday.External.Gengo
 			_privateKey = privateKey;
 			_publicKey = publicKey;
 			
-			_baseUri = mode == ClientMode.Production ? ProductionBaseUri : SandboxBaseUri;
+			var uri = mode == ClientMode.Production ? ProductionBaseUri : SandboxBaseUri;
+			
+			_baseUri = new Uri (uri);
 		}
 
+		public GengoClient (string privateKey, string publicKey, String baseUri)
+		{
+			if (string.IsNullOrWhiteSpace (privateKey))
+				throw new ArgumentException ("Private key not specified", "privateKey");
+			
+			if (string.IsNullOrWhiteSpace (publicKey))
+				throw new ArgumentException ("Public key not specified", "publicKey");
+
+			if (string.IsNullOrWhiteSpace (baseUri))
+				throw new ArgumentException ("Base uri not specified", "baseUri");
+		
+			if (!Uri.IsWellFormedUriString (baseUri, UriKind.Absolute))
+				throw new ArgumentException ("Base uri is not an absolute uri", "baseUri");
+
+			_privateKey = privateKey;
+			_publicKey = publicKey;
+			
+			_baseUri = new Uri (baseUri);
+		}
 
 		internal Uri BuildUri(String uriPart) {
-			throw new NotImplementedException();
+			if (String.IsNullOrWhiteSpace ("uriPart"))
+				throw new ArgumentException ("Uri part not provided", "baseUri");
+
+			if (!Uri.IsWellFormedUriString (uriPart, UriKind.Relative))
+				throw new ArgumentException ("Uri part not valid relative uri", "baseUri");
+
+			return new Uri (_baseUri, uriPart);
 		}
 
-		internal HttpWebRequest BuildRequest(String uriPart) {
-			throw new NotImplementedException ();
+		internal HttpWebRequest BuildRequest(String uriPart, HttpMethod method) {
+
+			var requestUri = BuildUri (uriPart);
+			var request = WebRequest.Create (requestUri) as HttpWebRequest;
+
+			if (request == null)
+				throw new InvalidOperationException ("Invalid uri scheme: " + requestUri.Scheme);
+
+			request.Method = method.ToMethodString ();
+			request.Accept = MimeTypeApplicationXml;
+			
+			return request;
 		}
 	}
 }

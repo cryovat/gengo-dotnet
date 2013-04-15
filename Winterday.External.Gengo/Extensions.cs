@@ -1,5 +1,5 @@
 //
-// AssemblyInfo.cs
+// Extensions.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -23,32 +23,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System.Reflection;
-using System.Runtime.CompilerServices;
+namespace Winterday.External.Gengo
+{
+	using System;
+	
+	public static class Extensions
+	{
+		public static string ToMethodString(this HttpMethod method) {
 
-// Information about this assembly is defined by the following attributes. 
-// Change them to the values specific to your project.
+			switch (method) {
+			case HttpMethod.Delete:
+				return "DELETE";
+			case HttpMethod.Post:
+				return "POST";
+			case HttpMethod.Update:
+				return "UPDATE";
+			default:
+				return "GET";
+			}
 
-[assembly: AssemblyTitle("Winterday.External.Gengo")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("winterday.net")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Jarl Erik Schmidt")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-[assembly:InternalsVisibleTo("Winterday.External.Gengo.Tests")]
-
-// The assembly version has the format "{Major}.{Minor}.{Build}.{Revision}".
-// The form "{Major}.{Minor}.*" will automatically update the build and revision,
-// and "{Major}.{Minor}.{Build}.*" will update just the revision.
-
-[assembly: AssemblyVersion("1.0.*")]
-
-// The following attributes are used to specify the signing key for the assembly, 
-// if desired. See the Mono documentation for more information about signing.
-
-//[assembly: AssemblyDelaySign(false)]
-//[assembly: AssemblyKeyFile("")]
+		}
+	}
+}
 

@@ -31,5 +31,12 @@ namespace Winterday.External.Gengo
 		Production,
 		Sandbox
 	}
+
+	public enum HttpMethod {
+		Get,
+		Post,
+		Delete,
+		Update
+	}
 }
 
