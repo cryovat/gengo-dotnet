@@ -23,6 +23,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+using System.Collections.Generic;
+
+
 namespace Winterday.External.Gengo
 {
 	using System;
@@ -32,6 +35,8 @@ namespace Winterday.External.Gengo
 	{
 		internal const string ProductionBaseUri = "http://api.sandbox.gengo.com/v2/";
 		internal const string SandboxBaseUri = "http://api.gengo.com/v2/";
+
+		internal const string UriPartLanguages = "translate/service/languages";
 
 		internal const string MimeTypeApplicationXml = "application/xml";
 
@@ -88,6 +93,11 @@ namespace Winterday.External.Gengo
 			_publicKey = publicKey;
 			
 			_baseUri = new Uri (baseUri);
+		}
+
+		public IEnumerable<LanguagePair> GetLanguagePairs()
+		{
+			throw new NotImplementedException ();
 		}
 
 		internal Uri BuildUri(String uriPart) {
