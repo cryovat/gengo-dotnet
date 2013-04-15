@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterday.External.Gengo", "Winterday.External.Gengo.csproj", "{F036405F-5F39-4CB3-A701-BCD9D7FCAF95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterday.External.Gengo", "Winterday.External.Gengo\Winterday.External.Gengo.csproj", "{F036405F-5F39-4CB3-A701-BCD9D7FCAF95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterday.External.Gengo.Tests", "..\Winterday.External.Gengo.Tests\Winterday.External.Gengo.Tests.csproj", "{0C7FB31D-2F74-4D4F-A0CC-FB91756628F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterday.External.Gengo.Tests", "Winterday.External.Gengo.Tests\Winterday.External.Gengo.Tests.csproj", "{0C7FB31D-2F74-4D4F-A0CC-FB91756628F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
