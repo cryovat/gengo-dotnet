@@ -48,6 +48,21 @@ namespace Winterday.External.Gengo
 			return d;
 		}
 
+		const NumberStyles UIntStyle = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite;
+
+		internal static long ToLong(this string value)
+		{
+			if (string.IsNullOrEmpty (value)) {
+				return 0;
+			}
+
+			long i;
+
+			Int64.TryParse (value, UIntStyle, CultureInfo.InvariantCulture, out i);
+
+			return i;
+		}
+
 		public static string ToQueryString (this Dictionary<string, string> dict)
 		{
 			if (dict == null) {
@@ -137,11 +152,16 @@ namespace Winterday.External.Gengo
 			}
 		}
 
-		static readonly DateTime unixEpoch = new DateTime (1970, 1, 1, 0, 0, 0);
+		static readonly DateTime unixEpoch = new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-		public static int ToTimeStamp (this DateTime time)
+		internal static long ToTimeStamp (this DateTime time)
 		{			
-			return (int)(time - unixEpoch).TotalSeconds;
+			return (long)(time - unixEpoch).TotalSeconds;
+		}
+
+		internal static DateTime ToDateFromTimestamp(this long timestamp)
+		{
+			return unixEpoch.AddSeconds (timestamp);
 		}
 	}
 }

@@ -113,6 +113,19 @@ namespace Winterday.External.Gengo.Tests
 			Assert.AreEqual (TranslationTier.Unknown, ((string)null).ToTranslationTier ());
 			Assert.AreEqual (TranslationTier.Unknown, "bazinga".ToTranslationTier ());
 		}
+
+		[Test()]
+		public void TestUnixTimeStamp()
+		{
+			var utcNow = DateTime.UtcNow;
+
+			// Shave off milliseconds:
+			utcNow = new DateTime (utcNow.Year, utcNow.Month, utcNow.Day,
+			                       utcNow.Hour, utcNow.Minute, utcNow.Second, 0,
+			                       DateTimeKind.Utc);
+
+			Assert.AreEqual (utcNow, utcNow.ToTimeStamp ().ToDateFromTimestamp ());
+		}
 	}
 }
 
