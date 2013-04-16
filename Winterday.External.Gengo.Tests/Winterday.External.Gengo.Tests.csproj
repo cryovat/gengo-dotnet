@@ -41,6 +41,7 @@
     <Compile Include="Payloads\LanguagePairTests.cs" />
     <Compile Include="Payloads\LanguageTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
+    <Compile Include="Payloads\AccountInfoTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

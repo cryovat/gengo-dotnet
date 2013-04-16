@@ -98,10 +98,6 @@ namespace Winterday.External.Gengo.Tests
 		{
 			var client = new GengoClient ("foo", "bar");
 			var request = client.BuildRequest ("hello", HttpMethod.Post);
-			
-			
-			Assert.AreEqual ("bar", request.Headers["api_key"],
-			               "api_key header was not set");
 
 			Assert.IsTrue (String.Equals (request.Accept, "application/xml", StringComparison.OrdinalIgnoreCase),
 			               "Accept should be application/xml, got: " + request.Accept);

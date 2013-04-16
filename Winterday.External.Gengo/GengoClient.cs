@@ -36,11 +36,14 @@ namespace Winterday.External.Gengo
 
 	public class GengoClient
 	{
-		internal const string ProductionBaseUri = "http://api.sandbox.gengo.com/v2/";
-		internal const string SandboxBaseUri = "http://api.gengo.com/v2/";
+		internal const string ProductionBaseUri = "http://api.gengo.com/v2/";
+		internal const string SandboxBaseUri = "http://api.sandbox.gengo.com/v2/";
 
 		internal const string UriPartLanguages = "translate/service/languages";
 		internal const string UriPartLanguagePairs = "translate/service/language_pairs";
+
+		internal const string UriPartStats = "account/stats";
+		internal const string UriPartBalance = "account/balance";
 
 		internal const string MimeTypeApplicationXml = "application/xml";
 
@@ -117,6 +120,20 @@ namespace Winterday.External.Gengo
 			}
 		}
 
+		public AccountStats GetStats() {
+
+			var xml = GetXmlResponse (UriPartStats, HttpMethod.Get, null, true);
+
+			return AccountStats.FromXContainer (xml);
+		}
+
+		public decimal GetBalance() {
+			
+			var xml = GetXmlResponse (UriPartBalance, HttpMethod.Get, null, true);
+			
+			return xml.Element ("credits").Value.ToDecimal ();
+		}
+
 		internal Uri BuildUri(String uriPart)
 		{
 			return BuildUri (uriPart, null);
@@ -133,13 +150,27 @@ namespace Winterday.External.Gengo
 		}
 
 		internal HttpWebRequest BuildRequest(String uriPart, HttpMethod method) {
-			return BuildRequest (uriPart, method, null);
+			return BuildRequest (uriPart, method, null, false);
 		}
 
 		internal HttpWebRequest BuildRequest(String uriPart, HttpMethod method, Dictionary<string, string> query) {
+			return BuildRequest (uriPart, method, query, false);
+		}
+
+		internal HttpWebRequest BuildRequest(String uriPart, HttpMethod method, Dictionary<string, string> query,
+		                                     bool authenticated) {
 
 			query = query ?? new Dictionary<string, string> ();
 			query ["api_key"] = _publicKey;
+			
+			if (authenticated) {
+				var ts = DateTime.UtcNow.ToTimeStamp ().ToString ();
+				var hash = _privateKey.SHA1Hash (ts);
+
+				query["ts"] = ts;
+				query["api_sig"] = hash;
+
+			}
 
 			var requestUri = BuildUri (uriPart, query);
 			var request = WebRequest.Create (requestUri) as HttpWebRequest;
@@ -147,16 +178,22 @@ namespace Winterday.External.Gengo
 			if (request == null)
 				throw new InvalidOperationException ("Invalid uri scheme: " + requestUri.Scheme);
 
+			request.UserAgent = typeof(GengoClient).Assembly.FullName;
 			request.Method = method.ToMethodString ();
 			request.Accept = MimeTypeApplicationXml;
-			request.Headers ["api_key"] = _publicKey;
 
 			return request;
 		}
 
 		internal XElement GetXmlResponse(String uriPart, HttpMethod method, Dictionary<string, string> query) {
+			return GetXmlResponse (uriPart, method, query, false);
+		}
 
-			var request = BuildRequest (uriPart, method, query);
+		internal XElement GetXmlResponse(String uriPart, HttpMethod method, Dictionary<string, string> query,
+		                                 bool authenticated) {
+
+			var request = BuildRequest (uriPart, method, query, authenticated);
+
 			var response = request.GetResponse ();
 
 			var root = XDocument.Load (response.GetResponseStream ()).Root;

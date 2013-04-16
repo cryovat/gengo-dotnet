@@ -139,20 +139,29 @@ namespace Winterday.External.Gengo
 			return method.ToString ().ToUpperInvariant ();
 		}
 
-		public static String SHA1Hash (String privateKey, String value)
+		public static byte[] ToUTF8Bytes(this string value)
 		{
-			var utf8 = Encoding.UTF8;
-			var keybytes = utf8.GetBytes (privateKey);
-			var valuebytes = utf8.GetBytes (value);
-
-			var algo = new HMACSHA1 (keybytes);
-
-			using (var ms = new MemoryStream(valuebytes)) {
-				return Convert.ToBase64String (algo.ComputeHash (ms));
-			}
+			return Encoding.UTF8.GetBytes (value);
 		}
 
-		static readonly DateTime unixEpoch = new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+		public static String SHA1Hash (this String privateKey, String value)
+		{
+			var keybytes = privateKey.ToUTF8Bytes ();
+			var valuebytes = value.ToUTF8Bytes ();
+
+			var algo = new HMACSHA1 (keybytes);
+			var hash = algo.ComputeHash (valuebytes);
+
+			var sb = new StringBuilder (2 * hash.Length);
+
+			foreach (var b in hash) {
+				sb.AppendFormat ("{0:x2}", b);
+			}
+
+			return sb.ToString ();
+		}
+
+		static readonly DateTime unixEpoch = new DateTime (1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
 		internal static long ToTimeStamp (this DateTime time)
 		{			
