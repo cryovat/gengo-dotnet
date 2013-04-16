@@ -29,15 +29,8 @@ namespace Winterday.External.Gengo
 
 	public class GengoException : Exception
 	{
-		readonly string _message;
 		readonly string _opStat;
 		readonly string _code;
-
-		public string Message {
-			get {
-				return _message;
-			}
-		}
 
 		public string OpStat {
 			get {
@@ -52,8 +45,8 @@ namespace Winterday.External.Gengo
 		}
 
 		public GengoException (string message, string opStat, string code)
+			: base(message ?? "An unknown error happened")
 		{
-			_message = message ?? "An unknown error happened";
 			_opStat = opStat ?? "N/A";
 			_code = code ?? "N/A";
 		}
