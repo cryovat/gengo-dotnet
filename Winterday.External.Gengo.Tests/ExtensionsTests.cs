@@ -115,6 +115,18 @@ namespace Winterday.External.Gengo.Tests
 		}
 
 		[Test()]
+		public void JobTypeConversions() {
+
+			Assert.AreEqual ("text", JobType.Text.ToTypeString ());
+			Assert.AreEqual ("file", JobType.File.ToTypeString ());
+
+			Assert.AreEqual (JobType.File, "fiLE".ToJobType ());
+			Assert.AreEqual (JobType.Text, "TeXT".ToJobType ());
+
+			Assert.AreEqual (JobType.Text, "bazinga".ToJobType ());
+		}
+
+		[Test()]
 		public void TestUnixTimeStamp()
 		{
 			var utcNow = DateTime.UtcNow;

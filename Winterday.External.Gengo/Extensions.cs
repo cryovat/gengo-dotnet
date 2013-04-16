@@ -33,6 +33,7 @@ namespace Winterday.External.Gengo
 	using System.Net;
 	using System.Security.Cryptography;
 	using System.Text;
+	using System.Xml.Linq;
 
 	public static class Extensions
 	{
@@ -100,6 +101,22 @@ namespace Winterday.External.Gengo
 			}
 
 			return Uri.HexEscape (c);
+		}
+
+		public static string ToTypeString (this JobType type)
+		{
+			return type.ToString ().ToLowerInvariant ();
+		}
+
+		public static JobType ToJobType (this string value)
+		{
+			JobType tier;
+			
+			if (Enum.TryParse<JobType> (value, true, out tier)) {
+				return tier;
+			}
+			
+			return JobType.Text;
 		}
 
 		public static string ToTierString (this TranslationTier tier)
@@ -171,6 +188,15 @@ namespace Winterday.External.Gengo
 		internal static DateTime ToDateFromTimestamp(this long timestamp)
 		{
 			return unixEpoch.AddSeconds (timestamp);
+		}
+
+		internal static XElement ToElementIfProvided(this string value, XName name) 
+		{
+			if (string.IsNullOrWhiteSpace (value)) {
+				return null;
+			}
+
+			return new XElement(name, value);
 		}
 	}
 }

@@ -27,6 +27,12 @@ using System;
 
 namespace Winterday.External.Gengo
 {
+	public enum JobType
+	{
+		Text,
+		File
+	}
+
 	public enum ClientMode {
 		Production,
 		Sandbox
