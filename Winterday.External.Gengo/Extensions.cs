@@ -28,8 +28,10 @@ namespace Winterday.External.Gengo
 	using System;
 	using System.Collections.Generic;
 	using System.Globalization;
+	using System.IO;
 	using System.Linq;
 	using System.Net;
+	using System.Security.Cryptography;
 	using System.Text;
 
 	public static class Extensions
@@ -83,7 +85,6 @@ namespace Winterday.External.Gengo
 
 			return Uri.HexEscape (c);
 		}
-		
 
 		public static string ToMethodString(this HttpMethod method) {
 
@@ -97,6 +98,25 @@ namespace Winterday.External.Gengo
 			default:
 				return WebRequestMethods.Http.Get;
 			}
+		}
+
+		public static String SHA1Hash(String privateKey, String value)
+		{
+			var utf8 = Encoding.UTF8;
+			var keybytes = utf8.GetBytes (privateKey);
+			var valuebytes = utf8.GetBytes (value);
+
+			var algo = new HMACSHA1 (keybytes);
+
+			using (var ms = new MemoryStream(valuebytes)) {
+				return Convert.ToBase64String (algo.ComputeHash (ms));
+			}
+		}
+
+		static readonly DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0);
+
+		public static int ToTimeStamp (this DateTime time) {			
+			return (int)(time - unixEpoch).TotalSeconds;
 		}
 	}
 }
