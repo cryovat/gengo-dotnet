@@ -36,7 +36,8 @@ namespace Winterday.External.Gengo
 
 	public static class Extensions
 	{
-		public static decimal ToDecimal(this string value) {
+		public static decimal ToDecimal (this string value)
+		{
 			if (string.IsNullOrWhiteSpace (value)) {
 				return 0;
 			}
@@ -47,7 +48,7 @@ namespace Winterday.External.Gengo
 			return d;
 		}
 
-		public static string ToQueryString(this Dictionary<string, string> dict)
+		public static string ToQueryString (this Dictionary<string, string> dict)
 		{
 			if (dict == null) {
 				return string.Empty;
@@ -56,8 +57,7 @@ namespace Winterday.External.Gengo
 			var sb = new StringBuilder ();
 
 			foreach (var pair in dict) {
-				if (!string.IsNullOrWhiteSpace (pair.Key))
-				{
+				if (!string.IsNullOrWhiteSpace (pair.Key)) {
 					if (sb.Length == 0) {
 						sb.Append ("?");
 					} else {
@@ -73,11 +73,12 @@ namespace Winterday.External.Gengo
 			return sb.ToString ();
 		}
 
-		static string HexEscape(this string value) {
+		static string HexEscape (this string value)
+		{
 			return String.Join (String.Empty, value.ToCharArray ().Select (c => c.HexEscape ()));
 		}
 
-		static string HexEscape(this char c)
+		static string HexEscape (this char c)
 		{
 			if ((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
 				return c.ToString ();
@@ -86,21 +87,44 @@ namespace Winterday.External.Gengo
 			return Uri.HexEscape (c);
 		}
 
-		public static string ToMethodString(this HttpMethod method) {
-
-			switch (method) {
-			case HttpMethod.Delete:
-				return "DELETE";
-			case HttpMethod.Post:
-				return WebRequestMethods.Http.Post;
-			case HttpMethod.Update:
-				return "UPDATE";
-			default:
-				return WebRequestMethods.Http.Get;
-			}
+		public static string ToTierString (this TranslationTier tier)
+		{
+			return tier.ToString ().ToLowerInvariant ();
 		}
 
-		public static String SHA1Hash(String privateKey, String value)
+		public static TranslationTier ToTranslationTier (this string value)
+		{
+			TranslationTier tier;
+
+			if (Enum.TryParse<TranslationTier> (value, true, out tier)) {
+				return tier;
+			}
+
+			return TranslationTier.Unknown;
+		}
+
+		public static string ToStatusString (this TranslationStatus status)
+		{
+			return status.ToString ().ToLowerInvariant ();
+		}
+
+		public static TranslationStatus ToTranslationStatus(this string value)
+		{
+			TranslationStatus status;
+
+			if (Enum.TryParse <TranslationStatus> (value, true, out status)) {
+				return status;
+			}
+
+			return TranslationStatus.Unknown;
+		}
+
+		public static string ToMethodString (this HttpMethod method)
+		{
+			return method.ToString ().ToUpperInvariant ();
+		}
+
+		public static String SHA1Hash (String privateKey, String value)
 		{
 			var utf8 = Encoding.UTF8;
 			var keybytes = utf8.GetBytes (privateKey);
@@ -113,9 +137,10 @@ namespace Winterday.External.Gengo
 			}
 		}
 
-		static readonly DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0);
+		static readonly DateTime unixEpoch = new DateTime (1970, 1, 1, 0, 0, 0);
 
-		public static int ToTimeStamp (this DateTime time) {			
+		public static int ToTimeStamp (this DateTime time)
+		{			
 			return (int)(time - unixEpoch).TotalSeconds;
 		}
 	}

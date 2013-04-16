@@ -75,6 +75,44 @@ namespace Winterday.External.Gengo.Tests
 			Assert.AreEqual ("?foo=%23%3F%26%25%3D",
 			                 dict.ToQueryString ());
 		}
+
+		[Test()]
+		public void TranslationStatusConversions()
+		{
+			Assert.AreEqual ("approved", TranslationStatus.Approved.ToStatusString ());
+			Assert.AreEqual ("available", TranslationStatus.Available.ToStatusString ());
+			Assert.AreEqual ("cancelled", TranslationStatus.Cancelled.ToStatusString ());
+			Assert.AreEqual ("pending", TranslationStatus.Pending.ToStatusString ());
+			Assert.AreEqual ("reviewable", TranslationStatus.Reviewable.ToStatusString ());
+			Assert.AreEqual ("revising", TranslationStatus.Revising.ToStatusString ());
+
+			Assert.AreEqual (TranslationStatus.Approved, "ApPrOvEd".ToTranslationStatus ());
+			Assert.AreEqual (TranslationStatus.Available, "AVAILable".ToTranslationStatus ());
+			Assert.AreEqual (TranslationStatus.Cancelled, "cancelLED".ToTranslationStatus ());
+			Assert.AreEqual (TranslationStatus.Pending, "pendinG".ToTranslationStatus());
+			Assert.AreEqual (TranslationStatus.Reviewable, "reviEWable".ToTranslationStatus ());
+			Assert.AreEqual (TranslationStatus.Revising, "reviSING".ToTranslationStatus ());
+
+			Assert.AreEqual (TranslationStatus.Unknown, ((string)null).ToTranslationStatus ());
+			Assert.AreEqual (TranslationStatus.Unknown, "bazinga".ToTranslationStatus ());
+		}
+
+		[Test()]
+		public void TranslationTierConversions()
+		{
+			Assert.AreEqual ("ultra", TranslationTier.Ultra.ToTierString ());
+			Assert.AreEqual ("machine", TranslationTier.Machine.ToTierString ());
+			Assert.AreEqual ("standard", TranslationTier.Standard.ToTierString ());
+			Assert.AreEqual ("pro", TranslationTier.Pro.ToTierString ());
+
+			Assert.AreEqual (TranslationTier.Machine, "MACHINE".ToTranslationTier ());
+			Assert.AreEqual (TranslationTier.Pro, "PrO".ToTranslationTier ());
+			Assert.AreEqual (TranslationTier.Standard, "StandarD".ToTranslationTier ());
+			Assert.AreEqual (TranslationTier.Ultra, "UlTrA".ToTranslationTier ());
+			
+			Assert.AreEqual (TranslationTier.Unknown, ((string)null).ToTranslationTier ());
+			Assert.AreEqual (TranslationTier.Unknown, "bazinga".ToTranslationTier ());
+		}
 	}
 }
 

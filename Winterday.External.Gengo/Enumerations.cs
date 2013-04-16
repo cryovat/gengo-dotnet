@@ -38,5 +38,25 @@ namespace Winterday.External.Gengo
 		Delete,
 		Update
 	}
+
+	public enum TranslationTier
+	{
+		Machine,
+		Standard,
+		Pro,
+		Ultra,
+		Unknown
+	}
+
+	public enum TranslationStatus
+	{
+		Available,
+		Pending,
+		Reviewable,
+		Revising,
+		Approved,
+		Cancelled,
+		Unknown
+	}
 }
 
