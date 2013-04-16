@@ -40,6 +40,7 @@
     <Compile Include="TestKeys.cs" />
     <Compile Include="Payloads\LanguagePairTests.cs" />
     <Compile Include="Payloads\LanguageTests.cs" />
+    <Compile Include="ExtensionsTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

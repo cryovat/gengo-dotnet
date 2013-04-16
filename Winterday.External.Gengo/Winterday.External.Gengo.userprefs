@@ -1,0 +1,39 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Payloads/LanguagePair.cs">
+    <Files>
+      <File FileName="Payloads/Language.cs" Line="81" Column="13" />
+      <File FileName="Payloads/LanguagePair.cs" Line="86" Column="22" />
+      <File FileName="GengoClient.cs" Line="112" Column="4" />
+      <File FileName="GengoException.cs" Line="1" Column="1" />
+      <File FileName="../Winterday.External.Gengo.Tests/Payloads/LanguagePairTests.cs" Line="33" Column="3" />
+      <File FileName="../Winterday.External.Gengo.Tests/Payloads/LanguageTests.cs" Line="43" Column="4" />
+      <File FileName="Extensions.cs" Line="43" Column="4" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Winterday.External.Gengo" expanded="True">
+            <Node name="Payloads" expanded="True" />
+          </Node>
+          <Node name="Winterday.External.Gengo.Tests" expanded="True" selected="True">
+            <Node name="Payloads" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

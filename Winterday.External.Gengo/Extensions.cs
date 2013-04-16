@@ -28,6 +28,7 @@ namespace Winterday.External.Gengo
 	using System;
 	using System.Collections.Generic;
 	using System.Globalization;
+	using System.Linq;
 	using System.Net;
 	using System.Text;
 
@@ -61,14 +62,28 @@ namespace Winterday.External.Gengo
 						sb.Append ("&");
 					}
 
-					sb.Append (System.Uri.EscapeUriString (pair.Key));
+					sb.Append (pair.Key.HexEscape ());
 					sb.Append ("=");
-					sb.Append (System.Uri.EscapeUriString (pair.Value));
+					sb.Append (pair.Value.HexEscape ());
 				}
 			}
 
 			return sb.ToString ();
 		}
+
+		static string HexEscape(this string value) {
+			return String.Join (String.Empty, value.ToCharArray ().Select (c => c.HexEscape ()));
+		}
+
+		static string HexEscape(this char c)
+		{
+			if ((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
+				return c.ToString ();
+			}
+
+			return Uri.HexEscape (c);
+		}
+		
 
 		public static string ToMethodString(this HttpMethod method) {
 
@@ -82,7 +97,6 @@ namespace Winterday.External.Gengo
 			default:
 				return WebRequestMethods.Http.Get;
 			}
-
 		}
 	}
 }
