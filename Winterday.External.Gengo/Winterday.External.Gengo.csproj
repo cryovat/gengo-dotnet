@@ -41,6 +41,7 @@
     <Compile Include="GengoException.cs" />
     <Compile Include="Payloads\Language.cs" />
     <Compile Include="Payloads\LanguagePair.cs" />
+    <Compile Include="Payloads\AccountStats.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
