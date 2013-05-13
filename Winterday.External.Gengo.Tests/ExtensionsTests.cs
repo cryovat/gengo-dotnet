@@ -29,23 +29,23 @@ namespace Winterday.External.Gengo.Tests
 	using System;
 	using System.Collections.Generic;
 
-	using NUnit.Framework;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 	using Winterday.External.Gengo;
 
-	[TestFixture()]
+	[TestClass]
 	public class ExtensionsTests
 	{
-		[Test()]
+		[TestMethod]
 		public void ToQueryStringNullDict ()
 		{
-			Dictionary<string, string> nothing;
+            Dictionary<string, string> nothing = null;
 
 			Assert.IsTrue (String.IsNullOrWhiteSpace (nothing.ToQueryString()),
 			               "Null dict should yield empty string");
 		}
 
-		[Test()]
+        [TestMethod]
 		public void ToQueryStringOneValue ()
 		{
 			var dict = new Dictionary<string, string>();
@@ -55,7 +55,7 @@ namespace Winterday.External.Gengo.Tests
 			                 dict.ToQueryString ());
 		}
 
-		[Test()]
+        [TestMethod]
 		public void ToQueryStringTwoValues ()
 		{
 			var dict = new Dictionary<string, string>();
@@ -66,7 +66,7 @@ namespace Winterday.External.Gengo.Tests
 			                 dict.ToQueryString ());
 		}
 
-		[Test()]
+		[TestMethod]
 		public void ToQueryStringUnsafeValues ()
 		{
 			var dict = new Dictionary<string, string>();
@@ -76,7 +76,7 @@ namespace Winterday.External.Gengo.Tests
 			                 dict.ToQueryString ());
 		}
 
-		[Test()]
+        [TestMethod]
 		public void TranslationStatusConversions()
 		{
 			Assert.AreEqual ("approved", TranslationStatus.Approved.ToStatusString ());
@@ -97,7 +97,7 @@ namespace Winterday.External.Gengo.Tests
 			Assert.AreEqual (TranslationStatus.Unknown, "bazinga".ToTranslationStatus ());
 		}
 
-		[Test()]
+        [TestMethod]
 		public void TranslationTierConversions()
 		{
 			Assert.AreEqual ("ultra", TranslationTier.Ultra.ToTierString ());
@@ -114,7 +114,7 @@ namespace Winterday.External.Gengo.Tests
 			Assert.AreEqual (TranslationTier.Unknown, "bazinga".ToTranslationTier ());
 		}
 
-		[Test()]
+        [TestMethod]
 		public void JobTypeConversions() {
 
 			Assert.AreEqual ("text", JobType.Text.ToTypeString ());
@@ -126,7 +126,7 @@ namespace Winterday.External.Gengo.Tests
 			Assert.AreEqual (JobType.Text, "bazinga".ToJobType ());
 		}
 
-		[Test()]
+        [TestMethod]
 		public void TestUnixTimeStamp()
 		{
 			var utcNow = DateTime.UtcNow;

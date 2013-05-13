@@ -23,36 +23,37 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using NUnit.Framework;
 
 namespace Winterday.External.Gengo.Tests.Payloads
 {
-	[TestFixture()]
+    using System;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+	[TestClass]
 	public class AccountInfoTest
 	{
 		GengoClient client;
 		
-		[TestFixtureSetUp]
+		[TestInitialize]
 		public void SetUpAttribute()
 		{
 			client = new GengoClient (TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
 		}
-		
-		[Test()]
+
+        [TestMethod]
 		public void TestGetStats ()
 		{
 			var stats = client.GetStats ();
 
 			Assert.IsNotNull (stats);
 			Assert.AreNotEqual (new DateTime (), stats.UserSince);
-			Assert.GreaterOrEqual (0, stats.CreditsSpent);
+			Assert.IsTrue(0 <= stats.CreditsSpent);
 		}
 
-		[Test()]
+        [TestMethod]
 		public void TestGetBalance ()
 		{
-			Assert.DoesNotThrow (() => client.GetBalance ());
+            Assert.IsTrue(client.GetBalance() > 0);
 		}
 	}
 }

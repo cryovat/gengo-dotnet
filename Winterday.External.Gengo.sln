@@ -1,9 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterday.External.Gengo", "Winterday.External.Gengo\Winterday.External.Gengo.csproj", "{F036405F-5F39-4CB3-A701-BCD9D7FCAF95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterday.External.Gengo.Tests", "Winterday.External.Gengo.Tests\Winterday.External.Gengo.Tests.csproj", "{0C7FB31D-2F74-4D4F-A0CC-FB91756628F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Winterday.External.Gengo.Tests", "Winterday.External.Gengo.Tests\Winterday.External.Gengo.Tests.csproj", "{54190738-AF7F-42AF-8EB9-D4B3DB348840}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +11,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0C7FB31D-2F74-4D4F-A0CC-FB91756628F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C7FB31D-2F74-4D4F-A0CC-FB91756628F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C7FB31D-2F74-4D4F-A0CC-FB91756628F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C7FB31D-2F74-4D4F-A0CC-FB91756628F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F036405F-5F39-4CB3-A701-BCD9D7FCAF95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F036405F-5F39-4CB3-A701-BCD9D7FCAF95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F036405F-5F39-4CB3-A701-BCD9D7FCAF95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F036405F-5F39-4CB3-A701-BCD9D7FCAF95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54190738-AF7F-42AF-8EB9-D4B3DB348840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54190738-AF7F-42AF-8EB9-D4B3DB348840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54190738-AF7F-42AF-8EB9-D4B3DB348840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54190738-AF7F-42AF-8EB9-D4B3DB348840}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Winterday.External.Gengo.csproj

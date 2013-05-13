@@ -25,23 +25,25 @@
 // THE SOFTWARE.
 namespace Winterday.External.Gengo.Tests.Payloads
 {
-	using NUnit.Framework;
+    using System.Linq;
 
-	[TestFixture()]
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+	[TestClass]
 	public class LanguagePairTests
 	{
 		GengoClient client;
 
-		[TestFixtureSetUp]
+		[TestInitialize]
 		public void SetUpAttribute()
 		{
 			client = new GengoClient (TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
 		}
 
-		[Test()]
+		[TestMethod]
 		public void TestGetLanguagePairs ()
 		{
-			Assert.IsNotEmpty (client.GetLanguagePairs ());
+			Assert.IsTrue (client.GetLanguagePairs ().Count() > 0);
 		}
 	}
 }

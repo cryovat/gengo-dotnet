@@ -27,28 +27,43 @@
 namespace Winterday.External.Gengo.Tests
 {
 	using System;
-	using NUnit.Framework;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-	[TestFixture()]
+	[TestClass]
 	public class GengoClientTests
 	{
-		[Test()]
-		public void TestConstructorValidatesCustomUri () {
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestConstructorFailsOnRelativeUri()
+        {
+            var client = new GengoClient("foo", "bar", "baz");
+            Assert.Fail("Constructor did not throw exception");
+        }
 
-			Assert.Throws<ArgumentException> (() => new GengoClient("foo", "bar", "baz"));
-			Assert.DoesNotThrow (() => new GengoClient("foo", "bar", "http://www.example.com"));
+		[TestMethod]
+		public void TestConstructorValidatesCustomUri ()
+        {
+			var client = new GengoClient("foo", "bar", "http://www.example.com");
+            Assert.IsTrue(true);
 		}
 
-		[Test()]
-		public void TestBuildUriValidesParameters ()
-		{
-			var client = new GengoClient ("foo", "bar");
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestBuildUriThrowsOnNullArgument()
+        {
+            var client = new GengoClient("foo", "bar");
+            client.BuildUri(null);
+        }
 
-			Assert.Throws <ArgumentException> (() => client.BuildUri (null));
-			Assert.Throws <ArgumentException> (() => client.BuildUri ("http://absolute.uri/"));
-		}
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestBuildUriThrowsOnAbsoluteUri()
+        {
+            var client = new GengoClient("foo", "bar");
+            client.BuildUri("http://absolute.uri/");
+        }
 
-		[Test()]
+        [TestMethod]
 		public void TestBuildUriMinimalConstructor ()
 		{
 			String expected = GengoClient.ProductionBaseUri + "bazinga";
@@ -59,7 +74,7 @@ namespace Winterday.External.Gengo.Tests
 			Assert.AreEqual (expected, uri.ToString ());
 		}
 
-		[Test()]
+        [TestMethod]
 		public void TestBuildUriProductionConstructor ()
 		{
 			String expected = GengoClient.ProductionBaseUri + "bazinga";
@@ -70,7 +85,7 @@ namespace Winterday.External.Gengo.Tests
 			Assert.AreEqual (expected, uri.ToString ());
 		}
 
-		[Test()]
+        [TestMethod]
 		public void TestBuildUriSandboxConstructor ()
 		{
 			String expected = GengoClient.SandboxBaseUri + "bazinga";
@@ -81,7 +96,7 @@ namespace Winterday.External.Gengo.Tests
 			Assert.AreEqual (expected, uri.ToString ());
 		}
 
-		[Test()]
+        [TestMethod]
 		public void TestBuildUriCustomUriConstructor ()
 		{
 			String customUri = "http://www.example.com/";
@@ -93,7 +108,7 @@ namespace Winterday.External.Gengo.Tests
 			Assert.AreEqual (expected, uri.ToString ());
 		}
 
-		[Test()]
+        [TestMethod]
 		public void TestBuildRequestSetsModes ()
 		{
 			var client = new GengoClient ("foo", "bar");
