@@ -26,6 +26,7 @@
 namespace Winterday.External.Gengo.Tests.Payloads
 {
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -41,9 +42,11 @@ namespace Winterday.External.Gengo.Tests.Payloads
 		}
 
 		[TestMethod]
-		public void TestGetLanguagePairs ()
+		public async Task TestGetLanguagePairs ()
 		{
-			Assert.IsTrue (client.GetLanguagePairs ().Count() > 0);
+            var pairs = await client.GetLanguagePairs ();
+            
+			Assert.IsTrue (pairs.Length > 0);
 		}
 	}
 }

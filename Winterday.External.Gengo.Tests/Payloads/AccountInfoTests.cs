@@ -27,6 +27,7 @@
 namespace Winterday.External.Gengo.Tests.Payloads
 {
     using System;
+    using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 	[TestClass]
@@ -41,9 +42,9 @@ namespace Winterday.External.Gengo.Tests.Payloads
 		}
 
         [TestMethod]
-		public void TestGetStats ()
+		public async Task TestGetStats ()
 		{
-			var stats = client.GetStats ();
+			var stats = await client.GetStats ();
 
 			Assert.IsNotNull (stats);
 			Assert.AreNotEqual (new DateTime (), stats.UserSince);
@@ -51,9 +52,11 @@ namespace Winterday.External.Gengo.Tests.Payloads
 		}
 
         [TestMethod]
-		public void TestGetBalance ()
+        public async Task TestGetBalance()
 		{
-            Assert.IsTrue(client.GetBalance() > 0);
+            var balance = await client.GetBalance();
+
+            Assert.IsTrue(balance > 0);
 		}
 	}
 }

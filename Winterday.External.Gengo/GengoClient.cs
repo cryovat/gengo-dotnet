@@ -29,12 +29,16 @@ using System.Collections.Generic;
 namespace Winterday.External.Gengo
 {
 	using System;
+    using System.Linq;
 	using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Threading.Tasks;
 	using System.Xml.Linq;
 
 	using Winterday.External.Gengo.Payloads;
 
-	public class GengoClient
+	public class GengoClient : IDisposable
 	{
 		internal const string ProductionBaseUri = "http://api.gengo.com/v2/";
 		internal const string SandboxBaseUri = "http://api.sandbox.gengo.com/v2/";
@@ -50,7 +54,18 @@ namespace Winterday.External.Gengo
 		readonly string _privateKey;
 		readonly string _publicKey;
 
-		readonly Uri _baseUri; 
+		readonly Uri _baseUri;
+        readonly HttpClient _client = new HttpClient();
+
+        bool _disposed;
+
+        public bool IsDisposed
+        {
+            get
+            {
+                return _disposed;
+            }
+        }
 
 		public GengoClient (string privateKey, string publicKey)
 		{
@@ -64,6 +79,8 @@ namespace Winterday.External.Gengo
 			_publicKey = publicKey;
 
 			_baseUri = new Uri(ProductionBaseUri);
+
+            initClient();
 		}
 
 		public GengoClient (string privateKey, string publicKey, ClientMode mode)
@@ -80,6 +97,8 @@ namespace Winterday.External.Gengo
 			var uri = mode == ClientMode.Production ? ProductionBaseUri : SandboxBaseUri;
 			
 			_baseUri = new Uri (uri);
+
+            initClient();
 		}
 
 		public GengoClient (string privateKey, string publicKey, String baseUri)
@@ -100,138 +119,139 @@ namespace Winterday.External.Gengo
 			_publicKey = publicKey;
 			
 			_baseUri = new Uri (baseUri);
+
+            initClient();
 		}
 
-		public IEnumerable<Language> GetLanguages()
+        private void initClient()
+        {
+            var assemblyName = GetType().Assembly.GetName();
+            var headers = _client.DefaultRequestHeaders;
+
+            headers.UserAgent.Add(new ProductInfoHeaderValue(assemblyName.Name, assemblyName.Version.ToString()));
+            headers.AcceptCharset.Add(new StringWithQualityHeaderValue("utf-8"));
+            headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MimeTypeApplicationXml));
+        }
+
+		public async Task<Language[]> GetLanguages()
 		{
-			var xml = GetXmlResponse (UriPartLanguages, HttpMethod.Get, null);
+			var xml = await GetXmlAsync (UriPartLanguages, false);
 			
-			foreach (var e in xml.Elements ()) {
-				yield return Language.FromXContainer (e);
-			}
+            return xml.Elements().Select(e => Language.FromXContainer(e)).ToArray();
 		}
 
-		public IEnumerable<LanguagePair> GetLanguagePairs()
+		public async Task<LanguagePair[]> GetLanguagePairs()
 		{
-			var xml = GetXmlResponse (UriPartLanguagePairs, HttpMethod.Get, null);
+			var xml = await GetXmlAsync (UriPartLanguagePairs, false);
 			
-			foreach (var e in xml.Elements ()) {
-				yield return LanguagePair.FromXContainer(e);
-			}
+            return xml.Elements().Select(e => LanguagePair.FromXContainer(e)).ToArray();
 		}
 
-		public AccountStats GetStats() {
+		public async Task<AccountStats> GetStats() {
 
-			var xml = GetXmlResponse (UriPartStats, HttpMethod.Get, null, true);
+            var xml = await GetXmlAsync(UriPartStats, true);
 
 			return AccountStats.FromXContainer (xml);
 		}
 
-		public decimal GetBalance() {
+		public async Task<decimal> GetBalance() {
 			
-			var xml = GetXmlResponse (UriPartBalance, HttpMethod.Get, null, true);
+			var xml = await GetXmlAsync (UriPartBalance, true);
 			
 			return xml.Element ("credits").Value.ToDecimal ();
 		}
 
-		internal Uri BuildUri(String uriPart)
+		internal Uri BuildUri(String uriPart, bool authenticated)
 		{
-			return BuildUri (uriPart, null);
+			return BuildUri (uriPart, null, authenticated);
 		}
 
-		internal Uri BuildUri(String uriPart, Dictionary<string, string> query) {
-			if (String.IsNullOrWhiteSpace ("uriPart"))
-				throw new ArgumentException ("Uri part not provided", "baseUri");
+        internal Uri BuildUri(String uriPart, Dictionary<string, string> query, bool authenticated)
+        {
+            if (String.IsNullOrWhiteSpace("uriPart"))
+                throw new ArgumentException("Uri part not provided", "baseUri");
 
-			if (!Uri.IsWellFormedUriString (uriPart, UriKind.Relative))
-				throw new ArgumentException ("Uri part not valid relative uri", "baseUri");
+            if (!Uri.IsWellFormedUriString(uriPart, UriKind.Relative))
+                throw new ArgumentException("Uri part not valid relative uri", "baseUri");
 
-			return new Uri (_baseUri, uriPart + query.ToQueryString());
-		}
+            query = query ?? new Dictionary<string, string>();
+            query["api_key"] = _publicKey;
 
-		internal HttpWebRequest BuildRequest(String uriPart, HttpMethod method) {
-			return BuildRequest (uriPart, method, null, false);
-		}
+            if (authenticated)
+            {
+                var ts = DateTime.UtcNow.ToTimeStamp().ToString();
+                var hash = _privateKey.SHA1Hash(ts);
 
-		internal HttpWebRequest BuildRequest(String uriPart, HttpMethod method, Dictionary<string, string> query) {
-			return BuildRequest (uriPart, method, query, false);
-		}
+                query["ts"] = ts;
+                query["api_sig"] = hash;
 
-		internal HttpWebRequest BuildRequest(String uriPart, HttpMethod method, Dictionary<string, string> query,
-		                                     bool authenticated) {
+            }
+            
+            return new Uri(_baseUri, uriPart + query.ToQueryString());
+        }
 
-			query = query ?? new Dictionary<string, string> ();
-			query ["api_key"] = _publicKey;
-			
-			if (authenticated) {
-				var ts = DateTime.UtcNow.ToTimeStamp ().ToString ();
-				var hash = _privateKey.SHA1Hash (ts);
+        internal Task<string> GetStringAsync(String uriPart, bool authenticated)
+        {
+            return _client.GetStringAsync(BuildUri(uriPart, authenticated));
+        }
 
-				query["ts"] = ts;
-				query["api_sig"] = hash;
+        internal async Task<XElement> GetXmlAsync(String uriPart, bool authenticated)
+        {
+            var rawXml = await GetStringAsync(uriPart, authenticated);
 
-			}
+            return UnpackXml(rawXml);
+        }
 
-			var requestUri = BuildUri (uriPart, query);
-			var request = WebRequest.Create (requestUri) as HttpWebRequest;
+        internal XElement UnpackXml(String rawXml)
+        {
+            var root = XDocument.Parse(rawXml).Root;
+            var opstatElm = root.Element("opstat");
 
-			if (request == null)
-				throw new InvalidOperationException ("Invalid uri scheme: " + requestUri.Scheme);
+            if (opstatElm == null)
+                throw new InvalidOperationException("Response XML did not contain opstat");
 
-			request.UserAgent = typeof(GengoClient).Assembly.FullName;
-			request.Method = method.ToMethodString ();
-			request.Accept = MimeTypeApplicationXml;
+            var opstat = opstatElm.Value.ToLower();
 
-			return request;
-		}
+            var errElm = root.Element("err");
 
-		internal XElement GetXmlResponse(String uriPart, HttpMethod method, Dictionary<string, string> query) {
-			return GetXmlResponse (uriPart, method, query, false);
-		}
+            var responseElm = root.Element("response");
 
-		internal XElement GetXmlResponse(String uriPart, HttpMethod method, Dictionary<string, string> query,
-		                                 bool authenticated) {
+            if (opstat == "error" && errElm == null)
+            {
+                throw new GengoException(null, opstat, null);
+            }
+            if (opstat == "error" && errElm != null)
+            {
+                var msgElm = errElm.Element("msg");
+                var codeElm = errElm.Element("code");
 
-			var request = BuildRequest (uriPart, method, query, authenticated);
+                string message = null;
+                string code = null;
 
-			var response = request.GetResponse ();
+                if (msgElm != null)
+                    message = msgElm.Value;
 
-			var root = XDocument.Load (response.GetResponseStream ()).Root;
-			var opstatElm = root.Element ("opstat");
+                if (codeElm != null)
+                    code = codeElm.Value;
 
-			if (opstatElm == null)
-				throw new InvalidOperationException ("Response XML did not contain opstat");
+                throw new GengoException(message, opstat, code);
+            }
+            if (responseElm != null)
+            {
+                return responseElm;
+            }
 
-			var opstat = opstatElm.Value.ToLower ();
+            return new XElement("response");
+        }
 
-			var errElm = root.Element ("err");
-
-			var responseElm = root.Element ("response");
-
-			if (opstat == "error" && errElm == null) {
-				throw new GengoException (null, opstat, null);
-			}
-			if (opstat == "error" && errElm != null) {
-				var msgElm = errElm.Element ("msg");
-				var codeElm = errElm.Element ("code");
-
-				string message = null;
-				string code = null;
-
-				if (msgElm != null)
-					message = msgElm.Value;
-
-				if (codeElm != null)
-					code = codeElm.Value;
-
-				throw new GengoException (message, opstat, code);
-			}
-			if (responseElm != null) {
-				return responseElm;
-			}
-
-			return new XElement("response");
-		}
-	}
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _client.Dispose();
+                _disposed = true;
+            }
+        }
+    }
 }
 
