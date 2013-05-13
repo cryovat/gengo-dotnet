@@ -88,6 +88,11 @@ namespace Winterday.External.Gengo.Payloads
             _unitPrice = unitPrice;
         }
 
+        public override string ToString()
+        {
+            return String.Format("FromLanguage: {0}, ToLanguage: {1}, Tier: {2}, UnitPrice: {3}", _fromLanguage, _toLanguage, _tier, _unitPrice);
+        }
+
         internal static LanguagePair FromXContainer(XContainer c)
         {
 

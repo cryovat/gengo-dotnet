@@ -92,6 +92,11 @@ namespace Winterday.External.Gengo.Payloads
             _unitType = unitType;
         }
 
+        public override string ToString()
+        {
+            return String.Format("Name: {0}, LocalizedName: {1}, Code: {2}, UnitType: {3}", _name, _localizedName, _code, _unitType);
+        }
+
         internal static Language FromXContainer(XContainer c)
         {
 
