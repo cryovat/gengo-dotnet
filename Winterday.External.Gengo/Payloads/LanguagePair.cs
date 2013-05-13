@@ -70,7 +70,7 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
-        internal LanguagePair(string fromLanguage, string toLanguage, string tier, decimal unitPrice)
+        LanguagePair(string fromLanguage, string toLanguage, string tier, decimal unitPrice)
         {
             if (string.IsNullOrWhiteSpace(fromLanguage))
                 throw new ArgumentException("From Language not provided", "fromLanguage");

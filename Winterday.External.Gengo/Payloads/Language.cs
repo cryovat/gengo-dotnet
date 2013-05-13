@@ -68,7 +68,7 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
-        internal Language(string name, string localizedName, string code, string unitType)
+        Language(string name, string localizedName, string code, string unitType)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Language name not provided", "name");
