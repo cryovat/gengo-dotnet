@@ -26,118 +26,119 @@
 
 namespace Winterday.External.Gengo.Tests
 {
-	using System;
-	using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-	using Winterday.External.Gengo;
+    using Winterday.External.Gengo;
 
-	[TestClass]
-	public class ExtensionsTests
-	{
-		[TestMethod]
-		public void ToQueryStringNullDict ()
-		{
+    [TestClass]
+    public class ExtensionsTests
+    {
+        [TestMethod]
+        public void ToQueryStringNullDict()
+        {
             Dictionary<string, string> nothing = null;
 
-			Assert.IsTrue (String.IsNullOrWhiteSpace (nothing.ToQueryString()),
-			               "Null dict should yield empty string");
-		}
+            Assert.IsTrue(String.IsNullOrWhiteSpace(nothing.ToQueryString()),
+                           "Null dict should yield empty string");
+        }
 
         [TestMethod]
-		public void ToQueryStringOneValue ()
-		{
-			var dict = new Dictionary<string, string>();
-			dict ["foo"] = "bar";
+        public void ToQueryStringOneValue()
+        {
+            var dict = new Dictionary<string, string>();
+            dict["foo"] = "bar";
 
-			Assert.AreEqual ("?foo=bar",
-			                 dict.ToQueryString ());
-		}
-
-        [TestMethod]
-		public void ToQueryStringTwoValues ()
-		{
-			var dict = new Dictionary<string, string>();
-			dict ["foo"] = "bar";
-			dict ["ba"] = "zinga";
-			
-			Assert.AreEqual ("?foo=bar&ba=zinga",
-			                 dict.ToQueryString ());
-		}
-
-		[TestMethod]
-		public void ToQueryStringUnsafeValues ()
-		{
-			var dict = new Dictionary<string, string>();
-			dict ["foo"] = "#?&%=";
-
-			Assert.AreEqual ("?foo=%23%3F%26%25%3D",
-			                 dict.ToQueryString ());
-		}
+            Assert.AreEqual("?foo=bar",
+                             dict.ToQueryString());
+        }
 
         [TestMethod]
-		public void TranslationStatusConversions()
-		{
-			Assert.AreEqual ("approved", TranslationStatus.Approved.ToStatusString ());
-			Assert.AreEqual ("available", TranslationStatus.Available.ToStatusString ());
-			Assert.AreEqual ("cancelled", TranslationStatus.Cancelled.ToStatusString ());
-			Assert.AreEqual ("pending", TranslationStatus.Pending.ToStatusString ());
-			Assert.AreEqual ("reviewable", TranslationStatus.Reviewable.ToStatusString ());
-			Assert.AreEqual ("revising", TranslationStatus.Revising.ToStatusString ());
+        public void ToQueryStringTwoValues()
+        {
+            var dict = new Dictionary<string, string>();
+            dict["foo"] = "bar";
+            dict["ba"] = "zinga";
 
-			Assert.AreEqual (TranslationStatus.Approved, "ApPrOvEd".ToTranslationStatus ());
-			Assert.AreEqual (TranslationStatus.Available, "AVAILable".ToTranslationStatus ());
-			Assert.AreEqual (TranslationStatus.Cancelled, "cancelLED".ToTranslationStatus ());
-			Assert.AreEqual (TranslationStatus.Pending, "pendinG".ToTranslationStatus());
-			Assert.AreEqual (TranslationStatus.Reviewable, "reviEWable".ToTranslationStatus ());
-			Assert.AreEqual (TranslationStatus.Revising, "reviSING".ToTranslationStatus ());
-
-			Assert.AreEqual (TranslationStatus.Unknown, ((string)null).ToTranslationStatus ());
-			Assert.AreEqual (TranslationStatus.Unknown, "bazinga".ToTranslationStatus ());
-		}
+            Assert.AreEqual("?foo=bar&ba=zinga",
+                             dict.ToQueryString());
+        }
 
         [TestMethod]
-		public void TranslationTierConversions()
-		{
-			Assert.AreEqual ("ultra", TranslationTier.Ultra.ToTierString ());
-			Assert.AreEqual ("machine", TranslationTier.Machine.ToTierString ());
-			Assert.AreEqual ("standard", TranslationTier.Standard.ToTierString ());
-			Assert.AreEqual ("pro", TranslationTier.Pro.ToTierString ());
+        public void ToQueryStringUnsafeValues()
+        {
+            var dict = new Dictionary<string, string>();
+            dict["foo"] = "#?&%=";
 
-			Assert.AreEqual (TranslationTier.Machine, "MACHINE".ToTranslationTier ());
-			Assert.AreEqual (TranslationTier.Pro, "PrO".ToTranslationTier ());
-			Assert.AreEqual (TranslationTier.Standard, "StandarD".ToTranslationTier ());
-			Assert.AreEqual (TranslationTier.Ultra, "UlTrA".ToTranslationTier ());
-			
-			Assert.AreEqual (TranslationTier.Unknown, ((string)null).ToTranslationTier ());
-			Assert.AreEqual (TranslationTier.Unknown, "bazinga".ToTranslationTier ());
-		}
+            Assert.AreEqual("?foo=%23%3F%26%25%3D",
+                             dict.ToQueryString());
+        }
 
         [TestMethod]
-		public void JobTypeConversions() {
+        public void TranslationStatusConversions()
+        {
+            Assert.AreEqual("approved", TranslationStatus.Approved.ToStatusString());
+            Assert.AreEqual("available", TranslationStatus.Available.ToStatusString());
+            Assert.AreEqual("cancelled", TranslationStatus.Cancelled.ToStatusString());
+            Assert.AreEqual("pending", TranslationStatus.Pending.ToStatusString());
+            Assert.AreEqual("reviewable", TranslationStatus.Reviewable.ToStatusString());
+            Assert.AreEqual("revising", TranslationStatus.Revising.ToStatusString());
 
-			Assert.AreEqual ("text", JobType.Text.ToTypeString ());
-			Assert.AreEqual ("file", JobType.File.ToTypeString ());
+            Assert.AreEqual(TranslationStatus.Approved, "ApPrOvEd".ToTranslationStatus());
+            Assert.AreEqual(TranslationStatus.Available, "AVAILable".ToTranslationStatus());
+            Assert.AreEqual(TranslationStatus.Cancelled, "cancelLED".ToTranslationStatus());
+            Assert.AreEqual(TranslationStatus.Pending, "pendinG".ToTranslationStatus());
+            Assert.AreEqual(TranslationStatus.Reviewable, "reviEWable".ToTranslationStatus());
+            Assert.AreEqual(TranslationStatus.Revising, "reviSING".ToTranslationStatus());
 
-			Assert.AreEqual (JobType.File, "fiLE".ToJobType ());
-			Assert.AreEqual (JobType.Text, "TeXT".ToJobType ());
-
-			Assert.AreEqual (JobType.Text, "bazinga".ToJobType ());
-		}
+            Assert.AreEqual(TranslationStatus.Unknown, ((string)null).ToTranslationStatus());
+            Assert.AreEqual(TranslationStatus.Unknown, "bazinga".ToTranslationStatus());
+        }
 
         [TestMethod]
-		public void TestUnixTimeStamp()
-		{
-			var utcNow = DateTime.UtcNow;
+        public void TranslationTierConversions()
+        {
+            Assert.AreEqual("ultra", TranslationTier.Ultra.ToTierString());
+            Assert.AreEqual("machine", TranslationTier.Machine.ToTierString());
+            Assert.AreEqual("standard", TranslationTier.Standard.ToTierString());
+            Assert.AreEqual("pro", TranslationTier.Pro.ToTierString());
 
-			// Shave off milliseconds:
-			utcNow = new DateTime (utcNow.Year, utcNow.Month, utcNow.Day,
-			                       utcNow.Hour, utcNow.Minute, utcNow.Second, 0,
-			                       DateTimeKind.Utc);
+            Assert.AreEqual(TranslationTier.Machine, "MACHINE".ToTranslationTier());
+            Assert.AreEqual(TranslationTier.Pro, "PrO".ToTranslationTier());
+            Assert.AreEqual(TranslationTier.Standard, "StandarD".ToTranslationTier());
+            Assert.AreEqual(TranslationTier.Ultra, "UlTrA".ToTranslationTier());
 
-			Assert.AreEqual (utcNow, utcNow.ToTimeStamp ().ToDateFromTimestamp ());
-		}
-	}
+            Assert.AreEqual(TranslationTier.Unknown, ((string)null).ToTranslationTier());
+            Assert.AreEqual(TranslationTier.Unknown, "bazinga".ToTranslationTier());
+        }
+
+        [TestMethod]
+        public void JobTypeConversions()
+        {
+
+            Assert.AreEqual("text", JobType.Text.ToTypeString());
+            Assert.AreEqual("file", JobType.File.ToTypeString());
+
+            Assert.AreEqual(JobType.File, "fiLE".ToJobType());
+            Assert.AreEqual(JobType.Text, "TeXT".ToJobType());
+
+            Assert.AreEqual(JobType.Text, "bazinga".ToJobType());
+        }
+
+        [TestMethod]
+        public void TestUnixTimeStamp()
+        {
+            var utcNow = DateTime.UtcNow;
+
+            // Shave off milliseconds:
+            utcNow = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day,
+                                   utcNow.Hour, utcNow.Minute, utcNow.Second, 0,
+                                   DateTimeKind.Utc);
+
+            Assert.AreEqual(utcNow, utcNow.ToTimeStamp().ToDateFromTimestamp());
+        }
+    }
 }
 

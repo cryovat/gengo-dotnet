@@ -28,33 +28,33 @@ using System.Collections.Generic;
 
 namespace Winterday.External.Gengo
 {
-	using System;
+    using System;
     using System.Linq;
-	using System.Net;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading.Tasks;
-	using System.Xml.Linq;
+    using System.Xml.Linq;
 
-	using Winterday.External.Gengo.Payloads;
+    using Winterday.External.Gengo.Payloads;
 
-	public class GengoClient : IDisposable
-	{
-		internal const string ProductionBaseUri = "http://api.gengo.com/v2/";
-		internal const string SandboxBaseUri = "http://api.sandbox.gengo.com/v2/";
+    public class GengoClient : IDisposable
+    {
+        internal const string ProductionBaseUri = "http://api.gengo.com/v2/";
+        internal const string SandboxBaseUri = "http://api.sandbox.gengo.com/v2/";
 
-		internal const string UriPartLanguages = "translate/service/languages";
-		internal const string UriPartLanguagePairs = "translate/service/language_pairs";
+        internal const string UriPartLanguages = "translate/service/languages";
+        internal const string UriPartLanguagePairs = "translate/service/language_pairs";
 
-		internal const string UriPartStats = "account/stats";
-		internal const string UriPartBalance = "account/balance";
+        internal const string UriPartStats = "account/stats";
+        internal const string UriPartBalance = "account/balance";
 
-		internal const string MimeTypeApplicationXml = "application/xml";
+        internal const string MimeTypeApplicationXml = "application/xml";
 
-		readonly string _privateKey;
-		readonly string _publicKey;
+        readonly string _privateKey;
+        readonly string _publicKey;
 
-		readonly Uri _baseUri;
+        readonly Uri _baseUri;
         readonly HttpClient _client = new HttpClient();
 
         bool _disposed;
@@ -67,61 +67,61 @@ namespace Winterday.External.Gengo
             }
         }
 
-		public GengoClient (string privateKey, string publicKey)
-		{
-			if (string.IsNullOrWhiteSpace (privateKey))
-				throw new ArgumentException ("Private key not specified", "privateKey");
+        public GengoClient(string privateKey, string publicKey)
+        {
+            if (string.IsNullOrWhiteSpace(privateKey))
+                throw new ArgumentException("Private key not specified", "privateKey");
 
-			if (string.IsNullOrWhiteSpace (publicKey))
-				throw new ArgumentException ("Public key not specified", "publicKey");
+            if (string.IsNullOrWhiteSpace(publicKey))
+                throw new ArgumentException("Public key not specified", "publicKey");
 
-			_privateKey = privateKey;
-			_publicKey = publicKey;
+            _privateKey = privateKey;
+            _publicKey = publicKey;
 
-			_baseUri = new Uri(ProductionBaseUri);
-
-            initClient();
-		}
-
-		public GengoClient (string privateKey, string publicKey, ClientMode mode)
-		{
-			if (string.IsNullOrWhiteSpace (privateKey))
-				throw new ArgumentException ("Private key not specified", "privateKey");
-			
-			if (string.IsNullOrWhiteSpace (publicKey))
-				throw new ArgumentException ("Public key not specified", "publicKey");
-			
-			_privateKey = privateKey;
-			_publicKey = publicKey;
-			
-			var uri = mode == ClientMode.Production ? ProductionBaseUri : SandboxBaseUri;
-			
-			_baseUri = new Uri (uri);
+            _baseUri = new Uri(ProductionBaseUri);
 
             initClient();
-		}
+        }
 
-		public GengoClient (string privateKey, string publicKey, String baseUri)
-		{
-			if (string.IsNullOrWhiteSpace (privateKey))
-				throw new ArgumentException ("Private key not specified", "privateKey");
-			
-			if (string.IsNullOrWhiteSpace (publicKey))
-				throw new ArgumentException ("Public key not specified", "publicKey");
+        public GengoClient(string privateKey, string publicKey, ClientMode mode)
+        {
+            if (string.IsNullOrWhiteSpace(privateKey))
+                throw new ArgumentException("Private key not specified", "privateKey");
 
-			if (string.IsNullOrWhiteSpace (baseUri))
-				throw new ArgumentException ("Base uri not specified", "baseUri");
-		
-			if (!Uri.IsWellFormedUriString (baseUri, UriKind.Absolute))
-				throw new ArgumentException ("Base uri is not an absolute uri", "baseUri");
+            if (string.IsNullOrWhiteSpace(publicKey))
+                throw new ArgumentException("Public key not specified", "publicKey");
 
-			_privateKey = privateKey;
-			_publicKey = publicKey;
-			
-			_baseUri = new Uri (baseUri);
+            _privateKey = privateKey;
+            _publicKey = publicKey;
+
+            var uri = mode == ClientMode.Production ? ProductionBaseUri : SandboxBaseUri;
+
+            _baseUri = new Uri(uri);
 
             initClient();
-		}
+        }
+
+        public GengoClient(string privateKey, string publicKey, String baseUri)
+        {
+            if (string.IsNullOrWhiteSpace(privateKey))
+                throw new ArgumentException("Private key not specified", "privateKey");
+
+            if (string.IsNullOrWhiteSpace(publicKey))
+                throw new ArgumentException("Public key not specified", "publicKey");
+
+            if (string.IsNullOrWhiteSpace(baseUri))
+                throw new ArgumentException("Base uri not specified", "baseUri");
+
+            if (!Uri.IsWellFormedUriString(baseUri, UriKind.Absolute))
+                throw new ArgumentException("Base uri is not an absolute uri", "baseUri");
+
+            _privateKey = privateKey;
+            _publicKey = publicKey;
+
+            _baseUri = new Uri(baseUri);
+
+            initClient();
+        }
 
         private void initClient()
         {
@@ -133,38 +133,40 @@ namespace Winterday.External.Gengo
             headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MimeTypeApplicationXml));
         }
 
-		public async Task<Language[]> GetLanguages()
-		{
-			var xml = await GetXmlAsync (UriPartLanguages, false);
-			
+        public async Task<Language[]> GetLanguages()
+        {
+            var xml = await GetXmlAsync(UriPartLanguages, false);
+
             return xml.Elements().Select(e => Language.FromXContainer(e)).ToArray();
-		}
+        }
 
-		public async Task<LanguagePair[]> GetLanguagePairs()
-		{
-			var xml = await GetXmlAsync (UriPartLanguagePairs, false);
-			
+        public async Task<LanguagePair[]> GetLanguagePairs()
+        {
+            var xml = await GetXmlAsync(UriPartLanguagePairs, false);
+
             return xml.Elements().Select(e => LanguagePair.FromXContainer(e)).ToArray();
-		}
+        }
 
-		public async Task<AccountStats> GetStats() {
+        public async Task<AccountStats> GetStats()
+        {
 
             var xml = await GetXmlAsync(UriPartStats, true);
 
-			return AccountStats.FromXContainer (xml);
-		}
+            return AccountStats.FromXContainer(xml);
+        }
 
-		public async Task<decimal> GetBalance() {
-			
-			var xml = await GetXmlAsync (UriPartBalance, true);
-			
-			return xml.Element ("credits").Value.ToDecimal ();
-		}
+        public async Task<decimal> GetBalance()
+        {
 
-		internal Uri BuildUri(String uriPart, bool authenticated)
-		{
-			return BuildUri (uriPart, null, authenticated);
-		}
+            var xml = await GetXmlAsync(UriPartBalance, true);
+
+            return xml.Element("credits").Value.ToDecimal();
+        }
+
+        internal Uri BuildUri(String uriPart, bool authenticated)
+        {
+            return BuildUri(uriPart, null, authenticated);
+        }
 
         internal Uri BuildUri(String uriPart, Dictionary<string, string> query, bool authenticated)
         {
@@ -186,7 +188,7 @@ namespace Winterday.External.Gengo
                 query["api_sig"] = hash;
 
             }
-            
+
             return new Uri(_baseUri, uriPart + query.ToQueryString());
         }
 

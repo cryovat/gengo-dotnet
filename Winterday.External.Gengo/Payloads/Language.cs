@@ -25,72 +25,83 @@
 // THE SOFTWARE.
 namespace Winterday.External.Gengo.Payloads
 {
-	using System;
-	using System.Xml.Linq;
-	
-	public class Language
-	{
-		readonly string _name;
-		readonly string _localizedName;
-		readonly string _code;
-		readonly string _unitType;
+    using System;
+    using System.Xml.Linq;
 
-		public string Name {
-			get {
-				return _name;
-			}
-		}
+    public class Language
+    {
+        readonly string _name;
+        readonly string _localizedName;
+        readonly string _code;
+        readonly string _unitType;
 
-		public string LocalizedName {
-			get {
-				return _localizedName;
-			}
-		}
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+        }
 
-		public string Code {
-			get {
-				return _code;
-			}
-		}
+        public string LocalizedName
+        {
+            get
+            {
+                return _localizedName;
+            }
+        }
 
-		public string UnitType {
-			get {
-				return _unitType;
-			}
-		}
+        public string Code
+        {
+            get
+            {
+                return _code;
+            }
+        }
 
-		public Language (string name, string localizedName, string code, string unitType)
-		{
-			if (string.IsNullOrWhiteSpace (name))
-				throw new ArgumentException ("Language name not provided", "name");
+        public string UnitType
+        {
+            get
+            {
+                return _unitType;
+            }
+        }
 
-			if (string.IsNullOrWhiteSpace (localizedName))
-				throw new ArgumentException ("Localized language name not provided", "localizedName");
+        public Language(string name, string localizedName, string code, string unitType)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Language name not provided", "name");
 
-			if (string.IsNullOrWhiteSpace (code)) {
-				throw new ArgumentException("Language code not provided", "code");
-			}
+            if (string.IsNullOrWhiteSpace(localizedName))
+                throw new ArgumentException("Localized language name not provided", "localizedName");
 
-			if (string.IsNullOrWhiteSpace (unitType)) {
-				throw new ArgumentException("Language unit type not provided", "unitType");
-			}
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                throw new ArgumentException("Language code not provided", "code");
+            }
 
-			_name = name;
-			_localizedName = localizedName;
-			_code = code;
-			_unitType = unitType;
-		}
+            if (string.IsNullOrWhiteSpace(unitType))
+            {
+                throw new ArgumentException("Language unit type not provided", "unitType");
+            }
 
-		internal static Language FromXContainer(XContainer c) {
+            _name = name;
+            _localizedName = localizedName;
+            _code = code;
+            _unitType = unitType;
+        }
 
-			return new Language(
-				c.Element ("language").Value,
-				c.Element ("localized_name").Value,
-				c.Element ("lc").Value,
-				c.Element ("unit_type").Value
-				);
+        internal static Language FromXContainer(XContainer c)
+        {
 
-		}
-	}
+            return new Language(
+                c.Element("language").Value,
+                c.Element("localized_name").Value,
+                c.Element("lc").Value,
+                c.Element("unit_type").Value
+                );
+
+        }
+    }
 }
 

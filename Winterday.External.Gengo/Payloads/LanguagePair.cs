@@ -25,70 +25,79 @@
 // THE SOFTWARE.
 namespace Winterday.External.Gengo.Payloads
 {
-	using System;
-	using System.Xml.Linq;
+    using System;
+    using System.Xml.Linq;
 
-	public class LanguagePair
-	{
-		readonly string _fromLanguage;
-		readonly string _toLanguage;
+    public class LanguagePair
+    {
+        readonly string _fromLanguage;
+        readonly string _toLanguage;
 
-		readonly string _tier;
+        readonly string _tier;
 
-		readonly decimal _unitPrice;
+        readonly decimal _unitPrice;
 
-		public string FromLanguage {
-			get {
-				return _fromLanguage;
-			}
-		}
+        public string FromLanguage
+        {
+            get
+            {
+                return _fromLanguage;
+            }
+        }
 
-		public string ToLanguage {
-			get {
-				return _toLanguage;
-			}
-		}
+        public string ToLanguage
+        {
+            get
+            {
+                return _toLanguage;
+            }
+        }
 
-		public string Tier {
-			get {
-				return _tier;
-			}
-		}
+        public string Tier
+        {
+            get
+            {
+                return _tier;
+            }
+        }
 
-		public decimal UnitPrice {
-			get {
-				return _unitPrice;
-			}
-		}
+        public decimal UnitPrice
+        {
+            get
+            {
+                return _unitPrice;
+            }
+        }
 
-		internal LanguagePair (string fromLanguage, string toLanguage, string tier, decimal unitPrice)
-		{
-			if (string.IsNullOrWhiteSpace (fromLanguage))
-				throw new ArgumentException ("From Language not provided", "fromLanguage");
+        internal LanguagePair(string fromLanguage, string toLanguage, string tier, decimal unitPrice)
+        {
+            if (string.IsNullOrWhiteSpace(fromLanguage))
+                throw new ArgumentException("From Language not provided", "fromLanguage");
 
-			if (string.IsNullOrWhiteSpace (toLanguage))
-				throw new ArgumentException("To Language not provided", "toLanguage");
+            if (string.IsNullOrWhiteSpace(toLanguage))
+                throw new ArgumentException("To Language not provided", "toLanguage");
 
-			if (string.IsNullOrWhiteSpace (tier))
-			    throw new ArgumentException("Tier not provided", "tier");
+            if (string.IsNullOrWhiteSpace(tier))
+                throw new ArgumentException("Tier not provided", "tier");
 
-			_fromLanguage = fromLanguage;
-			_toLanguage = toLanguage;
-			_tier = tier;
+            _fromLanguage = fromLanguage;
+            _toLanguage = toLanguage;
+            _tier = tier;
 
-			_unitPrice = unitPrice;
-		}
+            _unitPrice = unitPrice;
+        }
 
-		internal static LanguagePair FromXContainer(XContainer c) {
+        internal static LanguagePair FromXContainer(XContainer c)
+        {
 
-			return new LanguagePair(
-				c.Element ("lc_src").Value,
-				c.Element ("lc_tgt").Value,
-				c.Element ("tier").Value,
-				c.Element ("unit_price").Value.ToDecimal ()
-				);
+            return new LanguagePair(
+                c.Element("lc_src").Value,
+                c.Element("lc_tgt").Value,
+                c.Element("tier").Value,
+                c.Element("unit_price").Value.ToDecimal()
+                );
 
-		}
-	}
+        }
+    }
 }
 

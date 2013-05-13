@@ -25,31 +25,35 @@
 // THE SOFTWARE.
 namespace Winterday.External.Gengo
 {
-	using System;
+    using System;
 
-	public class GengoException : Exception
-	{
-		readonly string _opStat;
-		readonly string _code;
+    public class GengoException : Exception
+    {
+        readonly string _opStat;
+        readonly string _code;
 
-		public string OpStat {
-			get {
-				return _opStat;
-			}
-		}
+        public string OpStat
+        {
+            get
+            {
+                return _opStat;
+            }
+        }
 
-		public string ErrorCode {
-			get {
-				return _code;
-			}
-		}
+        public string ErrorCode
+        {
+            get
+            {
+                return _code;
+            }
+        }
 
-		public GengoException (string message, string opStat, string code)
-			: base(message ?? "An unknown error happened")
-		{
-			_opStat = opStat ?? "N/A";
-			_code = code ?? "N/A";
-		}
-	}
+        public GengoException(string message, string opStat, string code)
+            : base(message ?? "An unknown error happened")
+        {
+            _opStat = opStat ?? "N/A";
+            _code = code ?? "N/A";
+        }
+    }
 }
 

@@ -30,34 +30,34 @@ namespace Winterday.External.Gengo.Tests.Payloads
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-	[TestClass]
-	public class AccountInfoTest
-	{
-		GengoClient client;
-		
-		[TestInitialize]
-		public void SetUpAttribute()
-		{
-			client = new GengoClient (TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
-		}
+    [TestClass]
+    public class AccountInfoTest
+    {
+        GengoClient client;
+
+        [TestInitialize]
+        public void SetUpAttribute()
+        {
+            client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
+        }
 
         [TestMethod]
-		public async Task TestGetStats ()
-		{
-			var stats = await client.GetStats ();
+        public async Task TestGetStats()
+        {
+            var stats = await client.GetStats();
 
-			Assert.IsNotNull (stats);
-			Assert.AreNotEqual (new DateTime (), stats.UserSince);
-			Assert.IsTrue(0 <= stats.CreditsSpent);
-		}
+            Assert.IsNotNull(stats);
+            Assert.AreNotEqual(new DateTime(), stats.UserSince);
+            Assert.IsTrue(0 <= stats.CreditsSpent);
+        }
 
         [TestMethod]
         public async Task TestGetBalance()
-		{
+        {
             var balance = await client.GetBalance();
 
             Assert.IsTrue(balance > 0);
-		}
-	}
+        }
+    }
 }
 

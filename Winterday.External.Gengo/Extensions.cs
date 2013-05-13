@@ -25,179 +25,193 @@
 // THE SOFTWARE.
 namespace Winterday.External.Gengo
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.IO;
-	using System.Linq;
-	using System.Net;
-	using System.Security.Cryptography;
-	using System.Text;
-	using System.Xml.Linq;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Xml.Linq;
 
-	public static class Extensions
-	{
-		public static decimal ToDecimal (this string value)
-		{
-			if (string.IsNullOrWhiteSpace (value)) {
-				return 0;
-			}
+    public static class Extensions
+    {
+        public static decimal ToDecimal(this string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return 0;
+            }
 
-			decimal d;
-			Decimal.TryParse (value, NumberStyles.Number, CultureInfo.InvariantCulture, out d);
+            decimal d;
+            Decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out d);
 
-			return d;
-		}
+            return d;
+        }
 
-		const NumberStyles UIntStyle = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite;
+        const NumberStyles UIntStyle = NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite;
 
-		internal static long ToLong(this string value)
-		{
-			if (string.IsNullOrEmpty (value)) {
-				return 0;
-			}
+        internal static long ToLong(this string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return 0;
+            }
 
-			long i;
+            long i;
 
-			Int64.TryParse (value, UIntStyle, CultureInfo.InvariantCulture, out i);
+            Int64.TryParse(value, UIntStyle, CultureInfo.InvariantCulture, out i);
 
-			return i;
-		}
+            return i;
+        }
 
-		public static string ToQueryString (this Dictionary<string, string> dict)
-		{
-			if (dict == null) {
-				return string.Empty;
-			}
+        public static string ToQueryString(this Dictionary<string, string> dict)
+        {
+            if (dict == null)
+            {
+                return string.Empty;
+            }
 
-			var sb = new StringBuilder ();
+            var sb = new StringBuilder();
 
-			foreach (var pair in dict) {
-				if (!string.IsNullOrWhiteSpace (pair.Key)) {
-					if (sb.Length == 0) {
-						sb.Append ("?");
-					} else {
-						sb.Append ("&");
-					}
+            foreach (var pair in dict)
+            {
+                if (!string.IsNullOrWhiteSpace(pair.Key))
+                {
+                    if (sb.Length == 0)
+                    {
+                        sb.Append("?");
+                    }
+                    else
+                    {
+                        sb.Append("&");
+                    }
 
-					sb.Append (pair.Key.HexEscape ());
-					sb.Append ("=");
-					sb.Append (pair.Value.HexEscape ());
-				}
-			}
+                    sb.Append(pair.Key.HexEscape());
+                    sb.Append("=");
+                    sb.Append(pair.Value.HexEscape());
+                }
+            }
 
-			return sb.ToString ();
-		}
+            return sb.ToString();
+        }
 
-		static string HexEscape (this string value)
-		{
-			return String.Join (String.Empty, value.ToCharArray ().Select (c => c.HexEscape ()));
-		}
+        static string HexEscape(this string value)
+        {
+            return String.Join(String.Empty, value.ToCharArray().Select(c => c.HexEscape()));
+        }
 
-		static string HexEscape (this char c)
-		{
-			if ((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122)) {
-				return c.ToString ();
-			}
+        static string HexEscape(this char c)
+        {
+            if ((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+            {
+                return c.ToString();
+            }
 
-			return Uri.HexEscape (c);
-		}
+            return Uri.HexEscape(c);
+        }
 
-		public static string ToTypeString (this JobType type)
-		{
-			return type.ToString ().ToLowerInvariant ();
-		}
+        public static string ToTypeString(this JobType type)
+        {
+            return type.ToString().ToLowerInvariant();
+        }
 
-		public static JobType ToJobType (this string value)
-		{
-			JobType tier;
-			
-			if (Enum.TryParse<JobType> (value, true, out tier)) {
-				return tier;
-			}
-			
-			return JobType.Text;
-		}
+        public static JobType ToJobType(this string value)
+        {
+            JobType tier;
 
-		public static string ToTierString (this TranslationTier tier)
-		{
-			return tier.ToString ().ToLowerInvariant ();
-		}
+            if (Enum.TryParse<JobType>(value, true, out tier))
+            {
+                return tier;
+            }
 
-		public static TranslationTier ToTranslationTier (this string value)
-		{
-			TranslationTier tier;
+            return JobType.Text;
+        }
 
-			if (Enum.TryParse<TranslationTier> (value, true, out tier)) {
-				return tier;
-			}
+        public static string ToTierString(this TranslationTier tier)
+        {
+            return tier.ToString().ToLowerInvariant();
+        }
 
-			return TranslationTier.Unknown;
-		}
+        public static TranslationTier ToTranslationTier(this string value)
+        {
+            TranslationTier tier;
 
-		public static string ToStatusString (this TranslationStatus status)
-		{
-			return status.ToString ().ToLowerInvariant ();
-		}
+            if (Enum.TryParse<TranslationTier>(value, true, out tier))
+            {
+                return tier;
+            }
 
-		public static TranslationStatus ToTranslationStatus(this string value)
-		{
-			TranslationStatus status;
+            return TranslationTier.Unknown;
+        }
 
-			if (Enum.TryParse <TranslationStatus> (value, true, out status)) {
-				return status;
-			}
+        public static string ToStatusString(this TranslationStatus status)
+        {
+            return status.ToString().ToLowerInvariant();
+        }
 
-			return TranslationStatus.Unknown;
-		}
+        public static TranslationStatus ToTranslationStatus(this string value)
+        {
+            TranslationStatus status;
 
-		public static string ToMethodString (this HttpMethod method)
-		{
-			return method.ToString ().ToUpperInvariant ();
-		}
+            if (Enum.TryParse<TranslationStatus>(value, true, out status))
+            {
+                return status;
+            }
 
-		public static byte[] ToUTF8Bytes(this string value)
-		{
-			return Encoding.UTF8.GetBytes (value);
-		}
+            return TranslationStatus.Unknown;
+        }
 
-		public static String SHA1Hash (this String privateKey, String value)
-		{
-			var keybytes = privateKey.ToUTF8Bytes ();
-			var valuebytes = value.ToUTF8Bytes ();
+        public static string ToMethodString(this HttpMethod method)
+        {
+            return method.ToString().ToUpperInvariant();
+        }
 
-			var algo = new HMACSHA1 (keybytes);
-			var hash = algo.ComputeHash (valuebytes);
+        public static byte[] ToUTF8Bytes(this string value)
+        {
+            return Encoding.UTF8.GetBytes(value);
+        }
 
-			var sb = new StringBuilder (2 * hash.Length);
+        public static String SHA1Hash(this String privateKey, String value)
+        {
+            var keybytes = privateKey.ToUTF8Bytes();
+            var valuebytes = value.ToUTF8Bytes();
 
-			foreach (var b in hash) {
-				sb.AppendFormat ("{0:x2}", b);
-			}
+            var algo = new HMACSHA1(keybytes);
+            var hash = algo.ComputeHash(valuebytes);
 
-			return sb.ToString ();
-		}
+            var sb = new StringBuilder(2 * hash.Length);
 
-		static readonly DateTime unixEpoch = new DateTime (1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            foreach (var b in hash)
+            {
+                sb.AppendFormat("{0:x2}", b);
+            }
 
-		internal static long ToTimeStamp (this DateTime time)
-		{			
-			return (long)(time - unixEpoch).TotalSeconds;
-		}
+            return sb.ToString();
+        }
 
-		internal static DateTime ToDateFromTimestamp(this long timestamp)
-		{
-			return unixEpoch.AddSeconds (timestamp);
-		}
+        static readonly DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
-		internal static XElement ToElementIfProvided(this string value, XName name) 
-		{
-			if (string.IsNullOrWhiteSpace (value)) {
-				return null;
-			}
+        internal static long ToTimeStamp(this DateTime time)
+        {
+            return (long)(time - unixEpoch).TotalSeconds;
+        }
 
-			return new XElement(name, value);
-		}
-	}
+        internal static DateTime ToDateFromTimestamp(this long timestamp)
+        {
+            return unixEpoch.AddSeconds(timestamp);
+        }
+
+        internal static XElement ToElementIfProvided(this string value, XName name)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            return new XElement(name, value);
+        }
+    }
 }
 

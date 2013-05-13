@@ -30,24 +30,24 @@ namespace Winterday.External.Gengo.Tests.Payloads
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-	[TestClass]
-	public class LanguagePairTests
-	{
-		GengoClient client;
+    [TestClass]
+    public class LanguagePairTests
+    {
+        GengoClient client;
 
-		[TestInitialize]
-		public void SetUpAttribute()
-		{
-			client = new GengoClient (TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
-		}
+        [TestInitialize]
+        public void SetUpAttribute()
+        {
+            client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
+        }
 
-		[TestMethod]
-		public async Task TestGetLanguagePairs ()
-		{
-            var pairs = await client.GetLanguagePairs ();
-            
-			Assert.IsTrue (pairs.Length > 0);
-		}
-	}
+        [TestMethod]
+        public async Task TestGetLanguagePairs()
+        {
+            var pairs = await client.GetLanguagePairs();
+
+            Assert.IsTrue(pairs.Length > 0);
+        }
+    }
 }
 

@@ -27,42 +27,44 @@ using System;
 
 namespace Winterday.External.Gengo
 {
-	public enum JobType
-	{
-		Text,
-		File
-	}
+    public enum JobType
+    {
+        Text,
+        File
+    }
 
-	public enum ClientMode {
-		Production,
-		Sandbox
-	}
+    public enum ClientMode
+    {
+        Production,
+        Sandbox
+    }
 
-	public enum HttpMethod {
-		Get,
-		Post,
-		Delete,
-		Update
-	}
+    public enum HttpMethod
+    {
+        Get,
+        Post,
+        Delete,
+        Update
+    }
 
-	public enum TranslationTier
-	{
-		Machine,
-		Standard,
-		Pro,
-		Ultra,
-		Unknown
-	}
+    public enum TranslationTier
+    {
+        Machine,
+        Standard,
+        Pro,
+        Ultra,
+        Unknown
+    }
 
-	public enum TranslationStatus
-	{
-		Available,
-		Pending,
-		Reviewable,
-		Revising,
-		Approved,
-		Cancelled,
-		Unknown
-	}
+    public enum TranslationStatus
+    {
+        Available,
+        Pending,
+        Reviewable,
+        Revising,
+        Approved,
+        Cancelled,
+        Unknown
+    }
 }
 

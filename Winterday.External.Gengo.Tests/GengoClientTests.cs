@@ -26,12 +26,12 @@
 
 namespace Winterday.External.Gengo.Tests
 {
-	using System;
+    using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-	[TestClass]
-	public class GengoClientTests
-	{
+    [TestClass]
+    public class GengoClientTests
+    {
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorFailsOnRelativeUri()
@@ -40,12 +40,12 @@ namespace Winterday.External.Gengo.Tests
             Assert.Fail("Constructor did not throw exception");
         }
 
-		[TestMethod]
-		public void TestConstructorValidatesCustomUri ()
+        [TestMethod]
+        public void TestConstructorValidatesCustomUri()
         {
-			var client = new GengoClient("foo", "bar", "http://www.example.com");
+            var client = new GengoClient("foo", "bar", "http://www.example.com");
             Assert.IsTrue(true);
-		}
+        }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
@@ -64,50 +64,50 @@ namespace Winterday.External.Gengo.Tests
         }
 
         [TestMethod]
-		public void TestBuildUriMinimalConstructor ()
-		{
+        public void TestBuildUriMinimalConstructor()
+        {
             String expected = GengoClient.ProductionBaseUri + "bazinga?api_key=bar";
-			
-			var prodClient = new GengoClient ("foo", "bar");
-			var uri = prodClient.BuildUri ("bazinga", false);
-			
-			Assert.AreEqual (expected, uri.ToString ());
-		}
+
+            var prodClient = new GengoClient("foo", "bar");
+            var uri = prodClient.BuildUri("bazinga", false);
+
+            Assert.AreEqual(expected, uri.ToString());
+        }
 
         [TestMethod]
-		public void TestBuildUriProductionConstructor ()
-		{
+        public void TestBuildUriProductionConstructor()
+        {
             String expected = GengoClient.ProductionBaseUri + "bazinga?api_key=bar";
-			
-			var prodClient = new GengoClient ("foo", "bar", ClientMode.Production);
-			var uri = prodClient.BuildUri ("bazinga", false);
-			
-			Assert.AreEqual (expected, uri.ToString ());
-		}
+
+            var prodClient = new GengoClient("foo", "bar", ClientMode.Production);
+            var uri = prodClient.BuildUri("bazinga", false);
+
+            Assert.AreEqual(expected, uri.ToString());
+        }
 
         [TestMethod]
-		public void TestBuildUriSandboxConstructor ()
-		{
+        public void TestBuildUriSandboxConstructor()
+        {
             String expected = GengoClient.SandboxBaseUri + "bazinga?api_key=bar";
-			
-			var prodClient = new GengoClient ("foo", "bar", ClientMode.Sandbox);
-			var uri = prodClient.BuildUri ("bazinga", false);
-			
-			Assert.AreEqual (expected, uri.ToString ());
-		}
+
+            var prodClient = new GengoClient("foo", "bar", ClientMode.Sandbox);
+            var uri = prodClient.BuildUri("bazinga", false);
+
+            Assert.AreEqual(expected, uri.ToString());
+        }
 
         [TestMethod]
-		public void TestBuildUriCustomUriConstructor ()
-		{
-			String customUri = "http://www.example.com/";
+        public void TestBuildUriCustomUriConstructor()
+        {
+            String customUri = "http://www.example.com/";
             String expected = customUri + "bazinga?api_key=bar";
-			
-			var prodClient = new GengoClient ("foo", "bar", customUri);
-			var uri = prodClient.BuildUri ("bazinga", false);
-			
-			Assert.AreEqual (expected, uri.ToString ());
-		}
 
-	}
+            var prodClient = new GengoClient("foo", "bar", customUri);
+            var uri = prodClient.BuildUri("bazinga", false);
+
+            Assert.AreEqual(expected, uri.ToString());
+        }
+
+    }
 }
 

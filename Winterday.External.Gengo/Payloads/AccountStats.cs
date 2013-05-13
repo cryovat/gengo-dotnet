@@ -25,40 +25,45 @@
 // THE SOFTWARE.
 namespace Winterday.External.Gengo.Payloads
 {
-	using System;
-	using System.Xml.Linq;
+    using System;
+    using System.Xml.Linq;
 
-	public class AccountStats
-	{
-		readonly decimal _creditsSpent;
-		readonly DateTime _userSince;
+    public class AccountStats
+    {
+        readonly decimal _creditsSpent;
+        readonly DateTime _userSince;
 
-		public decimal CreditsSpent {
-			get {
-				return _creditsSpent;
-			}
-		}
+        public decimal CreditsSpent
+        {
+            get
+            {
+                return _creditsSpent;
+            }
+        }
 
-		public DateTime UserSince {
-			get {
-				return _userSince;
-			}
-		}
+        public DateTime UserSince
+        {
+            get
+            {
+                return _userSince;
+            }
+        }
 
-		AccountStats (decimal creditsSpent, DateTime userSince)
-		{
-			_creditsSpent = creditsSpent;
-			_userSince = userSince;
-		}
+        AccountStats(decimal creditsSpent, DateTime userSince)
+        {
+            _creditsSpent = creditsSpent;
+            _userSince = userSince;
+        }
 
-		internal static AccountStats FromXContainer(XContainer c) {
-			
-			return new AccountStats(
-				c.Element ("credits_spent").Value.ToDecimal(),
-				c.Element ("user_since").Value.ToLong().ToDateFromTimestamp()
-				);
-			
-		}
-	}
+        internal static AccountStats FromXContainer(XContainer c)
+        {
+
+            return new AccountStats(
+                c.Element("credits_spent").Value.ToDecimal(),
+                c.Element("user_since").Value.ToLong().ToDateFromTimestamp()
+                );
+
+        }
+    }
 }
 
