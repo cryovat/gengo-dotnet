@@ -55,12 +55,11 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Endpoints\JobsTests.cs" />
+    <Compile Include="Endpoints\ServiceTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="GengoClientTests.cs" />
-    <Compile Include="Payloads\AccountInfoTests.cs" />
+    <Compile Include="Endpoints\AccountTests.cs" />
     <Compile Include="Payloads\CommentsTests.cs" />
-    <Compile Include="Payloads\LanguagePairTests.cs" />
-    <Compile Include="Payloads\LanguageTests.cs" />
     <Compile Include="TestKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -41,7 +41,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Endpoints\AccountEndpoint.cs" />
     <Compile Include="Endpoints\JobsEndpoint.cs" />
+    <Compile Include="Endpoints\ServiceEndpoint.cs" />
     <Compile Include="Payloads\Comment.cs" />
     <Compile Include="Payloads\Confirmation.cs" />
     <Compile Include="Payloads\Job.cs" />

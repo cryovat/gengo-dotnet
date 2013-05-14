@@ -46,12 +46,6 @@ namespace Winterday.External.Gengo
         internal const string ProductionBaseUri = "http://api.gengo.com/v2/";
         internal const string SandboxBaseUri = "http://api.sandbox.gengo.com/v2/";
 
-        internal const string UriPartLanguages = "translate/service/languages";
-        internal const string UriPartLanguagePairs = "translate/service/language_pairs";
-
-        internal const string UriPartStats = "account/stats";
-        internal const string UriPartBalance = "account/balance";
-
         internal const string UriPartComment = "translate/job/{0}/comment";
         internal const string UriPartComments = "translate/job/{0}/comments";
 
@@ -64,7 +58,9 @@ namespace Winterday.External.Gengo
         readonly Uri _baseUri;
         readonly HttpClient _client = new HttpClient();
 
+        AccountEndpoint _account;
         JobsEndpoint _jobs;
+        ServiceEndpoint _service;
 
         bool _disposed;
 
@@ -76,9 +72,19 @@ namespace Winterday.External.Gengo
             }
         }
 
+        public AccountEndpoint Account
+        {
+            get { return _account; }
+        }
+
         public JobsEndpoint Jobs
         {
             get { return _jobs; }
+        }
+
+        public ServiceEndpoint Service
+        {
+            get { return _service; }
         }
 
         public GengoClient(string privateKey, string publicKey)
@@ -139,7 +145,9 @@ namespace Winterday.External.Gengo
 
         private void initClient()
         {
+            _account = new AccountEndpoint(this);
             _jobs = new JobsEndpoint(this);
+            _service = new ServiceEndpoint(this);
 
             var assemblyName = GetType().Assembly.GetName();
             var headers = _client.DefaultRequestHeaders;
@@ -147,36 +155,6 @@ namespace Winterday.External.Gengo
             headers.UserAgent.Add(new ProductInfoHeaderValue(assemblyName.Name, assemblyName.Version.ToString()));
             headers.AcceptCharset.Add(new StringWithQualityHeaderValue("utf-8"));
             headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MimeTypeApplicationJson));
-        }
-
-        public async Task<Language[]> GetLanguages()
-        {
-            var json = await GetJsonAsync<JArray>(UriPartLanguages, false);
-            
-            return json.Values<JObject>().Select(e => Language.FromJObject(e)).ToArray();
-        }
-
-        public async Task<LanguagePair[]> GetLanguagePairs()
-        {
-            var json = await GetJsonAsync<JArray>(UriPartLanguagePairs, false);
-
-            return json.Values<JObject>().Select(e => LanguagePair.FromJObject(e)).ToArray();
-        }
-
-        public async Task<AccountStats> GetStats()
-        {
-
-            var json = await GetJsonAsync<JObject>(UriPartStats, true);
-
-            return AccountStats.FromJObject(json);
-        }
-
-        public async Task<decimal> GetBalance()
-        {
-
-            var json = await GetJsonAsync<JObject>(UriPartBalance, true);
-
-            return json.Value<decimal>("credits");
         }
 
         // TODO: Implement tests

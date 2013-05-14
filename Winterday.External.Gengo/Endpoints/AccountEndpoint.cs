@@ -1,5 +1,5 @@
-//
-// AccountInfoTests.cs
+﻿//
+// AccountEndpoint.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -24,40 +24,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Winterday.External.Gengo.Tests.Payloads
+
+namespace Winterday.External.Gengo.Endpoints
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
-    public class AccountInfoTest
+    using Newtonsoft.Json.Linq;
+
+    using Winterday.External.Gengo.Payloads;
+    using Winterday.External.Gengo.Properties;
+
+    public class AccountEndpoint
     {
-        GengoClient client;
+        internal const string UriPartStats = "account/stats";
+        internal const string UriPartBalance = "account/balance";
 
-        [TestInitialize]
-        public void SetUpAttribute()
+        readonly GengoClient _client;
+
+        internal AccountEndpoint(GengoClient client)
         {
-            client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
+            if (client == null)
+                throw new ArgumentNullException("client");
+
+            _client = client;
         }
 
-        [TestMethod]
-        public async Task TestGetStats()
+        public async Task<decimal> GetBalance()
         {
-            var stats = await client.GetStats();
+            var json = await _client.GetJsonAsync<JObject>(UriPartBalance, true);
 
-            Assert.IsNotNull(stats);
-            Assert.AreNotEqual(new DateTime(), stats.UserSince);
-            Assert.IsTrue(0 != stats.CreditsSpent);
+            return json.Value<decimal>("credits");
         }
 
-        [TestMethod]
-        public async Task TestGetBalance()
+        public async Task<AccountStats> GetStats()
         {
-            var balance = await client.GetBalance();
+            var json = await _client.GetJsonAsync<JObject>(UriPartStats, true);
 
-            Assert.IsTrue(balance > 0);
+            return AccountStats.FromJObject(json);
         }
     }
 }
-

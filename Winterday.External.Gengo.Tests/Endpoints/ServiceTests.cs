@@ -1,5 +1,5 @@
-//
-// LanguagePairTests.cs
+﻿//
+// ServiceTests.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -24,15 +24,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Winterday.External.Gengo.Tests.Payloads
+namespace Winterday.External.Gengo.Tests.Endpoints
 {
-    using System.Linq;
+    using System;
     using System.Threading.Tasks;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Winterday.External.Gengo.Payloads;
+
     [TestClass]
-    public class LanguageTests
+    public class ServiceTests
     {
         GengoClient client;
 
@@ -43,12 +45,19 @@ namespace Winterday.External.Gengo.Tests.Payloads
         }
 
         [TestMethod]
+        public async Task TestGetLanguagePairs()
+        {
+            var pairs = await client.Service.GetLanguagePairs();
+
+            Assert.IsTrue(pairs.Length > 0);
+        }
+
+        [TestMethod]
         public async Task TestGetLanguages()
         {
-            var langs = await client.GetLanguages();
+            var langs = await client.Service.GetLanguages();
 
             Assert.IsTrue(langs.Length > 0);
         }
     }
 }
-
