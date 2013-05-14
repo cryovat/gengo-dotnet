@@ -1,5 +1,5 @@
 //
-// AccountStatsTests.cs
+// AccountInfoTests.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>

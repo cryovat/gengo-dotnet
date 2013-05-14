@@ -1,5 +1,5 @@
 ﻿//
-// LanguagePair.cs
+// Comment.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>

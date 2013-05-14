@@ -1,5 +1,5 @@
 ﻿//
-// LanguagePairTests.cs
+// CommentsTests.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
