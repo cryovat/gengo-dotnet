@@ -27,7 +27,8 @@
 namespace Winterday.External.Gengo.Payloads
 {
     using System;
-    using System.Xml.Linq;
+
+    using Newtonsoft.Json.Linq;
 
     public class Language
     {
@@ -97,14 +98,14 @@ namespace Winterday.External.Gengo.Payloads
             return String.Format("Name: {0}, LocalizedName: {1}, Code: {2}, UnitType: {3}", _name, _localizedName, _code, _unitType);
         }
 
-        internal static Language FromXContainer(XContainer c)
+        internal static Language FromJObject(JObject c)
         {
 
             return new Language(
-                c.Element("language").Value,
-                c.Element("localized_name").Value,
-                c.Element("lc").Value,
-                c.Element("unit_type").Value
+                c.Value<string>("language"),
+                c.Value<string>("localized_name"),
+                c.Value<string>("lc"),
+                c.Value<string>("unit_type")
                 );
 
         }

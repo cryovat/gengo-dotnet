@@ -27,11 +27,13 @@
 namespace Winterday.External.Gengo.Payloads
 {
     using System;
-    using System.Xml.Linq;
+
+    using Newtonsoft.Json.Linq;
 
     public class AccountStats
     {
         readonly decimal _creditsSpent;
+        readonly string _currency;
         readonly DateTime _userSince;
 
         public decimal CreditsSpent
@@ -39,6 +41,14 @@ namespace Winterday.External.Gengo.Payloads
             get
             {
                 return _creditsSpent;
+            }
+        }
+
+        public string Currency
+        {
+            get
+            {
+                return _currency;
             }
         }
 
@@ -50,18 +60,20 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
-        AccountStats(decimal creditsSpent, DateTime userSince)
+        AccountStats(decimal creditsSpent, string currency, DateTime userSince)
         {
             _creditsSpent = creditsSpent;
+            _currency = currency;
             _userSince = userSince;
         }
 
-        internal static AccountStats FromXContainer(XContainer c)
+        internal static AccountStats FromJObject(JObject o)
         {
 
             return new AccountStats(
-                c.Element("credits_spent").Value.ToDecimal(),
-                c.Element("user_since").Value.ToLong().ToDateFromTimestamp()
+                o.Value<string>("credits_spent").ToDecimal(),
+                o.Value<string>("currency"),
+                o.Value<string>("user_since").ToLong().ToDateFromTimestamp()
                 );
 
         }

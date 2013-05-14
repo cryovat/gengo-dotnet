@@ -27,7 +27,8 @@
 namespace Winterday.External.Gengo.Payloads
 {
     using System;
-    using System.Xml.Linq;
+
+    using Newtonsoft.Json.Linq;
 
     public class LanguagePair
     {
@@ -93,14 +94,16 @@ namespace Winterday.External.Gengo.Payloads
             return String.Format("FromLanguage: {0}, ToLanguage: {1}, Tier: {2}, UnitPrice: {3}", _fromLanguage, _toLanguage, _tier, _unitPrice);
         }
 
-        internal static LanguagePair FromXContainer(XContainer c)
+
+
+        internal static LanguagePair FromJObject(JObject o)
         {
 
             return new LanguagePair(
-                c.Element("lc_src").Value,
-                c.Element("lc_tgt").Value,
-                c.Element("tier").Value,
-                c.Element("unit_price").Value.ToDecimal()
+                o.Value<string>("lc_src"),
+                o.Value<string>("lc_tgt"),
+                o.Value<string>("tier"),
+                o.Value<decimal>("unit_price")
                 );
 
         }

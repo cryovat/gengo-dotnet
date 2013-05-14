@@ -29,11 +29,13 @@ namespace Winterday.External.Gengo
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Net.Mime;
+    using System.Text;
     using System.Threading.Tasks;
-    using System.Xml.Linq;
+
+    using Newtonsoft.Json.Linq;
 
     using Winterday.External.Gengo.Payloads;
 
@@ -52,6 +54,7 @@ namespace Winterday.External.Gengo
         internal const string UriPartComments = "translate/job/{0}/comments";
 
         internal const string MimeTypeApplicationXml = "application/xml";
+        internal const string MimeTypeApplicationJson = "application/json";
 
         readonly string _privateKey;
         readonly string _publicKey;
@@ -132,45 +135,77 @@ namespace Winterday.External.Gengo
 
             headers.UserAgent.Add(new ProductInfoHeaderValue(assemblyName.Name, assemblyName.Version.ToString()));
             headers.AcceptCharset.Add(new StringWithQualityHeaderValue("utf-8"));
-            headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MimeTypeApplicationXml));
+            headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MimeTypeApplicationJson));
         }
 
         public async Task<Language[]> GetLanguages()
         {
-            var xml = await GetXmlAsync(UriPartLanguages, false);
-
-            return xml.Elements().Select(e => Language.FromXContainer(e)).ToArray();
+            var json = await GetJsonAsync<JArray>(UriPartLanguages, false);
+            
+            return json.Values<JObject>().Select(e => Language.FromJObject(e)).ToArray();
         }
 
         public async Task<LanguagePair[]> GetLanguagePairs()
         {
-            var xml = await GetXmlAsync(UriPartLanguagePairs, false);
+            var json = await GetJsonAsync<JArray>(UriPartLanguagePairs, false);
 
-            return xml.Elements().Select(e => LanguagePair.FromXContainer(e)).ToArray();
+            return json.Values<JObject>().Select(e => LanguagePair.FromJObject(e)).ToArray();
         }
 
         public async Task<AccountStats> GetStats()
         {
 
-            var xml = await GetXmlAsync(UriPartStats, true);
+            var json = await GetJsonAsync<JObject>(UriPartStats, true);
 
-            return AccountStats.FromXContainer(xml);
+            return AccountStats.FromJObject(json);
         }
 
         public async Task<decimal> GetBalance()
         {
 
-            var xml = await GetXmlAsync(UriPartBalance, true);
+            var json = await GetJsonAsync<JObject>(UriPartBalance, true);
 
-            return xml.Element("credits").Value.ToDecimal();
+            return json.Value<decimal>("credits");
         }
 
         // TODO: Implement tests
         public async Task<Comment[]> GetComments(int jobID)
         {
-            var xml = await GetXmlAsync(string.Format(UriPartComments, jobID), true);
+            var xml = await GetJsonAsync<JObject>(string.Format(UriPartComments, jobID), true);
+            throw new NotImplementedException();
+            //return xml.Element("thread").Elements().Select(e => Comment.FromXContainer(jobID, e)).ToArray();
+        }
 
-            return xml.Element("thread").Elements().Select(e => Comment.FromXContainer(jobID, e)).ToArray();
+        // TODO: Implement tests
+        public async Task PostComment(int jobID, string body)
+        {
+            if (String.IsNullOrWhiteSpace(body)) throw new ArgumentException("Comment body not provided", "body");
+
+            var json = new JObject(new JProperty("body", body));
+
+            await PostJsonAsync<JToken>(string.Format(UriPartComment, jobID), json);
+        }
+
+        internal void AddAuthData(Dictionary<string, string> dict)
+        {
+            AddAuthData(dict, true);
+        }
+
+        internal void AddAuthData(Dictionary<string, string> dict, bool authenticated)
+        {
+            if (dict == null) throw new ArgumentNullException("dict");
+
+            dict["api_key"] = _publicKey;
+
+            if (authenticated)
+            {
+                var ts = DateTime.UtcNow.ToTimeStamp().ToString();
+                var hash = _privateKey.SHA1Hash(ts);
+
+                dict["ts"] = ts;
+                dict["api_sig"] = hash;
+
+            }
         }
 
         internal Uri BuildUri(String uriPart, bool authenticated)
@@ -187,17 +222,8 @@ namespace Winterday.External.Gengo
                 throw new ArgumentException("Uri part not valid relative uri", "baseUri");
 
             query = query ?? new Dictionary<string, string>();
-            query["api_key"] = _publicKey;
-
-            if (authenticated)
-            {
-                var ts = DateTime.UtcNow.ToTimeStamp().ToString();
-                var hash = _privateKey.SHA1Hash(ts);
-
-                query["ts"] = ts;
-                query["api_sig"] = hash;
-
-            }
+            
+            AddAuthData(query, authenticated);
 
             return new Uri(_baseUri, uriPart + query.ToQueryString());
         }
@@ -207,53 +233,72 @@ namespace Winterday.External.Gengo
             return _client.GetStringAsync(BuildUri(uriPart, authenticated));
         }
 
-        internal async Task<XElement> GetXmlAsync(String uriPart, bool authenticated)
+        internal async Task<JsonT> GetJsonAsync<JsonT>(String uriPart, bool authenticated) where JsonT : JToken
         {
-            var rawXml = await GetStringAsync(uriPart, authenticated);
+            var rawJson = await GetStringAsync(uriPart, authenticated);
 
-            return UnpackXml(rawXml);
+            return UnpackJson<JsonT>(rawJson);
         }
 
-        internal XElement UnpackXml(String rawXml)
+        internal async Task<JsonT> PostFormAsync<JsonT>(String uriPart, Dictionary<string, string> values) where JsonT : JToken
         {
-            var root = XDocument.Parse(rawXml).Root;
-            var opstatElm = root.Element("opstat");
+            if (values == null) throw new ArgumentNullException("values");
 
-            if (opstatElm == null)
-                throw new InvalidOperationException("Response XML did not contain opstat");
+            var auth = new Dictionary<string, string>();
 
-            var opstat = opstatElm.Value.ToLower();
+            AddAuthData(auth);
 
-            var errElm = root.Element("err");
+            var data = new FormUrlEncodedContent(values);
 
-            var responseElm = root.Element("response");
+            var response = await _client.PostAsync(new Uri(_baseUri, uriPart), data);
+            var responseStr = await response.Content.ReadAsStringAsync();
 
-            if (opstat == "error" && errElm == null)
+            
+
+            return UnpackJson<JsonT>(responseStr);
+        }
+
+        internal async Task<JsonT> PostJsonAsync<JsonT>(String uriPart, JToken json) where JsonT : JToken
+        {
+            if (json == null) throw new ArgumentNullException("json");
+
+            var auth = new Dictionary<string, string>();
+
+            AddAuthData(auth);
+            
+            var multi = new MultipartFormDataContent();
+
+            foreach (var pair  in auth)
             {
-                throw new GengoException(null, opstat, null);
+                multi.Add(new StringContent(pair.Value, Encoding.UTF8, MediaTypeNames.Text.Plain), pair.Key);
             }
-            if (opstat == "error" && errElm != null)
+
+            var data = new StringContent(json.ToString(), Encoding.UTF8, MimeTypeApplicationJson);
+
+            multi.Add(data, "data");
+
+            var response = await _client.PostAsync(new Uri(_baseUri, uriPart), multi);
+            var responseStr = await response.Content.ReadAsStringAsync();
+
+            return UnpackJson<JsonT>(responseStr);
+        }
+
+        internal JsonT UnpackJson<JsonT>(String rawXml) where JsonT : JToken
+        {
+            var json = JObject.Parse(rawXml);
+
+            var opstat = json.Value<string>("opstat");
+            var errObj = json.Value<JObject>("err");
+
+            if (errObj == null) {
+                return json["response"] as JsonT;
+            } else 
             {
-                var msgElm = errElm.Element("msg");
-                var codeElm = errElm.Element("code");
-
-                string message = null;
-                string code = null;
-
-                if (msgElm != null)
-                    message = msgElm.Value;
-
-                if (codeElm != null)
-                    code = codeElm.Value;
+                string message = errObj.Value<string>("msg");;
+                string code = errObj.Value<string>("code");;
 
                 throw new GengoException(message, opstat, code);
             }
-            if (responseElm != null)
-            {
-                return responseElm;
-            }
-
-            return new XElement("response");
         }
 
         public void Dispose()

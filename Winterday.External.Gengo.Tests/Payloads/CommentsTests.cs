@@ -28,7 +28,6 @@ namespace Winterday.External.Gengo.Tests.Payloads
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Xml.Linq;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -48,6 +47,15 @@ namespace Winterday.External.Gengo.Tests.Payloads
         public async Task TestThrowsOnInvalidJobId()
         {
             var comments = await client.GetComments(int.MaxValue);
+
+            Assert.Fail("Did not throw exception");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(GengoException))]
+        public async Task TestThrowsOnInvalidJobId2()
+        {
+            await client.PostComment(int.MaxValue, "hi there");
 
             Assert.Fail("Did not throw exception");
         }

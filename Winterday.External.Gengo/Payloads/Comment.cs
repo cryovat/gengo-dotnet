@@ -28,7 +28,8 @@ namespace Winterday.External.Gengo.Payloads
 {
     using System;
     using System.Linq;
-    using System.Xml.Linq;
+
+    using Newtonsoft.Json.Linq;
 
     public class Comment
     {
@@ -77,14 +78,14 @@ namespace Winterday.External.Gengo.Payloads
             _created = created;
         }
 
-        internal static Comment FromXContainer(int jobID, XContainer c)
+        internal static Comment FromJObject(int jobID, JObject c)
         {
-            var created = long.Parse(c.Element("ctime").Value);
+            var created = long.Parse(c.Value<string>("ctime"));
 
             return new Comment(
                 jobID,
-                c.Element("body").Value,
-                c.Element("author").Value.ToAuthorType(),
+                c.Value<string>("body"),
+                c.Value<string>("author").ToAuthorType(),
                 created.ToDateFromTimestamp()
                 );
 
