@@ -99,7 +99,7 @@ namespace Winterday.External.Gengo.Endpoints
                 UriPartJobsEndpoint,
                 payload);
 
-            return new Confirmation(response);
+            return new Confirmation(jobsObj, response);
         }
     }
 }

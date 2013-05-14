@@ -46,6 +46,7 @@
     <Compile Include="Endpoints\ServiceEndpoint.cs" />
     <Compile Include="Payloads\Comment.cs" />
     <Compile Include="Payloads\Confirmation.cs" />
+    <Compile Include="Payloads\DuplicateSubmission.cs" />
     <Compile Include="Payloads\Job.cs" />
     <Compile Include="Payloads\SubmittedJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -81,5 +81,24 @@ namespace Winterday.External.Gengo.Tests.Endpoints
 
             Assert.AreEqual(2, res.JobCount);
         }
+
+        [TestMethod]
+        public async Task TestSubmitSameTwice()
+        {
+            var job1Dt = DateTime.Now;
+
+            var job1 = new Job
+            {
+                Slug = "job 1 - " + job1Dt.ToTimeStamp(),
+                Body = job1Dt.ToString(),
+                SourceLanguage = "ja",
+                TargetLanguage = "en",
+            };
+
+            var first = await client.Jobs.Submit(false, true, job1);
+            var second = await client.Jobs.Submit(false, true, job1);
+
+            Assert.AreNotEqual(0, second.Duplicates.Count);
+        }
     }
 }

@@ -27,6 +27,7 @@
 namespace Winterday.External.Gengo.Payloads
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
 
     using Newtonsoft.Json.Linq;
@@ -40,6 +41,9 @@ namespace Winterday.External.Gengo.Payloads
         decimal _creditsUsed;
 
         string _currency;
+
+        readonly List<DuplicateSubmission> _dupes;
+        readonly IReadOnlyList<DuplicateSubmission> _dupesRo;
 
         public int GroupId
         {
@@ -66,36 +70,54 @@ namespace Winterday.External.Gengo.Payloads
             get { return _currency; }
         }
 
-        internal Confirmation(JObject obj)
+        public IReadOnlyList<DuplicateSubmission> Duplicates
         {
-            if (obj == null)
-                throw new ArgumentNullException("obj");
+            get { return _dupesRo; }
+        }
+
+        internal Confirmation(JObject submitted, JObject result)
+        {
+            if (submitted == null)
+                throw new ArgumentNullException("submitted");
+            
+            if (result == null)
+                throw new ArgumentNullException("result");
 
             Int32.TryParse(
-                obj.Value<string>("group_id"),
+                result.Value<string>("group_id"),
                 NumberStyles.Integer,
                 CultureInfo.InvariantCulture,
                 out _groupId);
 
             Int32.TryParse(
-                obj.Value<string>("job_count"),
+                result.Value<string>("job_count"),
                 NumberStyles.Integer,
                 CultureInfo.InvariantCulture,
                 out _jobCount);
 
             Int32.TryParse(
-                obj.Value<string>("order_id"),
+                result.Value<string>("order_id"),
                 NumberStyles.Integer,
                 CultureInfo.InvariantCulture,
                 out _orderId);
 
             Decimal.TryParse(
-                obj.Value<string>("credits_used"),
+                result.Value<string>("credits_used"),
                 NumberStyles.Any,
                 CultureInfo.InvariantCulture,
                 out _creditsUsed);
 
-            _currency = obj.Value<string>("currency");
+            _currency = result.Value<string>("currency");
+
+            _dupes = new List<DuplicateSubmission>();
+            _dupesRo = _dupes.AsReadOnly();
+            
+            var dupesObj = result["jobs"] as JObject;
+
+            if (dupesObj != null)
+            {
+                // TODO: Implement
+            }
         }
 
 
