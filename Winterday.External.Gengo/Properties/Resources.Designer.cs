@@ -106,6 +106,15 @@ namespace Winterday.External.Gengo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One or more of the jobs were already submitted..
+        /// </summary>
+        internal static string JobIsAlreadySubmitted {
+            get {
+                return ResourceManager.GetString("JobIsAlreadySubmitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot modify value, job is read-only..
         /// </summary>
         internal static string JobIsReadOnly {

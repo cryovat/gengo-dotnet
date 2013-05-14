@@ -76,6 +76,10 @@ namespace Winterday.External.Gengo.Endpoints
 
             foreach (var item in jobs)
             {
+                if (item is SubmittedJob)
+                    throw new ArgumentException(
+                        Resources.JobIsAlreadySubmitted);
+
                 jobsObj["job_" + count] = item.ToJObject();
 
                 count += 1;
