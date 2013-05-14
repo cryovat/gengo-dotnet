@@ -250,8 +250,6 @@ namespace Winterday.External.Gengo
             var response = await _client.PostAsync(new Uri(_baseUri, uriPart), data);
             var responseStr = await response.Content.ReadAsStringAsync();
 
-            
-
             return UnpackJson<JsonT>(responseStr);
         }
 
