@@ -9,7 +9,7 @@ API for translation.
 * **Dependencies:** [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json/)
 * **Supported platforms:** .NET 4.5 (Mono to come)
 * **Gengo API version:** V2
-* 
+
 Supported methods
 -----------------
 
