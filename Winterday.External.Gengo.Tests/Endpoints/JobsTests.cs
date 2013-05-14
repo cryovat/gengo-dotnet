@@ -1,5 +1,5 @@
-//
-// AccountInfoTests.cs
+﻿//
+// JobsTests.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -24,14 +24,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Winterday.External.Gengo.Tests.Payloads
+namespace Winterday.External.Gengo.Tests.Endpoints
 {
     using System;
     using System.Threading.Tasks;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Winterday.External.Gengo.Payloads;
+
     [TestClass]
-    public class AccountInfoTest
+    public class JobsTests
     {
         GengoClient client;
 
@@ -42,22 +45,41 @@ namespace Winterday.External.Gengo.Tests.Payloads
         }
 
         [TestMethod]
-        public async Task TestGetStats()
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task TestThrowsOnNoJobs()
         {
-            var stats = await client.GetStats();
+            var res = await client.Jobs.Submit(true, true);
 
-            Assert.IsNotNull(stats);
-            Assert.AreNotEqual(new DateTime(), stats.UserSince);
-            Assert.IsTrue(0 != stats.CreditsSpent);
+            Assert.Fail("Exception was not thrown");
         }
 
         [TestMethod]
-        public async Task TestGetBalance()
+        public async Task TestSubmitTwoJobs()
         {
-            var balance = await client.GetBalance();
+            var job1Dt = DateTime.Now;
 
-            Assert.IsTrue(balance > 0);
+            var job1 = new Job
+            {
+                Slug = "job 1 - " + job1Dt.ToTimeStamp(),
+                Body = job1Dt.ToString(),
+                SourceLanguage = "ja",
+                TargetLanguage = "en",
+            };
+
+            var job2Dt = DateTime.Now;
+
+            var job2 = new Job
+            {
+                Slug = "job 2 - " + job1Dt.ToTimeStamp(),
+                Body = job2Dt.ToString(),
+                SourceLanguage = "en",
+                TargetLanguage = "ja",
+                CallbackUrl = new Uri("http://www.zombo.com")
+            };
+
+            var res = await client.Jobs.Submit(false, true, job1, job2);
+
+            Assert.AreEqual(2, res.JobCount);
         }
     }
 }
-

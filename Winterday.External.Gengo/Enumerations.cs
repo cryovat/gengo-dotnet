@@ -56,8 +56,8 @@ namespace Winterday.External.Gengo
 
     public enum TranslationTier
     {
-        Machine,
         Standard,
+        Machine,
         Pro,
         Ultra,
         Unknown

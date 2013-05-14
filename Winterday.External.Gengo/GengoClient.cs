@@ -37,7 +37,9 @@ namespace Winterday.External.Gengo
 
     using Newtonsoft.Json.Linq;
 
+    using Winterday.External.Gengo.Endpoints;
     using Winterday.External.Gengo.Payloads;
+    using Winterday.External.Gengo.Properties;
 
     public class GengoClient : IDisposable
     {
@@ -62,6 +64,8 @@ namespace Winterday.External.Gengo
         readonly Uri _baseUri;
         readonly HttpClient _client = new HttpClient();
 
+        JobsEndpoint _jobs;
+
         bool _disposed;
 
         public bool IsDisposed
@@ -70,6 +74,11 @@ namespace Winterday.External.Gengo
             {
                 return _disposed;
             }
+        }
+
+        public JobsEndpoint Jobs
+        {
+            get { return _jobs; }
         }
 
         public GengoClient(string privateKey, string publicKey)
@@ -130,6 +139,8 @@ namespace Winterday.External.Gengo
 
         private void initClient()
         {
+            _jobs = new JobsEndpoint(this);
+
             var assemblyName = GetType().Assembly.GetName();
             var headers = _client.DefaultRequestHeaders;
 
@@ -228,6 +239,14 @@ namespace Winterday.External.Gengo
             return new Uri(_baseUri, uriPart + query.ToQueryString());
         }
 
+        internal async Task<JsonT> DeleteAsync<JsonT>(String uripart) where JsonT : JToken
+        {
+            var response = await  _client.DeleteAsync(BuildUri(uripart, true));
+            var responseStr = await response.Content.ReadAsStringAsync();
+
+            return UnpackJson<JsonT>(responseStr);
+        }
+
         internal Task<string> GetStringAsync(String uriPart, bool authenticated)
         {
             return _client.GetStringAsync(BuildUri(uriPart, authenticated));
@@ -283,9 +302,9 @@ namespace Winterday.External.Gengo
             return UnpackJson<JsonT>(responseStr);
         }
 
-        internal JsonT UnpackJson<JsonT>(String rawXml) where JsonT : JToken
+        internal JsonT UnpackJson<JsonT>(String rawJson) where JsonT : JToken
         {
-            var json = JObject.Parse(rawXml);
+            var json = JObject.Parse(rawJson);
 
             var opstat = json.Value<string>("opstat");
             var errObj = json.Value<JObject>("err");

@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Endpoints\JobsTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="GengoClientTests.cs" />
     <Compile Include="Payloads\AccountInfoTests.cs" />
