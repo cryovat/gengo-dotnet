@@ -118,16 +118,43 @@ namespace Winterday.External.Gengo
             return type.ToString().ToLowerInvariant();
         }
 
-        public static JobType ToJobType(this string value)
+        public static EnumT TryParseEnum<EnumT>(this string value, EnumT defaultValue, bool removeSpaces) where EnumT : struct
         {
-            JobType tier;
-
-            if (Enum.TryParse<JobType>(value, true, out tier))
+            EnumT result = defaultValue;
+            
+            if (removeSpaces)
             {
-                return tier;
+                value = (value ?? String.Empty).Replace(" ", "");
             }
 
-            return JobType.Text;
+            if (Enum.TryParse<EnumT>(value, true, out result))
+            {
+                return result;
+            }
+
+            return defaultValue;
+        }
+
+        public static AuthorType ToAuthorType(this string value)
+        {
+            return value.TryParseEnum(AuthorType.Unknown, true); 
+        }
+
+        public static string ToAuthorString(this AuthorType type)
+        {
+            if (type == AuthorType.SeniorTranslator)
+            {
+                return "senior translator";
+            }
+            else
+            {
+                return type.ToString().ToLowerInvariant();
+            }
+        }
+
+        public static JobType ToJobType(this string value)
+        {
+            return value.TryParseEnum(JobType.Text, false);
         }
 
         public static string ToTierString(this TranslationTier tier)
@@ -137,14 +164,7 @@ namespace Winterday.External.Gengo
 
         public static TranslationTier ToTranslationTier(this string value)
         {
-            TranslationTier tier;
-
-            if (Enum.TryParse<TranslationTier>(value, true, out tier))
-            {
-                return tier;
-            }
-
-            return TranslationTier.Unknown;
+            return value.TryParseEnum(TranslationTier.Unknown, false);
         }
 
         public static string ToStatusString(this TranslationStatus status)
@@ -154,14 +174,7 @@ namespace Winterday.External.Gengo
 
         public static TranslationStatus ToTranslationStatus(this string value)
         {
-            TranslationStatus status;
-
-            if (Enum.TryParse<TranslationStatus>(value, true, out status))
-            {
-                return status;
-            }
-
-            return TranslationStatus.Unknown;
+            return value.TryParseEnum(TranslationStatus.Unknown, false);
         }
 
         public static string ToMethodString(this HttpMethod method)

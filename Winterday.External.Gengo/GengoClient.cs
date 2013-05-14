@@ -48,6 +48,9 @@ namespace Winterday.External.Gengo
         internal const string UriPartStats = "account/stats";
         internal const string UriPartBalance = "account/balance";
 
+        internal const string UriPartComment = "translate/job/{0}/comment";
+        internal const string UriPartComments = "translate/job/{0}/comments";
+
         internal const string MimeTypeApplicationXml = "application/xml";
 
         readonly string _privateKey;
@@ -160,6 +163,14 @@ namespace Winterday.External.Gengo
             var xml = await GetXmlAsync(UriPartBalance, true);
 
             return xml.Element("credits").Value.ToDecimal();
+        }
+
+        // TODO: Implement tests
+        public async Task<Comment[]> GetComments(int jobID)
+        {
+            var xml = await GetXmlAsync(string.Format(UriPartComments, jobID), true);
+
+            return xml.Element("thread").Elements().Select(e => Comment.FromXContainer(jobID, e)).ToArray();
         }
 
         internal Uri BuildUri(String uriPart, bool authenticated)

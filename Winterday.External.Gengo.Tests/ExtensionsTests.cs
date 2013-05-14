@@ -77,6 +77,20 @@ namespace Winterday.External.Gengo.Tests
         }
 
         [TestMethod]
+        public void TestAuthorTypeConversions()
+        {
+            Assert.AreEqual("customer", AuthorType.Customer.ToAuthorString());
+            Assert.AreEqual("senior translator", AuthorType.SeniorTranslator.ToAuthorString());
+            Assert.AreEqual("translator", AuthorType.Translator.ToAuthorString());
+            Assert.AreEqual("unknown", AuthorType.Unknown.ToAuthorString());
+
+            Assert.AreEqual(AuthorType.Customer, "CuSToMeR".ToAuthorType());
+            Assert.AreEqual(AuthorType.SeniorTranslator, "SeNiOR TrAnSlAtOR".ToAuthorType());
+            Assert.AreEqual(AuthorType.Translator, "tRaNSlaTor".ToAuthorType());
+            Assert.AreEqual(AuthorType.Unknown, "zog".ToAuthorType());
+        }
+
+        [TestMethod]
         public void TranslationStatusConversions()
         {
             Assert.AreEqual("approved", TranslationStatus.Approved.ToStatusString());

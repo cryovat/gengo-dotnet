@@ -1,5 +1,5 @@
-//
-// Enumerations.cs
+﻿//
+// LanguagePairTests.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -24,54 +24,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Winterday.External.Gengo
+namespace Winterday.External.Gengo.Tests.Payloads
 {
-    public enum AuthorType
-    {
-        Unknown,
-        Translator,
-        SeniorTranslator,
-        Customer
-    }
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Xml.Linq;
 
-    public enum JobType
-    {
-        Text,
-        File
-    }
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    public enum ClientMode
+    [TestClass]
+    public class CommentsTest
     {
-        Production,
-        Sandbox
-    }
+        GengoClient client;
 
-    public enum HttpMethod
-    {
-        Get,
-        Post,
-        Delete,
-        Update
-    }
+        [TestInitialize]
+        public void SetUpAttribute()
+        {
+            client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
+        }
 
-    public enum TranslationTier
-    {
-        Machine,
-        Standard,
-        Pro,
-        Ultra,
-        Unknown
-    }
+        [TestMethod]
+        [ExpectedException(typeof(GengoException))]
+        public async Task TestThrowsOnInvalidJobId()
+        {
+            var comments = await client.GetComments(int.MaxValue);
 
-    public enum TranslationStatus
-    {
-        Available,
-        Pending,
-        Reviewable,
-        Revising,
-        Approved,
-        Cancelled,
-        Unknown
+            Assert.Fail("Did not throw exception");
+        }
     }
 }
 
