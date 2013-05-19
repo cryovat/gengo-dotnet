@@ -27,6 +27,7 @@
 namespace Winterday.External.Gengo.Tests.Endpoints
 {
     using System;
+    using System.Linq;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -45,6 +46,73 @@ namespace Winterday.External.Gengo.Tests.Endpoints
         {
             _client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
         }
+
+        [TestMethod]
+        public async Task TestGetJobsByIdNoIds()
+        {
+            var first = await _client.Jobs.GetJobsByIds();
+            var second = await _client.Jobs.GetJobsByIds(Enumerable.Empty<int>());
+
+            Assert.IsNotNull(first);
+            Assert.IsNotNull(second);
+           
+            Assert.AreEqual(0, first.Length);
+            Assert.AreEqual(0, second.Length);
+        }
+
+        [TestMethod]
+        public async Task TestGetJobsById()
+        {
+            var rec = await _client.Jobs.GetRecentJobs(
+                status: TranslationStatus.Available,
+                maxCount: 5);
+
+            if (rec.Length == 0)
+                Assert.Inconclusive("No recent jobs found");
+
+            
+            var ids = rec.Select(i => i.Id);
+            var jobs = await _client.Jobs.GetJobsByIds(ids);
+
+            Assert.AreEqual(rec.Length, jobs.Length);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task TestGetJobsRejectsInvalidIds()
+        {
+            var lst = await _client.Jobs.GetJobsByIds(Int32.MinValue, 0);
+            Assert.Fail("Exception was not thrown");
+        }
+
+        [TestMethod]
+        public async Task TestGetRecentJobs()
+        {
+            var any = await _client.Jobs.GetRecentJobs(
+                status: TranslationStatus.Available,
+                maxCount: 5);
+
+            if (any.Length == 0)
+            {
+                Assert.Inconclusive("No recent jobs were found");
+            }
+            else
+            {
+                foreach (var id in any)
+                {
+                    if (id.Created == new DateTime())
+                        Assert.Fail("Job created date was not parsed");
+
+                    if (id.Id <= 0)
+                        Assert.Fail("Job id was not parsed");
+                }
+            }
+
+            Assert.IsTrue(any.Length <= 5, "Too many results were returned");
+
+            Assert.AreEqual(true, true);
+        }
+
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]

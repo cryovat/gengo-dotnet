@@ -230,12 +230,25 @@ namespace Winterday.External.Gengo
             return _client.GetStringAsync(BuildUri(uriPart, authenticated));
         }
 
+        internal Task<string> GetStringAsync(String uriPart, Dictionary<string, string> values, bool authenticated)
+        {
+            return _client.GetStringAsync(BuildUri(uriPart, values, authenticated));
+        }
+
         internal async Task<JsonT> GetJsonAsync<JsonT>(String uriPart, bool authenticated) where JsonT : JToken
         {
             var rawJson = await GetStringAsync(uriPart, authenticated);
 
             return UnpackJson<JsonT>(rawJson);
         }
+
+        internal async Task<JsonT> GetJsonAsync<JsonT>(String uriPart, Dictionary<string, string> values, bool authenticated) where JsonT : JToken
+        {
+            var rawJson = await GetStringAsync(uriPart, values, authenticated);
+
+            return UnpackJson<JsonT>(rawJson);
+        }
+
 
         internal async Task<JsonT> PostFormAsync<JsonT>(String uriPart, Dictionary<string, string> values) where JsonT : JToken
         {

@@ -29,6 +29,8 @@ namespace Winterday.External.Gengo.Endpoints
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
 
     using Newtonsoft.Json.Linq;
@@ -48,6 +50,101 @@ namespace Winterday.External.Gengo.Endpoints
                 throw new ArgumentNullException("client");
 
             _client = client;
+        }
+
+        public Task<SubmittedJob[]> GetJobsByIds(params int[] jobIds) {
+
+            if (jobIds == null) throw new ArgumentNullException("jobIds");
+
+            if (jobIds.Length == 0)
+            {
+                return Task.FromResult(new SubmittedJob[] { });
+            }
+            else
+            {
+                return GetJobsByIds((IEnumerable<int>)jobIds);
+            }
+        }
+
+        public async Task<SubmittedJob[]> GetJobsByIds(IEnumerable<int> jobIds)
+        {
+            if (jobIds == null) throw new ArgumentNullException("jobIds");
+
+            var sb = new StringBuilder("/");
+
+            foreach (var item in jobIds)
+            {
+                if (item <= 0)
+                    throw new ArgumentException(
+                        Resources.InvalidJobIdProvided, "jobIds");
+
+                if (sb.Length > 1)
+                    sb.Append(",");
+
+                sb.Append(item);
+            }
+
+            if (sb.Length == 1)
+            {
+                return new SubmittedJob[] { };
+            }
+
+            var url = UriPartJobsEndpoint + sb.ToString();
+            var json = await _client.GetJsonAsync<JObject>(url, true);
+
+            var arr = json.Value<JArray>("jobs");
+
+            return arr.Values<JObject>().Select(
+                o => new SubmittedJob(o)).ToArray();
+        }
+
+        public async Task<TimestampedId[]> GetRecentJobs(
+            TranslationStatus? status = null,
+            DateTime? afterDateTime = null,
+            int maxCount = 10
+            )
+        {
+            var args = new Dictionary<string, string>();
+
+            if (status.HasValue &&
+                status.Value == TranslationStatus.Unknown)
+            {
+                throw new ArgumentException(
+                    Resources.CannotRequestJobsWithUnknownStatus,
+                    "status");
+            }
+            else if (status.HasValue)
+            {
+                args["status"] = status.Value.ToStatusString(); 
+            }
+
+            if (afterDateTime.HasValue)
+            {
+                var ts = afterDateTime.Value.ToTimeStamp();
+
+                if (ts <= 0)
+                {
+                    throw new ArgumentException(
+                        Resources.CannotRequestJobsWithPreUnixTime,
+                        "afterDateTime");
+                }
+
+                args["timestamp_after"] = ts.ToString();
+            }
+
+            if (maxCount <= 0)
+            {
+                return new TimestampedId[] { };
+            }
+            else
+            {
+                args["count"] = maxCount.ToString();
+            }
+
+            var json = await _client.GetJsonAsync<JArray>(UriPartJobsEndpoint, args, true);
+
+            return json.Values<JObject>().Select(o =>
+                new TimestampedId(o, "job_id", "ctime")).ToArray();
         }
 
         public Task<Confirmation> Submit(

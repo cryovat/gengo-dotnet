@@ -79,6 +79,24 @@ namespace Winterday.External.Gengo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot request jobs from before the dawn of time..
+        /// </summary>
+        internal static string CannotRequestJobsWithPreUnixTime {
+            get {
+                return ResourceManager.GetString("CannotRequestJobsWithPreUnixTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot request jobs with &quot;Unknown&quot; status..
+        /// </summary>
+        internal static string CannotRequestJobsWithUnknownStatus {
+            get {
+                return ResourceManager.GetString("CannotRequestJobsWithUnknownStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The string cannot be empty..
         /// </summary>
         internal static string EmptyString {
@@ -102,6 +120,15 @@ namespace Winterday.External.Gengo.Properties {
         internal static string FileNameNotProvided {
             get {
                 return ResourceManager.GetString("FileNameNotProvided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A job with ID of zero or less was requested..
+        /// </summary>
+        internal static string InvalidJobIdProvided {
+            get {
+                return ResourceManager.GetString("InvalidJobIdProvided", resourceCulture);
             }
         }
         

@@ -123,6 +123,12 @@
   <data name="CallbackUrlMustBeAbsolute" xml:space="preserve">
     <value>Callback URL must be absolute</value>
   </data>
+  <data name="CannotRequestJobsWithPreUnixTime" xml:space="preserve">
+    <value>Cannot request jobs from before the dawn of time.</value>
+  </data>
+  <data name="CannotRequestJobsWithUnknownStatus" xml:space="preserve">
+    <value>Cannot request jobs with "Unknown" status.</value>
+  </data>
   <data name="EmptyString" xml:space="preserve">
     <value>The string cannot be empty.</value>
   </data>
@@ -131,6 +137,9 @@
   </data>
   <data name="FileNameNotProvided" xml:space="preserve">
     <value>File name not provided.</value>
+  </data>
+  <data name="InvalidJobIdProvided" xml:space="preserve">
+    <value>A job with ID of zero or less was requested.</value>
   </data>
   <data name="InvalidTier" xml:space="preserve">
     <value>Invalid job, tier value is invalid.</value>
