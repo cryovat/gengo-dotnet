@@ -27,6 +27,8 @@
 namespace Winterday.External.Gengo.Tests.Endpoints
 {
     using System;
+    using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -36,19 +38,19 @@ namespace Winterday.External.Gengo.Tests.Endpoints
     [TestClass]
     public class JobsTests
     {
-        GengoClient client;
+        GengoClient _client;
 
         [TestInitialize]
         public void SetUpAttribute()
         {
-            client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
+            _client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public async Task TestThrowsOnNoJobs()
         {
-            var res = await client.Jobs.Submit(true, true);
+            var res = await _client.Jobs.Submit(true, true);
 
             Assert.Fail("Exception was not thrown");
         }
@@ -77,7 +79,7 @@ namespace Winterday.External.Gengo.Tests.Endpoints
                 CallbackUrl = new Uri("http://www.zombo.com")
             };
 
-            var res = await client.Jobs.Submit(false, true, job1, job2);
+            var res = await _client.Jobs.Submit(false, true, job1, job2);
 
             Assert.AreEqual(2, res.JobCount);
         }
@@ -90,15 +92,33 @@ namespace Winterday.External.Gengo.Tests.Endpoints
             var job1 = new Job
             {
                 Slug = "job 1 - " + job1Dt.ToTimeStamp(),
-                Body = job1Dt.ToString(),
-                SourceLanguage = "ja",
-                TargetLanguage = "en",
+                Body = "JUSTICE " + job1Dt.Ticks,
+                SourceLanguage = "en",
+                TargetLanguage = "ja",
             };
 
-            var first = await client.Jobs.Submit(false, true, job1);
-            var second = await client.Jobs.Submit(false, true, job1);
 
-            Assert.AreNotEqual(0, second.Duplicates.Count);
+            var job2Dt = DateTime.Now;
+
+            var job2 = new Job
+            {
+                Slug = "job 2 - " + job2Dt.ToTimeStamp(),
+                Body = "Unrelated fooo~~~~ " + job2Dt.Ticks,
+                SourceLanguage = "en",
+                TargetLanguage = "ja",
+            };
+
+
+            var first = await _client.Jobs.Submit(false, true, job1);
+
+            Thread.Sleep(TimeSpan.FromSeconds(5));
+
+            var second = await _client.Jobs.Submit(false, true, job1, job2);
+
+            Assert.AreEqual(0, first.Duplicates.Count);
+            Assert.AreEqual(1, second.Duplicates.Count);
+
+            Assert.AreEqual(job1.Slug, second.Duplicates[0].ExistingJobs[0].Slug);
         }
     }
 }

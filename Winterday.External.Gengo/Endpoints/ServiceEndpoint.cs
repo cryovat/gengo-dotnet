@@ -41,6 +41,9 @@ namespace Winterday.External.Gengo.Endpoints
         internal const string UriPartLanguages = "translate/service/languages";
         internal const string UriPartLanguagePairs = "translate/service/language_pairs";
 
+        internal const string UriPartQuote = "translate/service/quote";
+        internal const string UriPartQuoteFiles = "translate/service/quote/file";
+
         readonly GengoClient _client;
 
         internal ServiceEndpoint(GengoClient client)
@@ -62,7 +65,61 @@ namespace Winterday.External.Gengo.Endpoints
         {
             var json = await _client.GetJsonAsync<JArray>(UriPartLanguagePairs, false);
 
-            return json.Values<JObject>().Select(e => LanguagePair.FromJObject(e)).ToArray();
+            return json.Values<JObject>().Select(
+                e => LanguagePair.FromJObject(e)).ToArray();
+        }
+
+        public Task<Quote[]> GetQuote(
+            bool requireSameTranslator, params Job[] jobs)
+        {
+            if (jobs == null) throw new ArgumentNullException("jobs");
+
+            return GetQuote(requireSameTranslator, (IEnumerable<Job>)jobs);
+        }
+
+        public async Task<Quote[]> GetQuote(
+                bool requireSameTranslator, IEnumerable<Job> jobs)
+        {
+            if (jobs == null) throw new ArgumentNullException("jobs");
+
+            var payload = new JObject();
+
+            payload["jobs"] = jobs.ToJsonJobsArray();
+            payload["as_group"] = Convert.ToInt32(requireSameTranslator);
+
+            var response = await _client.PostJsonAsync<JObject>(
+                UriPartQuote, payload);
+
+            var quotes = response.Value<JArray>("jobs");
+
+            return quotes.Select(o => new Quote((JObject)o)).ToArray();
+        }
+
+        public Task<FileQuote[]> GetQuoteForFiles(
+            params FileJob[] jobs)
+        {
+            if (jobs == null)
+                throw new ArgumentNullException("jobs");
+
+            return GetQuoteForFiles((IEnumerable<FileJob>)jobs);
+        }
+
+        public async Task<FileQuote[]> GetQuoteForFiles(
+            IEnumerable<FileJob> jobs)
+        {
+            if (jobs == null)
+                throw new ArgumentNullException("jobs");
+
+            var payload = new JObject();
+
+            payload["jobs"] = jobs.ToJsonJobsArray();
+
+            var response = await _client.PostJsonAsync<JObject>(
+                UriPartQuoteFiles, payload, jobs);
+
+            var quotes = response.Value<JArray>("jobs");
+
+            return quotes.Select(o => new FileQuote((JObject)o)).ToArray();
         }
     }
 }

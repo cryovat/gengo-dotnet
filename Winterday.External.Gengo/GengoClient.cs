@@ -253,7 +253,9 @@ namespace Winterday.External.Gengo
             return UnpackJson<JsonT>(responseStr);
         }
 
-        internal async Task<JsonT> PostJsonAsync<JsonT>(String uriPart, JToken json) where JsonT : JToken
+        internal async Task<JsonT> PostJsonAsync<JsonT>(
+            String uriPart, JToken json, IEnumerable<IPostableFile> files = null
+            ) where JsonT : JToken
         {
             if (json == null) throw new ArgumentNullException("json");
 
@@ -272,6 +274,14 @@ namespace Winterday.External.Gengo
 
             multi.Add(data, "data");
 
+            if (files != null)
+            {
+                foreach (var file in files)
+                {
+                    multi.Add(file.Content, file.FileKey, file.FileName);
+                }
+            }
+
             var response = await _client.PostAsync(new Uri(_baseUri, uriPart), multi);
             var responseStr = await response.Content.ReadAsStringAsync();
 
@@ -289,8 +299,8 @@ namespace Winterday.External.Gengo
                 return json["response"] as JsonT;
             } else 
             {
-                string message = errObj.Value<string>("msg");;
-                string code = errObj.Value<string>("code");;
+                string message = errObj.Value<string>("msg");
+                string code = errObj.Value<string>("code");
 
                 throw new GengoException(message, opstat, code);
             }

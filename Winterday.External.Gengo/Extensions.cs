@@ -37,6 +37,9 @@ namespace Winterday.External.Gengo
 
     using Newtonsoft.Json.Linq;
 
+    using Winterday.External.Gengo.Payloads;
+    using Winterday.External.Gengo.Properties;
+
     public static class Extensions
     {
         public static decimal ToDecimal(this string value)
@@ -216,6 +219,46 @@ namespace Winterday.External.Gengo
         internal static DateTime ToDateFromTimestamp(this long timestamp)
         {
             return unixEpoch.AddSeconds(timestamp);
+        }
+
+        internal static JArray ToJsonJobsArray(this IEnumerable<Job> jobs)
+        {
+            if (jobs == null) throw new ArgumentNullException("jobs");
+
+            var arr = new JArray();
+
+            foreach (var job in jobs)
+            {
+                arr.Add(job.ToJObject());
+            }
+
+            return arr;
+        }
+
+        internal static Tuple<JObject, Dictionary<string, Job>> ToJsonJobsList(this IEnumerable<Job> jobs)
+        {
+            if (jobs == null) throw new ArgumentNullException("jobs");
+
+            var count = 1;
+
+            var jobsObj = new JObject();
+            var mapping = new Dictionary<string, Job>();
+
+            foreach (var item in jobs)
+            {
+                if (item is SubmittedJob)
+                    throw new ArgumentException(
+                        Resources.JobIsAlreadySubmitted);
+
+                var key = "job_" + count;
+
+                mapping[key] = item;
+                jobsObj[key] = item.ToJObject();
+
+                count += 1;
+            }
+
+            return Tuple.Create(jobsObj, mapping);
         }
     }
 }

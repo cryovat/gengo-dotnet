@@ -27,6 +27,7 @@
 namespace Winterday.External.Gengo.Tests.Endpoints
 {
     using System;
+    using System.Text;
     using System.Threading.Tasks;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -58,6 +59,60 @@ namespace Winterday.External.Gengo.Tests.Endpoints
             var langs = await client.Service.GetLanguages();
 
             Assert.IsTrue(langs.Length > 0);
+        }
+
+        [TestMethod]
+        public async Task TestGetQuotes()
+        {
+            var job1 = new Job
+            {
+                Slug = "quote job 1",
+                Body = "Never gonna give you up",
+                SourceLanguage = "en",
+                TargetLanguage = "ja"
+            };
+
+            var job2 = new Job
+            {
+                Slug = "quote job 2",
+                Body = "Never gonna let you down",
+                SourceLanguage = "en",
+                TargetLanguage = "ja",
+                TranslationTier = TranslationTier.Ultra
+            };
+
+            var job3 = new Job
+            {
+                Slug = "quote job 3",
+                Body = "Never gonna run around and desert you",
+                SourceLanguage = "en",
+                TargetLanguage = "ja",
+                TranslationTier = TranslationTier.Pro
+            };
+
+            var quotes = await client.Service.GetQuote(true, job1, job2, job3);
+
+            Assert.AreEqual(3, quotes.Length);
+        }
+
+        [TestMethod]
+        public async Task TestGetFileQuote()
+        {
+            var text = "Hang down your head, Tom Dooley\nHang down your head and cry";
+            var raw = Encoding.UTF8.GetBytes(text);
+
+            var file = new FileJob("lyrics.txt", raw)
+            {
+                Slug = "test file",
+                SourceLanguage = "en",
+                TargetLanguage = "ja",
+                TranslationTier = TranslationTier.Standard
+            };
+
+            var quote = await client.Service.GetQuoteForFiles(file);
+
+            Assert.AreEqual(1, quote.Length);
+            Assert.AreEqual(text, quote[0].Body);
         }
     }
 }

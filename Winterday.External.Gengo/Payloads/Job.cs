@@ -223,7 +223,7 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
-        public JobType JobType
+        public virtual JobType JobType
         {
             get { return _type; }
             set
@@ -265,28 +265,6 @@ namespace Winterday.External.Gengo.Payloads
             _readOnly = readOnly;
         }
 
-        protected Job(bool readOnly, Job source)
-        {
-            if (source == null) throw new ArgumentNullException("source");
-
-            _readOnly = readOnly;
-
-            _autoApprove = source._autoApprove;
-            _force = source._force;
-
-            _body = source._body;
-            _comment = source._comment;
-            _customData = source._customData;
-            _slug = source._slug;
-            _sourceLang = source._sourceLang;
-            _targetLang = source._targetLang;
-
-            _callbackUrl = source._callbackUrl;
-
-            _type = source._type;
-            _tier = source._tier;
-        }
-
         protected Job(JObject json)
         {
             if (json == null) throw new ArgumentNullException("json");
@@ -312,7 +290,7 @@ namespace Winterday.External.Gengo.Payloads
             Uri.TryCreate(callback, UriKind.Absolute, out _callbackUrl);
         }
 
-        internal JObject ToJObject()
+        internal virtual JObject ToJObject()
         {
             if (_tier == TranslationTier.Unknown)
                 throw new InvalidOperationException(Resources.InvalidTier);
@@ -323,7 +301,7 @@ namespace Winterday.External.Gengo.Payloads
             if (_type == JobType.Text && !string.IsNullOrWhiteSpace(_fileId))
                 throw new InvalidOperationException(Resources.TextButIdSpecified);
 
-            if (String.IsNullOrWhiteSpace(_body))
+            if (JobType == Gengo.JobType.Text && String.IsNullOrWhiteSpace(_body))
                 throw new InvalidOperationException(Resources.MissingBody);
 
             if (String.IsNullOrWhiteSpace(_slug))
@@ -340,15 +318,22 @@ namespace Winterday.External.Gengo.Payloads
             obj["auto_approve"] = Convert.ToInt32(_autoApprove);
             obj["force"] = Convert.ToInt32(_force);
 
-            obj["body_src"] = _body;
-            obj["comment"] = _comment;
-            obj["custom_data"] = _customData;
-            obj["identifier"] = _fileId;
             obj["slug"] = _slug;
+            obj["body_src"] = _body;
+
+            if (_comment != null)
+                obj["comment"] = _comment;
+
+            if (_customData != null)
+                obj["custom_data"] = _customData;
+            
+            if (_fileId != null)
+                obj["identifier"] = _fileId;
+
             obj["lc_src"] = _sourceLang;
             obj["lc_tgt"] = _targetLang;
 
-            obj["type"] = _type.ToTypeString();
+            obj["type"] = JobType.ToTypeString();
             obj["tier"] = _tier.ToTierString();
 
             if (_callbackUrl != null)

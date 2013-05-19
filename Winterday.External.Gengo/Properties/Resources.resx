@@ -123,8 +123,14 @@
   <data name="CallbackUrlMustBeAbsolute" xml:space="preserve">
     <value>Callback URL must be absolute</value>
   </data>
+  <data name="EmptyString" xml:space="preserve">
+    <value>The string cannot be empty.</value>
+  </data>
   <data name="FileButIdNotSpecified" xml:space="preserve">
     <value>Invalid job, type is File but identifier is not specified.</value>
+  </data>
+  <data name="FileNameNotProvided" xml:space="preserve">
+    <value>File name not provided.</value>
   </data>
   <data name="InvalidTier" xml:space="preserve">
     <value>Invalid job, tier value is invalid.</value>
@@ -137,6 +143,9 @@
   </data>
   <data name="JobIsReadOnly" xml:space="preserve">
     <value>Cannot modify value, job is read-only.</value>
+  </data>
+  <data name="JobTypeMayNotBeChanged" xml:space="preserve">
+    <value>Job type cannot be changed for this instance.</value>
   </data>
   <data name="MissingBody" xml:space="preserve">
     <value>Invalid job, missing body value.</value>

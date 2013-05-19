@@ -79,11 +79,29 @@ namespace Winterday.External.Gengo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The string cannot be empty..
+        /// </summary>
+        internal static string EmptyString {
+            get {
+                return ResourceManager.GetString("EmptyString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid job, type is File but identifier is not specified..
         /// </summary>
         internal static string FileButIdNotSpecified {
             get {
                 return ResourceManager.GetString("FileButIdNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File name not provided..
+        /// </summary>
+        internal static string FileNameNotProvided {
+            get {
+                return ResourceManager.GetString("FileNameNotProvided", resourceCulture);
             }
         }
         
@@ -120,6 +138,15 @@ namespace Winterday.External.Gengo.Properties {
         internal static string JobIsReadOnly {
             get {
                 return ResourceManager.GetString("JobIsReadOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job type cannot be changed for this instance..
+        /// </summary>
+        internal static string JobTypeMayNotBeChanged {
+            get {
+                return ResourceManager.GetString("JobTypeMayNotBeChanged", resourceCulture);
             }
         }
         

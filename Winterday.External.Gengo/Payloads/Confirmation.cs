@@ -29,6 +29,7 @@ namespace Winterday.External.Gengo.Payloads
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
 
     using Newtonsoft.Json.Linq;
 
@@ -75,7 +76,7 @@ namespace Winterday.External.Gengo.Payloads
             get { return _dupesRo; }
         }
 
-        internal Confirmation(JObject submitted, JObject result)
+        internal Confirmation(Dictionary<string, Job> submitted, JObject result)
         {
             if (submitted == null)
                 throw new ArgumentNullException("submitted");
@@ -116,7 +117,20 @@ namespace Winterday.External.Gengo.Payloads
 
             if (dupesObj != null)
             {
-                // TODO: Implement
+                foreach (var pair in dupesObj)
+                {
+                    Job dupe = null;
+                    var raw = pair.Value as JArray;
+
+                    if (raw != null && submitted.TryGetValue(pair.Key, out dupe))
+                    {
+                        _dupes.Add(
+                            new DuplicateSubmission(
+                                dupe,
+                                raw.Values<JObject>().Select((o) => 
+                                    new SubmittedJob(o))));
+                    }
+                }
             }
         }
 

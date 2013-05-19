@@ -70,20 +70,9 @@ namespace Winterday.External.Gengo.Endpoints
         {
             if (jobs == null) throw new ArgumentNullException("jobs");
 
-            var jobsObj = new JObject();
-
-            var count = 1;
-
-            foreach (var item in jobs)
-            {
-                if (item is SubmittedJob)
-                    throw new ArgumentException(
-                        Resources.JobIsAlreadySubmitted);
-
-                jobsObj["job_" + count] = item.ToJObject();
-
-                count += 1;
-            }
+            var tpl = jobs.ToJsonJobsList();
+            var jobsObj = tpl.Item1;
+            var mapping = tpl.Item2;
 
             if (!jobsObj.HasValues)
                 throw new ArgumentException(
@@ -99,7 +88,7 @@ namespace Winterday.External.Gengo.Endpoints
                 UriPartJobsEndpoint,
                 payload);
 
-            return new Confirmation(jobsObj, response);
+            return new Confirmation(mapping, response);
         }
     }
 }
