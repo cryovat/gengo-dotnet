@@ -24,7 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Winterday.External.Gengo.Tests.Endpoints
+namespace Winterday.External.Gengo.Tests.MethodGroups
 {
     using System;
     using System.Text;

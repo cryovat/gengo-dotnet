@@ -25,7 +25,7 @@
 // THE SOFTWARE.
 
 
-namespace Winterday.External.Gengo.Endpoints
+namespace Winterday.External.Gengo.MethodGroups
 {
     using System;
     using System.Collections.Generic;

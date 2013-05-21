@@ -37,7 +37,7 @@ namespace Winterday.External.Gengo
 
     using Newtonsoft.Json.Linq;
 
-    using Winterday.External.Gengo.Endpoints;
+    using Winterday.External.Gengo.MethodGroups;
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
