@@ -41,7 +41,7 @@ namespace Winterday.External.Gengo
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
-    public class GengoClient : IDisposable
+    public class GengoClient : IGengoClient, IDisposable
     {
         internal const string ProductionBaseUri = "http://api.gengo.com/v2/";
         internal const string SandboxBaseUri = "http://api.sandbox.gengo.com/v2/";
@@ -59,12 +59,13 @@ namespace Winterday.External.Gengo
         readonly HttpClient _client = new HttpClient();
 
         AccountEndpoint _account;
+        JobEndpoint _job;
         JobsEndpoint _jobs;
         ServiceEndpoint _service;
 
         bool _disposed;
 
-        public bool IsDisposed
+        bool IGengoClient.IsDisposed
         {
             get
             {
@@ -77,6 +78,11 @@ namespace Winterday.External.Gengo
             get { return _account; }
         }
 
+        public JobEndpoint Job
+        {
+            get { return _job; }
+        }
+
         public JobsEndpoint Jobs
         {
             get { return _jobs; }
@@ -85,6 +91,11 @@ namespace Winterday.External.Gengo
         public ServiceEndpoint Service
         {
             get { return _service; }
+        }
+
+        private IGengoClient that
+        {
+            get { return this as IGengoClient; }
         }
 
         public GengoClient(string privateKey, string publicKey)
@@ -146,6 +157,7 @@ namespace Winterday.External.Gengo
         private void initClient()
         {
             _account = new AccountEndpoint(this);
+            _job = new JobEndpoint(this);
             _jobs = new JobsEndpoint(this);
             _service = new ServiceEndpoint(this);
 
@@ -160,7 +172,7 @@ namespace Winterday.External.Gengo
         // TODO: Implement tests
         public async Task<Comment[]> GetComments(int jobID)
         {
-            var xml = await GetJsonAsync<JObject>(string.Format(UriPartComments, jobID), true);
+            var xml = await that.GetJsonAsync<JObject>(string.Format(UriPartComments, jobID), true);
             throw new NotImplementedException();
             //return xml.Element("thread").Elements().Select(e => Comment.FromXContainer(jobID, e)).ToArray();
         }
@@ -171,8 +183,8 @@ namespace Winterday.External.Gengo
             if (String.IsNullOrWhiteSpace(body)) throw new ArgumentException("Comment body not provided", "body");
 
             var json = new JObject(new JProperty("body", body));
-
-            await PostJsonAsync<JToken>(string.Format(UriPartComment, jobID), json);
+            
+            await that.PostJsonAsync<JToken>(string.Format(UriPartComment, jobID), json);
         }
 
         internal void AddAuthData(Dictionary<string, string> dict)
@@ -217,7 +229,7 @@ namespace Winterday.External.Gengo
             return new Uri(_baseUri, uriPart + query.ToQueryString());
         }
 
-        internal async Task<JsonT> DeleteAsync<JsonT>(String uripart) where JsonT : JToken
+        async Task<JsonT> IGengoClient.DeleteAsync<JsonT>(String uripart)
         {
             var response = await  _client.DeleteAsync(BuildUri(uripart, true));
             var responseStr = await response.Content.ReadAsStringAsync();
@@ -225,32 +237,32 @@ namespace Winterday.External.Gengo
             return UnpackJson<JsonT>(responseStr);
         }
 
-        internal Task<string> GetStringAsync(String uriPart, bool authenticated)
+        Task<string> IGengoClient.GetStringAsync(String uriPart, bool authenticated)
         {
             return _client.GetStringAsync(BuildUri(uriPart, authenticated));
         }
 
-        internal Task<string> GetStringAsync(String uriPart, Dictionary<string, string> values, bool authenticated)
+        Task<string> IGengoClient.GetStringAsync(String uriPart, Dictionary<string, string> values, bool authenticated)
         {
             return _client.GetStringAsync(BuildUri(uriPart, values, authenticated));
         }
 
-        internal async Task<JsonT> GetJsonAsync<JsonT>(String uriPart, bool authenticated) where JsonT : JToken
+        async Task<JsonT> IGengoClient.GetJsonAsync<JsonT>(String uriPart, bool authenticated)
         {
-            var rawJson = await GetStringAsync(uriPart, authenticated);
+            var rawJson = await that.GetStringAsync(uriPart, authenticated);
 
             return UnpackJson<JsonT>(rawJson);
         }
 
-        internal async Task<JsonT> GetJsonAsync<JsonT>(String uriPart, Dictionary<string, string> values, bool authenticated) where JsonT : JToken
+        async Task<JsonT> IGengoClient.GetJsonAsync<JsonT>(String uriPart, Dictionary<string, string> values, bool authenticated)
         {
-            var rawJson = await GetStringAsync(uriPart, values, authenticated);
+            var rawJson = await that.GetStringAsync(uriPart, values, authenticated);
 
             return UnpackJson<JsonT>(rawJson);
         }
 
 
-        internal async Task<JsonT> PostFormAsync<JsonT>(String uriPart, Dictionary<string, string> values) where JsonT : JToken
+        async Task<JsonT> IGengoClient.PostFormAsync<JsonT>(String uriPart, Dictionary<string, string> values)
         {
             if (values == null) throw new ArgumentNullException("values");
 
@@ -266,9 +278,16 @@ namespace Winterday.External.Gengo
             return UnpackJson<JsonT>(responseStr);
         }
 
-        internal async Task<JsonT> PostJsonAsync<JsonT>(
-            String uriPart, JToken json, IEnumerable<IPostableFile> files = null
-            ) where JsonT : JToken
+        Task<JsonT> IGengoClient.PostJsonAsync<JsonT>(
+            String uriPart, JToken json
+            )
+        {
+            return that.PostJsonAsync<JsonT>(uriPart, json, null);
+        }
+
+        async Task<JsonT> IGengoClient.PostJsonAsync<JsonT>(
+            String uriPart, JToken json, IEnumerable<IPostableFile> files
+            )
         {
             if (json == null) throw new ArgumentNullException("json");
 
@@ -301,7 +320,7 @@ namespace Winterday.External.Gengo
             return UnpackJson<JsonT>(responseStr);
         }
 
-        internal JsonT UnpackJson<JsonT>(String rawJson) where JsonT : JToken
+        JsonT UnpackJson<JsonT>(String rawJson) where JsonT : JToken
         {
             var json = JObject.Parse(rawJson);
 

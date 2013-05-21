@@ -33,9 +33,9 @@ namespace Winterday.External.Gengo.Endpoints
 
     public class JobEndpoint
     {
-        readonly GengoClient _client;
+        readonly IGengoClient _client;
 
-        internal JobEndpoint(GengoClient client)
+        internal JobEndpoint(IGengoClient client)
         {
             if (client == null)
                 throw new ArgumentNullException("client");

@@ -44,9 +44,9 @@ namespace Winterday.External.Gengo.Endpoints
         internal const string UriPartQuote = "translate/service/quote";
         internal const string UriPartQuoteFiles = "translate/service/quote/file";
 
-        readonly GengoClient _client;
+        readonly IGengoClient _client;
 
-        internal ServiceEndpoint(GengoClient client)
+        internal ServiceEndpoint(IGengoClient client)
         {
             if (client == null)
                 throw new ArgumentNullException("client");
@@ -81,7 +81,7 @@ namespace Winterday.External.Gengo.Endpoints
                 bool requireSameTranslator, IEnumerable<Job> jobs)
         {
             if (jobs == null) throw new ArgumentNullException("jobs");
-
+            
             var payload = new JObject();
 
             payload["jobs"] = jobs.ToJsonJobsArray();

@@ -46,6 +46,7 @@
     <Compile Include="Endpoints\JobEndpoint.cs" />
     <Compile Include="Endpoints\JobsEndpoint.cs" />
     <Compile Include="Endpoints\ServiceEndpoint.cs" />
+    <Compile Include="IGengoClient.cs" />
     <Compile Include="IPostableFile.cs" />
     <Compile Include="Payloads\Comment.cs" />
     <Compile Include="Payloads\Confirmation.cs" />

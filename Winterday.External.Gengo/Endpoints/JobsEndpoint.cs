@@ -42,9 +42,9 @@ namespace Winterday.External.Gengo.Endpoints
     {
         internal const string UriPartJobsEndpoint = "translate/jobs";
 
-        readonly GengoClient _client;
+        readonly IGengoClient _client;
 
-        internal JobsEndpoint(GengoClient client)
+        internal JobsEndpoint(IGengoClient client)
         {
             if (client == null)
                 throw new ArgumentNullException("client");

@@ -41,9 +41,9 @@ namespace Winterday.External.Gengo.Endpoints
         internal const string UriPartStats = "account/stats";
         internal const string UriPartBalance = "account/balance";
 
-        readonly GengoClient _client;
+        readonly IGengoClient _client;
 
-        internal AccountEndpoint(GengoClient client)
+        internal AccountEndpoint(IGengoClient client)
         {
             if (client == null)
                 throw new ArgumentNullException("client");
