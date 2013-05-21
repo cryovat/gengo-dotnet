@@ -53,5 +53,7 @@ namespace Winterday.External.Gengo
         Task<JsonT> PostJsonAsync<JsonT>(
             String uriPart, JToken json, IEnumerable<IPostableFile> files
             ) where JsonT : JToken;
+
+        Task<JsonT> PutJsonAsync<JsonT>(String uriPart, JToken json) where JsonT : JToken;
     }
 }

@@ -177,6 +177,9 @@
   <data name="PropertyNameNotProvided" xml:space="preserve">
     <value>Property name not provided.</value>
   </data>
+  <data name="RevisionCommentMandatory" xml:space="preserve">
+    <value>A comment is mandatory when returning a job for revision.</value>
+  </data>
   <data name="ServiceDidNotReturnExpectedValue" xml:space="preserve">
     <value>Remote service did not return expected value.</value>
   </data>

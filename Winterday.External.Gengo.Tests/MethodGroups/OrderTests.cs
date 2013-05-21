@@ -73,7 +73,7 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
 
                 Assert.Fail("Failed to delete order?");
             }
-            catch
+            catch (GengoException)
             {
                 Assert.IsTrue(true);
             }

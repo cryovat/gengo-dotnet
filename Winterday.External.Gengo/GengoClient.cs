@@ -46,9 +46,6 @@ namespace Winterday.External.Gengo
         internal const string ProductionBaseUri = "http://api.gengo.com/v2/";
         internal const string SandboxBaseUri = "http://api.sandbox.gengo.com/v2/";
 
-        internal const string UriPartComment = "translate/job/{0}/comment";
-        internal const string UriPartComments = "translate/job/{0}/comments";
-
         internal const string MimeTypeApplicationXml = "application/xml";
         internal const string MimeTypeApplicationJson = "application/json";
 
@@ -176,24 +173,6 @@ namespace Winterday.External.Gengo
             headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MimeTypeApplicationJson));
         }
 
-        // TODO: Implement tests
-        public async Task<Comment[]> GetComments(int jobID)
-        {
-            var xml = await that.GetJsonAsync<JObject>(string.Format(UriPartComments, jobID), true);
-            throw new NotImplementedException();
-            //return xml.Element("thread").Elements().Select(e => Comment.FromXContainer(jobID, e)).ToArray();
-        }
-
-        // TODO: Implement tests
-        public async Task PostComment(int jobID, string body)
-        {
-            if (String.IsNullOrWhiteSpace(body)) throw new ArgumentException("Comment body not provided", "body");
-
-            var json = new JObject(new JProperty("body", body));
-            
-            await that.PostJsonAsync<JToken>(string.Format(UriPartComment, jobID), json);
-        }
-
         internal void AddAuthData(Dictionary<string, string> dict)
         {
             AddAuthData(dict, true);
@@ -230,7 +209,7 @@ namespace Winterday.External.Gengo
                 throw new ArgumentException("Uri part not valid relative uri", "baseUri");
 
             query = query ?? new Dictionary<string, string>();
-            
+
             AddAuthData(query, authenticated);
 
             return new Uri(_baseUri, uriPart + query.ToQueryString());
@@ -238,7 +217,7 @@ namespace Winterday.External.Gengo
 
         async Task<JsonT> IGengoClient.DeleteAsync<JsonT>(String uripart)
         {
-            var response = await  _client.DeleteAsync(BuildUri(uripart, true));
+            var response = await _client.DeleteAsync(BuildUri(uripart, true));
             var responseStr = await response.Content.ReadAsStringAsync();
 
             return UnpackJson<JsonT>(responseStr);
@@ -298,13 +277,36 @@ namespace Winterday.External.Gengo
         {
             if (json == null) throw new ArgumentNullException("json");
 
+            return await transferJsonAsync<JsonT>(
+                uriPart, json, files, (u, c) => _client.PostAsync(u, c));
+
+        }
+
+        Task<JsonT> IGengoClient.PutJsonAsync<JsonT>(
+            String uriPart, JToken json
+            )
+        {
+            if (json == null) throw new ArgumentNullException("json");
+
+            return transferJsonAsync<JsonT>(
+                uriPart, json, null, (u, c) => _client.PutAsync(u, c));
+        }
+
+        async Task<JsonT> transferJsonAsync<JsonT>(
+            String uriPart, JToken json, IEnumerable<IPostableFile> files,
+            Func<Uri, HttpContent, Task<HttpResponseMessage>> clientFunc
+            ) where JsonT : JToken
+        {
+            if (clientFunc == null) throw new ArgumentNullException("clientFunc");
+            if (json == null) throw new ArgumentNullException("json");
+
             var auth = new Dictionary<string, string>();
 
             AddAuthData(auth);
-            
+
             var multi = new MultipartFormDataContent();
 
-            foreach (var pair  in auth)
+            foreach (var pair in auth)
             {
                 multi.Add(new StringContent(pair.Value, Encoding.UTF8, MediaTypeNames.Text.Plain), pair.Key);
             }
@@ -321,11 +323,12 @@ namespace Winterday.External.Gengo
                 }
             }
 
-            var response = await _client.PostAsync(new Uri(_baseUri, uriPart), multi);
+            var response = await clientFunc(new Uri(_baseUri, uriPart), multi);
             var responseStr = await response.Content.ReadAsStringAsync();
 
             return UnpackJson<JsonT>(responseStr);
         }
+
 
         JsonT UnpackJson<JsonT>(String rawJson) where JsonT : JToken
         {
@@ -334,9 +337,11 @@ namespace Winterday.External.Gengo
             var opstat = json.Value<string>("opstat");
             var errObj = json.Value<JObject>("err");
 
-            if (errObj == null) {
+            if (errObj == null)
+            {
                 return json["response"] as JsonT;
-            } else 
+            }
+            else
             {
                 string message = errObj.Value<string>("msg");
                 string code = errObj.Value<string>("code");

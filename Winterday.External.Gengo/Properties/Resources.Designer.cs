@@ -241,6 +241,15 @@ namespace Winterday.External.Gengo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A comment is mandatory when returning a job for revision..
+        /// </summary>
+        internal static string RevisionCommentMandatory {
+            get {
+                return ResourceManager.GetString("RevisionCommentMandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remote service did not return expected value..
         /// </summary>
         internal static string ServiceDidNotReturnExpectedValue {

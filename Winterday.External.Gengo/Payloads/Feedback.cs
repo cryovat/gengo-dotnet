@@ -1,5 +1,5 @@
 ﻿//
-// CommentsTests.cs
+// Feedback.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -24,41 +24,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Winterday.External.Gengo.Tests.Payloads
+namespace Winterday.External.Gengo.Payloads
 {
-    using System.Linq;
-    using System.Threading.Tasks;
+    using System;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Newtonsoft.Json.Linq;
 
-    [TestClass]
-    public class CommentsTest
+    public class Feedback
     {
-        GengoClient client;
+        public string CommentForTranslator { get; private set; }
+        public decimal Rating { get; private set; }
 
-        [TestInitialize]
-        public void SetUpAttribute()
+        internal Feedback(JObject obj)
         {
-            client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
-        }
+            if (obj == null)
+                throw new ArgumentNullException("obj");
 
-        [TestMethod]
-        [ExpectedException(typeof(GengoException))]
-        public async Task TestThrowsOnInvalidJobId()
-        {
-            var comments = await client.GetComments(int.MaxValue);
-
-            Assert.Fail("Did not throw exception");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(GengoException))]
-        public async Task TestThrowsOnInvalidJobId2()
-        {
-            await client.PostComment(int.MaxValue, "hi there");
-
-            Assert.Fail("Did not throw exception");
+            CommentForTranslator = obj.Value<string>("for_translator");
+            Rating = obj.DecValueStrict("rating");
         }
     }
 }
-

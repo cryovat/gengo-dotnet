@@ -315,6 +315,13 @@ namespace Winterday.External.Gengo
             return (json.IntValueStrict(propName) == 1);
         }
 
+
+        internal static DateTime DateValueStrict(this JObject json, string propName)
+        {
+            return (json.LongValueStrict(propName).ToDateFromTimestamp());
+        }
+
+
         internal static decimal DecValueStrict(this JObject json, string propName)
         {
             if (json == null)
@@ -363,6 +370,35 @@ namespace Winterday.External.Gengo
                 return i;
             }
             else {
+                var err = string.Format
+                    (Resources.NamedPropertyNotFound,
+                    propName);
+
+                throw new ArgumentException(err, "json");
+            }
+
+        }
+
+        internal static long LongValueStrict(this JObject json, string propName)
+        {
+            if (json == null)
+                throw new ArgumentNullException("json");
+
+            if (string.IsNullOrWhiteSpace(propName))
+                throw new ArgumentException(Resources.PropertyNameNotProvided);
+
+            long i;
+
+            if (Int64.TryParse(
+                json.Value<string>(propName),
+                NumberStyles.Number,
+                CultureInfo.InvariantCulture,
+                out i))
+            {
+                return i;
+            }
+            else
+            {
                 var err = string.Format
                     (Resources.NamedPropertyNotFound,
                     propName);

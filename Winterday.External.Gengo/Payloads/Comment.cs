@@ -33,62 +33,15 @@ namespace Winterday.External.Gengo.Payloads
 
     public class Comment
     {
-        readonly int _jobID;
-        readonly string _body;
-        readonly AuthorType _author;
-        readonly DateTime _created;
+        public string Body { get; private set; }
+        public AuthorType Author { get; private set; }
+        public DateTime Created { get; private set; }
 
-        public int JobID
+        internal Comment(JObject obj)
         {
-            get
-            {
-                return _jobID;
-            }
-        }
-
-        public string Body
-        {
-            get
-            {
-                return _body;
-            }
-        }
-
-        public AuthorType Author
-        {
-            get
-            {
-                return _author;
-            }
-        }
-
-        public DateTime Created
-        {
-            get
-            {
-                return _created;
-            }
-        }
-
-        Comment(int jobId, string body, AuthorType author, DateTime created)
-        {
-            _jobID = jobId;
-            _body = body;
-            _author = author;
-            _created = created;
-        }
-
-        internal static Comment FromJObject(int jobID, JObject c)
-        {
-            var created = long.Parse(c.Value<string>("ctime"));
-
-            return new Comment(
-                jobID,
-                c.Value<string>("body"),
-                c.Value<string>("author").ToAuthorType(),
-                created.ToDateFromTimestamp()
-                );
-
+            Body = obj.Value<string>("body");
+            Author = obj.Value<string>("author").ToAuthorType();
+            Created = obj.DateValueStrict("ctime");
         }
     }
 }

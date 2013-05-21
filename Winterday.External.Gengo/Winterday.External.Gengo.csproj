@@ -52,6 +52,7 @@
     <Compile Include="Payloads\Comment.cs" />
     <Compile Include="Payloads\Confirmation.cs" />
     <Compile Include="Payloads\DuplicateSubmission.cs" />
+    <Compile Include="Payloads\Feedback.cs" />
     <Compile Include="Payloads\FileJob.cs" />
     <Compile Include="Payloads\Job.cs" />
     <Compile Include="Payloads\Order.cs" />
