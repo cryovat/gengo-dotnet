@@ -47,12 +47,14 @@
     <Compile Include="MethodGroups\AccountMethodGroup.cs" />
     <Compile Include="MethodGroups\JobMethodGroup.cs" />
     <Compile Include="MethodGroups\JobsMethodGroup.cs" />
+    <Compile Include="MethodGroups\OrderMethodGroup.cs" />
     <Compile Include="MethodGroups\ServiceMethodGroup.cs" />
     <Compile Include="Payloads\Comment.cs" />
     <Compile Include="Payloads\Confirmation.cs" />
     <Compile Include="Payloads\DuplicateSubmission.cs" />
     <Compile Include="Payloads\FileJob.cs" />
     <Compile Include="Payloads\Job.cs" />
+    <Compile Include="Payloads\Order.cs" />
     <Compile Include="Payloads\Quote.cs" />
     <Compile Include="Payloads\SubmittedJob.cs" />
     <Compile Include="Payloads\TimestampedId.cs" />

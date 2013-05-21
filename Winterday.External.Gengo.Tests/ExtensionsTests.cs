@@ -31,6 +31,8 @@ namespace Winterday.External.Gengo.Tests
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Newtonsoft.Json.Linq;
+
     using Winterday.External.Gengo;
 
     [TestClass]
@@ -153,6 +155,38 @@ namespace Winterday.External.Gengo.Tests
 
             Assert.AreEqual(utcNow, utcNow.ToTimeStamp().ToDateFromTimestamp());
         }
+
+        [TestMethod]
+        public void TestReadIntsFromJson()
+        {
+            var list = new List<int>();
+
+            JObject foo = null;
+
+            foo.ReadIntArrayIntoList("bar", list);
+
+            Assert.AreEqual(0, list.Count);
+
+            foo = new JObject();
+            foo["bar"] = new JArray("hello", "world", "123");
+
+            foo.ReadIntArrayIntoList("bar", list);
+
+            Assert.AreEqual(1, list.Count);
+            Assert.AreEqual(123, list[0]);
+
+            list.Clear();
+
+            foo["bar"] = new JArray(4, 3, 2, 1);
+            foo.ReadIntArrayIntoList("bar", list);
+
+            Assert.AreEqual(4, list.Count);
+            Assert.AreEqual(4, list[0]);
+            Assert.AreEqual(3, list[1]);
+            Assert.AreEqual(2, list[2]);
+            Assert.AreEqual(1, list[3]);
+        }
+
     }
 }
 

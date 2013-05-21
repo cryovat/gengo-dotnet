@@ -156,6 +156,9 @@
   <data name="JobTypeMayNotBeChanged" xml:space="preserve">
     <value>Job type cannot be changed for this instance.</value>
   </data>
+  <data name="ListIsReadOnly" xml:space="preserve">
+    <value>List is read-only.</value>
+  </data>
   <data name="MissingBody" xml:space="preserve">
     <value>Invalid job, missing body value.</value>
   </data>
@@ -167,6 +170,15 @@
   </data>
   <data name="MissingTargetLang" xml:space="preserve">
     <value>Invalid job, missing target language code.</value>
+  </data>
+  <data name="NamedPropertyNotFound" xml:space="preserve">
+    <value>Property '{0}' not found.</value>
+  </data>
+  <data name="PropertyNameNotProvided" xml:space="preserve">
+    <value>Property name not provided.</value>
+  </data>
+  <data name="ServiceDidNotReturnExpectedValue" xml:space="preserve">
+    <value>Remote service did not return expected value.</value>
   </data>
   <data name="TextButIdSpecified" xml:space="preserve">
     <value>Invalid job, type is Text but identifier is specified.</value>

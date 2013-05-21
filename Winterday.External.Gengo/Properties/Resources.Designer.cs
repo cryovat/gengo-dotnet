@@ -178,6 +178,15 @@ namespace Winterday.External.Gengo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List is read-only..
+        /// </summary>
+        internal static string ListIsReadOnly {
+            get {
+                return ResourceManager.GetString("ListIsReadOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid job, missing body value..
         /// </summary>
         internal static string MissingBody {
@@ -210,6 +219,33 @@ namespace Winterday.External.Gengo.Properties {
         internal static string MissingTargetLang {
             get {
                 return ResourceManager.GetString("MissingTargetLang", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; not found..
+        /// </summary>
+        internal static string NamedPropertyNotFound {
+            get {
+                return ResourceManager.GetString("NamedPropertyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property name not provided..
+        /// </summary>
+        internal static string PropertyNameNotProvided {
+            get {
+                return ResourceManager.GetString("PropertyNameNotProvided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote service did not return expected value..
+        /// </summary>
+        internal static string ServiceDidNotReturnExpectedValue {
+            get {
+                return ResourceManager.GetString("ServiceDidNotReturnExpectedValue", resourceCulture);
             }
         }
         

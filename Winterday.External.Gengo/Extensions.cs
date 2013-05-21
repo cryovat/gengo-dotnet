@@ -260,6 +260,117 @@ namespace Winterday.External.Gengo
 
             return Tuple.Create(jobsObj, mapping);
         }
+
+        internal static IReadOnlyCollection<int>
+            ReadIntArrayAsRoList(this JObject obj, string propName)
+        {
+            if (string.IsNullOrWhiteSpace(propName))
+                throw new ArgumentException(Resources.PropertyNameNotProvided);
+
+            var list = new List<int>();
+
+            obj.ReadIntArrayIntoList(propName, list);
+
+            return list;
+        }
+
+        internal static void ReadIntArrayIntoList(this JObject obj, string propName, IList<int> ints)
+        {
+            if (string.IsNullOrWhiteSpace(propName))
+                throw new ArgumentException(Resources.PropertyNameNotProvided);
+            
+            if (ints == null)
+                throw new ArgumentNullException("ints");
+
+            if (ints.IsReadOnly)
+                throw new ArgumentException(Resources.ListIsReadOnly, "ints");
+
+            if (obj == null)
+                return;
+
+            var arr = obj.Value<JArray>(propName);
+
+            if (arr == null)
+                return;
+
+            foreach (var item in arr)
+            {
+                if (item == null) continue;
+
+                int i;
+
+                if (Int32.TryParse(
+                    item.ToString(),
+                    NumberStyles.Integer,
+                    CultureInfo.InvariantCulture,
+                    out i))
+                {
+                    ints.Add(i);
+                }
+            }
+        }
+
+        internal static bool BoolValueStrict(this JObject json, string propName)
+        {
+            return (json.IntValueStrict(propName) == 1);
+        }
+
+        internal static decimal DecValueStrict(this JObject json, string propName)
+        {
+            if (json == null)
+                throw new ArgumentNullException("json");
+
+            if (string.IsNullOrWhiteSpace(propName))
+                throw new ArgumentException(Resources.PropertyNameNotProvided);
+
+            decimal i;
+
+            if (Decimal.TryParse(
+                json.Value<string>(propName),
+                NumberStyles.Number,
+                CultureInfo.InvariantCulture,
+                out i))
+            {
+                return i;
+            }
+            else
+            {
+                var err = string.Format
+                    (Resources.NamedPropertyNotFound,
+                    propName);
+
+                throw new ArgumentException(err, "json");
+            }
+
+        }
+
+        internal static int IntValueStrict(this JObject json, string propName)
+        {
+            if (json == null)
+                throw new ArgumentNullException("json");
+
+            if (string.IsNullOrWhiteSpace(propName))
+                throw new ArgumentException(Resources.PropertyNameNotProvided);
+
+            int i;
+
+            if (Int32.TryParse(
+                json.Value<string>(propName),
+                NumberStyles.Integer,
+                CultureInfo.InvariantCulture,
+                out i))
+            {
+                return i;
+            }
+            else {
+                var err = string.Format
+                    (Resources.NamedPropertyNotFound,
+                    propName);
+
+                throw new ArgumentException(err, "json");
+            }
+
+        }
     }
 }
 

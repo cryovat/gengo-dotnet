@@ -62,6 +62,7 @@ namespace Winterday.External.Gengo
         JobMethodGroup _job;
         JobsMethodGroup _jobs;
         ServiceMethodGroup _service;
+        OrderMethodGroup _order;
 
         bool _disposed;
 
@@ -91,6 +92,11 @@ namespace Winterday.External.Gengo
         public ServiceMethodGroup Service
         {
             get { return _service; }
+        }
+
+        public OrderMethodGroup Order
+        {
+            get { return _order; }
         }
 
         private IGengoClient that
@@ -160,6 +166,7 @@ namespace Winterday.External.Gengo
             _job = new JobMethodGroup(this);
             _jobs = new JobsMethodGroup(this);
             _service = new ServiceMethodGroup(this);
+            _order = new OrderMethodGroup(this);
 
             var assemblyName = GetType().Assembly.GetName();
             var headers = _client.DefaultRequestHeaders;

@@ -58,6 +58,7 @@
     <Compile Include="GengoClientTests.cs" />
     <Compile Include="MethodGroups\AccountTests.cs" />
     <Compile Include="MethodGroups\JobsTests.cs" />
+    <Compile Include="MethodGroups\OrderTests.cs" />
     <Compile Include="MethodGroups\ServiceTests.cs" />
     <Compile Include="Payloads\CommentsTests.cs" />
     <Compile Include="TestKeys.cs" />
