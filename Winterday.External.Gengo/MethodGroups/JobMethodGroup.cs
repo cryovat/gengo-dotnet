@@ -1,5 +1,5 @@
 ﻿//
-// JobEndpoint.cs
+// JobMethodGroup.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -31,11 +31,11 @@ namespace Winterday.External.Gengo.MethodGroups
 
     using Winterday.External.Gengo.Payloads;
 
-    public class JobEndpoint
+    public class JobMethodGroup
     {
         readonly IGengoClient _client;
 
-        internal JobEndpoint(IGengoClient client)
+        internal JobMethodGroup(IGengoClient client)
         {
             if (client == null)
                 throw new ArgumentNullException("client");

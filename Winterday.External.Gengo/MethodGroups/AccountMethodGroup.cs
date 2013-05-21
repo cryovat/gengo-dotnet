@@ -1,5 +1,5 @@
 ﻿//
-// AccountEndpoint.cs
+// AccountMethodGroup.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -36,14 +36,14 @@ namespace Winterday.External.Gengo.MethodGroups
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
-    public class AccountEndpoint
+    public class AccountMethodGroup
     {
         internal const string UriPartStats = "account/stats";
         internal const string UriPartBalance = "account/balance";
 
         readonly IGengoClient _client;
 
-        internal AccountEndpoint(IGengoClient client)
+        internal AccountMethodGroup(IGengoClient client)
         {
             if (client == null)
                 throw new ArgumentNullException("client");

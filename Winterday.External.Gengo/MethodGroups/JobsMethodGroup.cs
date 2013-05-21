@@ -1,5 +1,5 @@
 ﻿//
-// Jobs.cs
+// JobsMethodGroup.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -38,13 +38,13 @@ namespace Winterday.External.Gengo.MethodGroups
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
-    public class JobsEndpoint
+    public class JobsMethodGroup
     {
         internal const string UriPartJobsEndpoint = "translate/jobs";
 
         readonly IGengoClient _client;
 
-        internal JobsEndpoint(IGengoClient client)
+        internal JobsMethodGroup(IGengoClient client)
         {
             if (client == null)
                 throw new ArgumentNullException("client");

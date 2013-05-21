@@ -58,10 +58,10 @@ namespace Winterday.External.Gengo
         readonly Uri _baseUri;
         readonly HttpClient _client = new HttpClient();
 
-        AccountEndpoint _account;
-        JobEndpoint _job;
-        JobsEndpoint _jobs;
-        ServiceEndpoint _service;
+        AccountMethodGroup _account;
+        JobMethodGroup _job;
+        JobsMethodGroup _jobs;
+        ServiceMethodGroup _service;
 
         bool _disposed;
 
@@ -73,22 +73,22 @@ namespace Winterday.External.Gengo
             }
         }
 
-        public AccountEndpoint Account
+        public AccountMethodGroup Account
         {
             get { return _account; }
         }
 
-        public JobEndpoint Job
+        public JobMethodGroup Job
         {
             get { return _job; }
         }
 
-        public JobsEndpoint Jobs
+        public JobsMethodGroup Jobs
         {
             get { return _jobs; }
         }
 
-        public ServiceEndpoint Service
+        public ServiceMethodGroup Service
         {
             get { return _service; }
         }
@@ -156,10 +156,10 @@ namespace Winterday.External.Gengo
 
         private void initClient()
         {
-            _account = new AccountEndpoint(this);
-            _job = new JobEndpoint(this);
-            _jobs = new JobsEndpoint(this);
-            _service = new ServiceEndpoint(this);
+            _account = new AccountMethodGroup(this);
+            _job = new JobMethodGroup(this);
+            _jobs = new JobsMethodGroup(this);
+            _service = new ServiceMethodGroup(this);
 
             var assemblyName = GetType().Assembly.GetName();
             var headers = _client.DefaultRequestHeaders;

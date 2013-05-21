@@ -1,5 +1,5 @@
 ﻿//
-// ServiceEndpoint.cs
+// ServiceMethodGroup.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -36,7 +36,7 @@ namespace Winterday.External.Gengo.MethodGroups
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
-    public class ServiceEndpoint
+    public class ServiceMethodGroup
     {
         internal const string UriPartLanguages = "translate/service/languages";
         internal const string UriPartLanguagePairs = "translate/service/language_pairs";
@@ -46,7 +46,7 @@ namespace Winterday.External.Gengo.MethodGroups
 
         readonly IGengoClient _client;
 
-        internal ServiceEndpoint(IGengoClient client)
+        internal ServiceMethodGroup(IGengoClient client)
         {
             if (client == null)
                 throw new ArgumentNullException("client");
