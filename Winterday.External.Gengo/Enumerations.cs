@@ -54,6 +54,22 @@ namespace Winterday.External.Gengo
         Update
     }
 
+    public enum RejectionReason
+    {
+        Quality,
+        Incomplete,
+        Other
+    }
+
+    public enum Stars
+    {
+        One,
+        Two,
+        Three,
+        Four,
+        Five
+    }
+
     public enum TranslationTier
     {
         Standard,
