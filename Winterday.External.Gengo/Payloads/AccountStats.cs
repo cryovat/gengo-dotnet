@@ -32,50 +32,18 @@ namespace Winterday.External.Gengo.Payloads
 
     public class AccountStats
     {
-        readonly decimal _creditsSpent;
-        readonly string _currency;
-        readonly DateTime _userSince;
+        public decimal CreditsSpent { get; private set;}
+        public string Currency { get; private set;}
+        public DateTime UserSince { get; private set;}
 
-        public decimal CreditsSpent
+        internal AccountStats(JObject obj)
         {
-            get
-            {
-                return _creditsSpent;
-            }
-        }
+            if (obj == null)
+                throw new ArgumentNullException("obj");
 
-        public string Currency
-        {
-            get
-            {
-                return _currency;
-            }
-        }
-
-        public DateTime UserSince
-        {
-            get
-            {
-                return _userSince;
-            }
-        }
-
-        AccountStats(decimal creditsSpent, string currency, DateTime userSince)
-        {
-            _creditsSpent = creditsSpent;
-            _currency = currency;
-            _userSince = userSince;
-        }
-
-        internal static AccountStats FromJObject(JObject o)
-        {
-
-            return new AccountStats(
-                o.Value<string>("credits_spent").ToDecimal(),
-                o.Value<string>("currency"),
-                o.Value<string>("user_since").ToLong().ToDateFromTimestamp()
-                );
-
+            CreditsSpent = obj.DecValueStrict("credits_spent");
+            Currency = obj.Value<string>("currency");
+            UserSince = obj.DateValueStrict("user_since");
         }
     }
 }

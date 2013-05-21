@@ -32,25 +32,8 @@ namespace Winterday.External.Gengo.Payloads
 
     public class DuplicateSubmission
     {
-        readonly Job _duplicateJob;
-        readonly List<SubmittedJob> _existingJobs;
-        readonly IReadOnlyList<SubmittedJob> _existingJobsRo;
-
-        public Job DuplicateJob
-        {
-            get
-            {
-                return _duplicateJob;
-            }
-        }
-
-        public IReadOnlyList<SubmittedJob> ExistingJobs
-        {
-            get
-            {
-                return _existingJobsRo;
-            }
-        }
+        public Job DuplicateJob { get; private set; }
+        public IReadOnlyList<SubmittedJob> ExistingJobs { get; private set; }
 
         internal DuplicateSubmission(Job duplicateJob, IEnumerable<SubmittedJob> existingJobs)
         {
@@ -60,10 +43,9 @@ namespace Winterday.External.Gengo.Payloads
             if (existingJobs == null)
                 throw new ArgumentNullException("existingJobs");
 
-            _duplicateJob = duplicateJob;
-            _existingJobs = existingJobs.ToList();
+            DuplicateJob = duplicateJob;
+            ExistingJobs = existingJobs.ToList().AsReadOnly();
 
-            _existingJobsRo = _existingJobs.AsReadOnly();
         }
     }
 }

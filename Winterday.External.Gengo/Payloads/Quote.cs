@@ -33,105 +33,41 @@ namespace Winterday.External.Gengo.Payloads
 
     public class FileQuote : Quote
     {
-        readonly string _body;
-        readonly string _identifier;
-        readonly string _sourceLang;
-        readonly string _title;
-
-        public string Body
-        {
-            get { return _body; }
-        }
-
-        public string Identifier
-        {
-            get { return _identifier; }
-        }
-
-        public string SourceLanguage
-        {
-            get { return _sourceLang; }
-        }
-
-        public string Title
-        {
-            get { return _title; }
-        }
+        public string Body { get; private set; }
+        public string Title  { get; private set; }
 
         internal FileQuote(JObject obj) : base(obj)
         {
-            _body = obj.Value<string>("body");
-            _identifier = obj.Value<string>("identifier");
-            _sourceLang = obj.Value<string>("lc_src");
-            _title = obj.Value<string>("title");
+            Body = obj.Value<string>("body");
+            Title = obj.Value<string>("title");
         }
     }
 
     public class Quote
     {
+        public int UnitCount { get; private set; }
+        public decimal Credits  { get; private set; }
+        public string Currency  { get; private set; }
+        public string Identifier  { get; private set; }
+        public string SourceLanguage  { get; private set; }
 
-        readonly int _unitCount;
+        public TimeSpan Eta { get; private set; }
 
-        readonly decimal _credits;
-        readonly string _currency;
-        readonly string _identifier;
-        readonly string _sourceLang;
-        
-        readonly TimeSpan _eta;
-        readonly JobType _type;
-
-        public int UnitCount
-        {
-            get { return _unitCount; }
-        }
-
-        public decimal Credits
-        {
-            get { return _credits; }
-        }
-
-        public string Currency
-        {
-            get { return _currency; }
-        }
-
-        public string Identifier
-        {
-            get { return _identifier; }
-        }
-
-        public string SourceLanguage
-        {
-            get { return _sourceLang; }
-        }
-
-        public TimeSpan Eta
-        {
-            get { return _eta; }
-        }
-
-        public JobType JobType
-        {
-            get { return _type; }
-        }
+        public JobType JobType  { get; private set; }
 
         internal Quote(JObject obj)
         {
             if (obj == null) throw new ArgumentNullException("obj");
 
-            _unitCount = obj.Value<int>("unit_count");
+            UnitCount = obj.IntValueStrict("unit_count");
+            Credits = obj.DecValueStrict("credits");
 
-            Decimal.TryParse(obj.Value<string>("credits"),
-                NumberStyles.Any,
-                CultureInfo.InvariantCulture,
-                out _credits);
+            Currency = obj.Value<string>("currency");
+            Identifier = obj.Value<string>("identifier");
+            SourceLanguage = obj.Value<string>("lc_src");
 
-            _currency = obj.Value<string>("currency");
-            _identifier = obj.Value<string>("identifier");
-            _sourceLang = obj.Value<string>("lc_src");
-
-            _eta = TimeSpan.FromSeconds(obj.Value<int>("eta"));
-            _type = obj.Value<string>("type").ToJobType();
+            Eta = obj.TsValueStrict("eta");
+            JobType = obj.Value<string>("type").ToJobType();
         }
     }
 }

@@ -33,18 +33,8 @@ namespace Winterday.External.Gengo.Payloads
 
     public class TimestampedId
     {
-        private readonly int _id;
-        private readonly DateTime _created;
-
-        public int Id
-        {
-            get { return _id; }
-        }
-
-        public DateTime Created
-        {
-            get { return _created; }
-        }
+        public int Id { get; private set; }
+        public DateTime Created { get; private set; }
 
         internal TimestampedId(JObject obj, string idProp, string createdProp)
         {
@@ -57,20 +47,8 @@ namespace Winterday.External.Gengo.Payloads
             if (createdProp == null)
                 throw new ArgumentNullException("createdProp");
 
-            Int32.TryParse(
-                obj.Value<string>(idProp), NumberStyles.Integer,
-                CultureInfo.InvariantCulture, out _id);
-
-            long ts;
-
-            Int64.TryParse(
-                obj.Value<string>(createdProp), NumberStyles.Integer,
-                CultureInfo.InvariantCulture, out ts);
-
-            if (ts > 0)
-            {
-                _created = ts.ToDateFromTimestamp();
-            }
+            Id = obj.IntValueStrict(idProp);
+            Created = obj.DateValueStrict(createdProp);
         }
 
 

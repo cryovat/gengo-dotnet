@@ -32,82 +32,20 @@ namespace Winterday.External.Gengo.Payloads
 
     public class Language
     {
-        readonly string _name;
-        readonly string _localizedName;
-        readonly string _code;
-        readonly string _unitType;
+        public string Name { get; private set; }
+        public string LocalizedName { get; private set; }
+        public string Code { get; private set; }
+        public string UnitType { get; private set; }
 
-        public string Name
+        internal Language(JObject obj)
         {
-            get
-            {
-                return _name;
-            }
-        }
+            if (obj == null)
+                throw new ArgumentNullException("obj");
 
-        public string LocalizedName
-        {
-            get
-            {
-                return _localizedName;
-            }
-        }
-
-        public string Code
-        {
-            get
-            {
-                return _code;
-            }
-        }
-
-        public string UnitType
-        {
-            get
-            {
-                return _unitType;
-            }
-        }
-
-        Language(string name, string localizedName, string code, string unitType)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Language name not provided", "name");
-
-            if (string.IsNullOrWhiteSpace(localizedName))
-                throw new ArgumentException("Localized language name not provided", "localizedName");
-
-            if (string.IsNullOrWhiteSpace(code))
-            {
-                throw new ArgumentException("Language code not provided", "code");
-            }
-
-            if (string.IsNullOrWhiteSpace(unitType))
-            {
-                throw new ArgumentException("Language unit type not provided", "unitType");
-            }
-
-            _name = name;
-            _localizedName = localizedName;
-            _code = code;
-            _unitType = unitType;
-        }
-
-        public override string ToString()
-        {
-            return String.Format("Name: {0}, LocalizedName: {1}, Code: {2}, UnitType: {3}", _name, _localizedName, _code, _unitType);
-        }
-
-        internal static Language FromJObject(JObject c)
-        {
-
-            return new Language(
-                c.Value<string>("language"),
-                c.Value<string>("localized_name"),
-                c.Value<string>("lc"),
-                c.Value<string>("unit_type")
-                );
-
+            Name = obj.Value<string>("language");
+            LocalizedName = obj.Value<string>("localized_name");
+            Code = obj.Value<string>("lc");
+            UnitType = obj.Value<string>("unit_type");
         }
     }
 }

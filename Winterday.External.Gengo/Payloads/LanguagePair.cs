@@ -32,80 +32,25 @@ namespace Winterday.External.Gengo.Payloads
 
     public class LanguagePair
     {
-        readonly string _fromLanguage;
-        readonly string _toLanguage;
+        public string FromLanguage  { get; private set; }
+        public string ToLanguage  { get; private set; }
+        public TranslationTier Tier { get; private set; }
+        public decimal UnitPrice { get; private set; }
 
-        readonly string _tier;
-
-        readonly decimal _unitPrice;
-
-        public string FromLanguage
+        internal LanguagePair(JObject obj)
         {
-            get
-            {
-                return _fromLanguage;
-            }
-        }
+            if (obj == null)
+                throw new ArgumentNullException("obj");
 
-        public string ToLanguage
-        {
-            get
-            {
-                return _toLanguage;
-            }
-        }
-
-        public string Tier
-        {
-            get
-            {
-                return _tier;
-            }
-        }
-
-        public decimal UnitPrice
-        {
-            get
-            {
-                return _unitPrice;
-            }
-        }
-
-        LanguagePair(string fromLanguage, string toLanguage, string tier, decimal unitPrice)
-        {
-            if (string.IsNullOrWhiteSpace(fromLanguage))
-                throw new ArgumentException("From Language not provided", "fromLanguage");
-
-            if (string.IsNullOrWhiteSpace(toLanguage))
-                throw new ArgumentException("To Language not provided", "toLanguage");
-
-            if (string.IsNullOrWhiteSpace(tier))
-                throw new ArgumentException("Tier not provided", "tier");
-
-            _fromLanguage = fromLanguage;
-            _toLanguage = toLanguage;
-            _tier = tier;
-
-            _unitPrice = unitPrice;
+            FromLanguage = obj.Value<string>("lc_src");
+            ToLanguage = obj.Value<string>("lc_tgt");
+            Tier = obj.Value<string>("tier").ToTranslationTier();
+            UnitPrice = obj.DecValueStrict("unit_price");
         }
 
         public override string ToString()
         {
-            return String.Format("FromLanguage: {0}, ToLanguage: {1}, Tier: {2}, UnitPrice: {3}", _fromLanguage, _toLanguage, _tier, _unitPrice);
-        }
-
-
-
-        internal static LanguagePair FromJObject(JObject o)
-        {
-
-            return new LanguagePair(
-                o.Value<string>("lc_src"),
-                o.Value<string>("lc_tgt"),
-                o.Value<string>("tier"),
-                o.Value<decimal>("unit_price")
-                );
-
+            return String.Format("FromLanguage: {0}, ToLanguage: {1}, Tier: {2}, UnitPrice: {3}", FromLanguage, ToLanguage, Tier, UnitPrice);
         }
     }
 }

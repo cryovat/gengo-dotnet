@@ -39,20 +39,10 @@ namespace Winterday.External.Gengo.Payloads
 
     public class FileJob : Job, IDisposable, IPostableFile
     {
-        readonly string _fileName;
-        readonly string _fileKey;
-
         readonly Lazy<HttpContent> _content;
 
-        public string FileKey
-        {
-            get { return _fileKey; }
-        }
-
-        public string FileName
-        {
-            get { return _fileName; }
-        }
+        public string FileKey { get; private set; }
+        public string FileName { get; private set; }
 
         HttpContent IPostableFile.Content
         {
@@ -77,10 +67,10 @@ namespace Winterday.External.Gengo.Payloads
             if (!File.Exists(filePath))
                 throw new FileNotFoundException();
 
-            _fileKey = fileKey ?? Guid.NewGuid().ToString();
-            _fileName = Path.GetFileName(_fileName);
+            FileKey = fileKey ?? Guid.NewGuid().ToString();
+            FileName = Path.GetFileName(FileName);
 
-            _content = LazyStream(_fileName, () => File.OpenRead(filePath));
+            _content = LazyStream(FileName, () => File.OpenRead(filePath));
         }
 
         public FileJob(string filePath, Stream stream, string fileKey = null)
@@ -93,10 +83,10 @@ namespace Winterday.External.Gengo.Payloads
             if (stream == null)
                 throw new ArgumentNullException("stream");
 
-            _fileKey = fileKey ?? Guid.NewGuid().ToString();
-            _fileName = Path.GetFileName(filePath);
+            FileKey = fileKey ?? Guid.NewGuid().ToString();
+            FileName = Path.GetFileName(filePath);
 
-            _content = LazyStream(_fileName, () => stream);
+            _content = LazyStream(FileName, () => stream);
         }
 
         public FileJob(string fileName, byte[] rawData, string fileKey = null)
@@ -109,16 +99,16 @@ namespace Winterday.External.Gengo.Payloads
             if (rawData == null)
                 throw new ArgumentNullException("rawData");
 
-            _fileKey = fileKey ?? Guid.NewGuid().ToString();
-            _fileName = fileName;
+            FileKey = fileKey ?? Guid.NewGuid().ToString();
+            FileName = fileName;
 
-            _content = LazyByteArray(_fileName, () => rawData);
+            _content = LazyByteArray(FileName, () => rawData);
         }
 
         internal override JObject ToJObject()
         {
             var obj = base.ToJObject();
-            obj["file_key"] = _fileKey;
+            obj["file_key"] = FileKey;
             return obj;
         }
 

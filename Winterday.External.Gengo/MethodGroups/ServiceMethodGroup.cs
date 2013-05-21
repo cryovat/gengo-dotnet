@@ -58,7 +58,7 @@ namespace Winterday.External.Gengo.MethodGroups
         {
             var json = await _client.GetJsonAsync<JArray>(UriPartLanguages, false);
 
-            return json.Values<JObject>().Select(e => Language.FromJObject(e)).ToArray();
+            return json.Values<JObject>().Select(e => new Language(e)).ToArray();
         }
 
         public async Task<LanguagePair[]> GetLanguagePairs()
@@ -66,7 +66,7 @@ namespace Winterday.External.Gengo.MethodGroups
             var json = await _client.GetJsonAsync<JArray>(UriPartLanguagePairs, false);
 
             return json.Values<JObject>().Select(
-                e => LanguagePair.FromJObject(e)).ToArray();
+                e => new LanguagePair(e)).ToArray();
         }
 
         public Task<Quote[]> GetQuote(

@@ -62,7 +62,7 @@ namespace Winterday.External.Gengo.MethodGroups
         {
             var json = await _client.GetJsonAsync<JObject>(UriPartStats, true);
 
-            return AccountStats.FromJObject(json);
+            return new AccountStats(json);
         }
     }
 }

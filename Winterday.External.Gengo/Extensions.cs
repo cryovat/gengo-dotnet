@@ -407,6 +407,11 @@ namespace Winterday.External.Gengo
             }
 
         }
+
+        internal static TimeSpan TsValueStrict(this JObject json, string propName)
+        {
+            return TimeSpan.FromSeconds(json.IntValueStrict(propName));
+        }
     }
 }
 
