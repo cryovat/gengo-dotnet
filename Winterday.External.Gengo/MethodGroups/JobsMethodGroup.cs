@@ -90,9 +90,7 @@ namespace Winterday.External.Gengo.MethodGroups
             }
 
             var url = UriPartJobsEndpoint + sb.ToString();
-            var json = await _client.GetJsonAsync<JObject>(url, true);
-
-            var arr = json.Value<JArray>("jobs");
+            var arr = await _client.GetJsonPropertyAsync<JArray>("jobs", url, true);
 
             return arr.Values<JObject>().Select(
                 o => new SubmittedJob(o)).ToArray();
