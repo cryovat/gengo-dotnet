@@ -1,5 +1,5 @@
 //
-// AccountTests.cs
+// AccountBalance.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -24,41 +24,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Winterday.External.Gengo.Tests.MethodGroups
+namespace Winterday.External.Gengo.Payloads
 {
     using System;
-    using System.Threading.Tasks;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
-    public class AccountTests
+    using Newtonsoft.Json.Linq;
+
+    public class AccountBalance
     {
-        GengoClient client;
+        public decimal Credits { get; private set;}
+        public string Currency { get; private set;}
 
-        [TestInitialize]
-        public void SetUpAttribute()
+        internal AccountBalance(JObject obj)
         {
-            client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
-        }
+            if (obj == null)
+                throw new ArgumentNullException("obj");
 
-        [TestMethod]
-        public async Task TestGetStats()
-        {
-            var stats = await client.Account.GetStats();
-
-            Assert.IsNotNull(stats);
-            Assert.AreNotEqual(new DateTime(), stats.UserSince);
-            Assert.IsTrue(0 != stats.CreditsSpent);
-        }
-
-        [TestMethod]
-        public async Task TestGetBalance()
-        {
-            var balance = await client.Account.GetBalance();
-
-            Assert.IsNotNull(balance);
-            Assert.IsTrue(balance.Credits > 0);
-            Assert.IsNotNull(balance.Currency);
+            Credits = obj.DecValueStrict("credits");
+            Currency = obj.Value<string>("currency");
         }
     }
 }

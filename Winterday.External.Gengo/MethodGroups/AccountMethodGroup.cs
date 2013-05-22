@@ -51,11 +51,11 @@ namespace Winterday.External.Gengo.MethodGroups
             _client = client;
         }
 
-        public async Task<decimal> GetBalance()
+        public async Task<AccountBalance> GetBalance()
         {
             var json = await _client.GetJsonAsync<JObject>(UriPartBalance, true);
 
-            return json.Value<decimal>("credits");
+            return new AccountBalance(json);
         }
 
         public async Task<AccountStats> GetStats()
