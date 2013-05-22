@@ -41,12 +41,23 @@ namespace Winterday.External.Gengo.Payloads
     {
         readonly Lazy<HttpContent> _content;
 
+        bool disposed;
+
         public string FileKey { get; private set; }
         public string FileName { get; private set; }
 
         HttpContent IPostableFile.Content
         {
-            get { return _content.Value; }
+            get {
+                if (disposed)
+                {
+                    throw new ObjectDisposedException("FileJob");
+                }
+                else
+                {
+                    return _content.Value;
+                }            
+            }
         }
 
         public override JobType JobType
@@ -137,6 +148,8 @@ namespace Winterday.External.Gengo.Payloads
 
         public void Dispose()
         {
+            disposed = true;
+
             if (_content.IsValueCreated)
             {
                 _content.Value.Dispose();

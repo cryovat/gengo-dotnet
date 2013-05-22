@@ -55,12 +55,6 @@ namespace Winterday.External.Gengo
         readonly Uri _baseUri;
         readonly HttpClient _client = new HttpClient();
 
-        AccountMethodGroup _account;
-        JobMethodGroup _job;
-        JobsMethodGroup _jobs;
-        ServiceMethodGroup _service;
-        OrderMethodGroup _order;
-
         bool _disposed;
 
         bool IGengoClient.IsDisposed
@@ -71,30 +65,11 @@ namespace Winterday.External.Gengo
             }
         }
 
-        public AccountMethodGroup Account
-        {
-            get { return _account; }
-        }
-
-        public JobMethodGroup Job
-        {
-            get { return _job; }
-        }
-
-        public JobsMethodGroup Jobs
-        {
-            get { return _jobs; }
-        }
-
-        public ServiceMethodGroup Service
-        {
-            get { return _service; }
-        }
-
-        public OrderMethodGroup Order
-        {
-            get { return _order; }
-        }
+        public AccountMethodGroup Account { get ; private set ; }
+        public JobMethodGroup Job { get ; private set ; }
+        public JobsMethodGroup Jobs { get ; private set ; }
+        public ServiceMethodGroup Service { get ; private set ; }
+        public OrderMethodGroup Order { get ; private set ; }
 
         private IGengoClient that
         {
@@ -159,11 +134,11 @@ namespace Winterday.External.Gengo
 
         private void initClient()
         {
-            _account = new AccountMethodGroup(this);
-            _job = new JobMethodGroup(this);
-            _jobs = new JobsMethodGroup(this);
-            _service = new ServiceMethodGroup(this);
-            _order = new OrderMethodGroup(this);
+            Account = new AccountMethodGroup(this);
+            Job = new JobMethodGroup(this);
+            Jobs = new JobsMethodGroup(this);
+            Service = new ServiceMethodGroup(this);
+            Order = new OrderMethodGroup(this);
 
             var assemblyName = GetType().Assembly.GetName();
             var headers = _client.DefaultRequestHeaders;
@@ -253,38 +228,27 @@ namespace Winterday.External.Gengo
         }
 
 
-        async Task<JsonT> IGengoClient.PostFormAsync<JsonT>(String uriPart, Dictionary<string, string> values)
+        Task<JsonT> IGengoClient.PostFormAsync<JsonT>(String uriPart, Dictionary<string, string> values)
         {
             if (values == null) throw new ArgumentNullException("values");
 
-            var auth = new Dictionary<string, string>();
-
-            AddAuthData(auth);
-
-            var data = new FormUrlEncodedContent(values);
-
-            var response = await _client.PostAsync(new Uri(_baseUri, uriPart), data);
-            var responseStr = await response.Content.ReadAsStringAsync();
-
-            return UnpackJson<JsonT>(responseStr);
+            return TransferContent<JsonT>(uriPart, getContent(null, values), _client.PostAsync);
         }
 
         Task<JsonT> IGengoClient.PostJsonAsync<JsonT>(
             String uriPart, JToken json
             )
         {
-            return that.PostJsonAsync<JsonT>(uriPart, json, null);
+            return TransferContent<JsonT>(uriPart, getContent(json), _client.PostAsync);
         }
 
-        async Task<JsonT> IGengoClient.PostJsonAsync<JsonT>(
+        Task<JsonT> IGengoClient.PostJsonAsync<JsonT>(
             String uriPart, JToken json, IEnumerable<IPostableFile> files
             )
         {
             if (json == null) throw new ArgumentNullException("json");
 
-            return await transferJsonAsync<JsonT>(
-                uriPart, json, files, (u, c) => _client.PostAsync(u, c));
-
+            return TransferContent<JsonT>(uriPart, getContent(json, files), _client.PostAsync);
         }
 
         Task<JsonT> IGengoClient.PutJsonAsync<JsonT>(
@@ -293,47 +257,58 @@ namespace Winterday.External.Gengo
         {
             if (json == null) throw new ArgumentNullException("json");
 
-            return transferJsonAsync<JsonT>(
-                uriPart, json, null, (u, c) => _client.PutAsync(u, c));
+            return TransferContent<JsonT>(uriPart, getContent(json), _client.PutAsync);
         }
 
-        async Task<JsonT> transferJsonAsync<JsonT>(
-            String uriPart, JToken json, IEnumerable<IPostableFile> files,
-            Func<Uri, HttpContent, Task<HttpResponseMessage>> clientFunc
-            ) where JsonT : JToken
+        async Task<JsonT> TransferContent<JsonT>(
+            string uriPart,
+            HttpContent content,
+            Func<Uri, HttpContent, Task<HttpResponseMessage>> func
+            )
+            where JsonT : JToken
         {
-            if (clientFunc == null) throw new ArgumentNullException("clientFunc");
-            if (json == null) throw new ArgumentNullException("json");
-
-            var auth = new Dictionary<string, string>();
-
-            AddAuthData(auth);
-
-            var multi = new MultipartFormDataContent();
-
-            foreach (var pair in auth)
+            using (var response = await func(new Uri(_baseUri, uriPart), content))
             {
-                multi.Add(new StringContent(pair.Value, Encoding.UTF8, MediaTypeNames.Text.Plain), pair.Key);
+                var responseStr = await response.Content.ReadAsStringAsync();
+                return UnpackJson<JsonT>(responseStr);
             }
-
-            var data = new StringContent(json.ToString(), Encoding.UTF8, MimeTypeApplicationJson);
-
-            multi.Add(data, "data");
-
-            if (files != null)
-            {
-                foreach (var file in files)
-                {
-                    multi.Add(file.Content, file.FileKey, file.FileName);
-                }
-            }
-
-            var response = await clientFunc(new Uri(_baseUri, uriPart), multi);
-            var responseStr = await response.Content.ReadAsStringAsync();
-
-            return UnpackJson<JsonT>(responseStr);
         }
 
+        HttpContent getContent(
+            JToken json,
+            Dictionary<string, string> data = null
+            )
+        {
+            data = data ?? new Dictionary<string, string>();
+            data.Add("data", json.ToString());
+            
+            AddAuthData(data);
+            return new FormUrlEncodedContent(data);
+        }
+
+        HttpContent getContent(
+            JToken json,
+            IEnumerable<IPostableFile> files
+            )
+        {
+            var multi = new MultipartFormDataContent();
+            var dict = new Dictionary<string, string>();
+
+            AddAuthData(dict);
+            foreach (var item in dict)
+            {
+                multi.Add(new StringContent(item.Value, Encoding.UTF8), item.Key);
+            }
+
+            multi.Add(new StringContent(json.ToString(), Encoding.UTF8), "data");
+
+            foreach (var file in files)
+            {
+                multi.Add(file.Content, file.FileKey, file.FileName);
+            }
+
+            return multi;
+        }
 
         JsonT UnpackJson<JsonT>(String rawJson) where JsonT : JToken
         {
