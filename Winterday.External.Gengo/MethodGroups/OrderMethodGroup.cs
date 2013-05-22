@@ -34,6 +34,11 @@ namespace Winterday.External.Gengo.MethodGroups
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
+    /// <summary>
+    /// Provides access to methods in the
+    /// <a href="http://developers.gengo.com/v2/order/">Order</a>
+    /// method group.
+    /// </summary>
     public class OrderMethodGroup
     {
         internal const string UriPartOrder = "translate/order/";
@@ -48,6 +53,12 @@ namespace Winterday.External.Gengo.MethodGroups
             _client = client;
         }
 
+        /// <summary>
+        /// Gets information about an order, its constituent jobs
+        /// and their statuses
+        /// </summary>
+        /// <param name="orderId">The order ID</param>
+        /// <returns>Task yielding order information</returns>
         public async Task<Order> Get(int orderId)
         {
             var obj = await _client.GetJsonAsync<JObject>(
@@ -60,6 +71,12 @@ namespace Winterday.External.Gengo.MethodGroups
             return new Order(obj.Value<JObject>("order"));
         }
 
+        /// <summary>
+        /// Cancels all the jobs in an order. This assumes that they
+        /// have not already been started by a translator
+        /// </summary>
+        /// <param name="orderId">The order ID</param>
+        /// <returns>Task yielding no value</returns>
         public async Task Delete(int orderId)
         {
             await _client.DeleteAsync<JObject>(UriPartOrder + orderId);

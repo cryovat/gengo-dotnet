@@ -30,10 +30,25 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// A snapshot of account statistics
+    /// </summary>
     public class AccountStats
     {
+        /// <summary>
+        /// Total number of credits spent during the lifetime of the
+        /// account
+        /// </summary>
         public decimal CreditsSpent { get; private set;}
+
+        /// <summary>
+        /// The currency for spent credits
+        /// </summary>
         public string Currency { get; private set;}
+
+        /// <summary>
+        /// The date and time when the account was created
+        /// </summary>
         public DateTime UserSince { get; private set;}
 
         internal AccountStats(JObject obj)

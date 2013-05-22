@@ -30,9 +30,19 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// Feedback on an approved job
+    /// </summary>
     public class Feedback
     {
+        /// <summary>
+        /// Comment left by customer (you) for translator
+        /// </summary>
         public string CommentForTranslator { get; private set; }
+
+        /// <summary>
+        /// Rating given to translation work
+        /// </summary>
         public Stars Rating { get; private set; }
 
         internal Feedback(JObject obj)

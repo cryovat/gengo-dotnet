@@ -38,6 +38,11 @@ namespace Winterday.External.Gengo.MethodGroups
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
+    /// <summary>
+    /// Provides access to methods in the
+    /// <a href="http://developers.gengo.com/v2/jobs/">Jobs</a>
+    /// method group.
+    /// </summary>
     public class JobsMethodGroup
     {
         internal const string UriPartJobsGroup = "translate/jobs/group/";
@@ -53,6 +58,11 @@ namespace Winterday.External.Gengo.MethodGroups
             _client = client;
         }
 
+        /// <summary>
+        /// Gets information about a series of specified jobs
+        /// </summary>
+        /// <param name="jobIds">The IDs of jobs to retrieve</param>
+        /// <returns>Task yielding array of jobs</returns>
         public Task<SubmittedJob[]> GetJobsByIds(params int[] jobIds) {
 
             if (jobIds == null) throw new ArgumentNullException("jobIds");
@@ -67,6 +77,14 @@ namespace Winterday.External.Gengo.MethodGroups
             }
         }
 
+        /// <summary>
+        /// Gets the IDs of jobs belonging to a given group. For jobs to belong
+        /// to a group, they must have been submitted together, with the same
+        /// source and target languages and with a requirement of same
+        /// translator.
+        /// </summary>
+        /// <param name="jobIds">The group ID</param>
+        /// <returns>Task yielding list of job IDs</returns>
         public async Task<TimestampedReadOnlyCollection<int>> GetJobGroup(
             int groupId
             )
@@ -94,6 +112,11 @@ namespace Winterday.External.Gengo.MethodGroups
             return new TimestampedReadOnlyCollection<int>(created, ids);
         }
 
+        /// <summary>
+        /// Gets information about a series of specified jobs
+        /// </summary>
+        /// <param name="jobIds">The IDs of jobs to retrieve</param>
+        /// <returns>Task yielding array of jobs</returns>
         public async Task<SubmittedJob[]> GetJobsByIds(IEnumerable<int> jobIds)
         {
             if (jobIds == null) throw new ArgumentNullException("jobIds");
@@ -124,6 +147,15 @@ namespace Winterday.External.Gengo.MethodGroups
                 o => new SubmittedJob(o)).ToArray();
         }
 
+        /// <summary>
+        /// Gets the ID of recent jobs matching optional filter criterias
+        /// </summary>
+        /// <param name="status">Status of jobs to get (optional)</param>
+        /// <param name="afterDateTime">
+        /// Oldest allowed age of jobs to get (optional)
+        /// </param>
+        /// <param name="maxCount">Max number of jobs to retrive</param>
+        /// <returns>Task yielding array of job IDs</returns>
         public async Task<TimestampedId[]> GetRecentJobs(
             TranslationStatus? status = null,
             DateTime? afterDateTime = null,
@@ -173,6 +205,19 @@ namespace Winterday.External.Gengo.MethodGroups
                 new TimestampedId(o, "job_id", "ctime")).ToArray();
         }
 
+        /// <summary>
+        /// Submits a series of jobs for translation
+        /// </summary>
+        /// <param name="requireSameTranslator">
+        /// Wether the jobs may be split among several translators
+        /// </param>
+        /// <param name="allowTranslatorChange">
+        /// Wether Gengo may assign a new translator if the original
+        /// becomes unavailable
+        /// </param>
+        /// <param name="jobs">Jobs for translation</param>
+        /// <returns>Task yielding the resulting order
+        /// </returns>
         public Task<Confirmation> Submit(
             bool requireSameTranslator,
             bool allowTranslatorChange,
@@ -186,6 +231,19 @@ namespace Winterday.External.Gengo.MethodGroups
                 (IEnumerable<Job>)jobs);
         }
 
+        /// <summary>
+        /// Submits a series of jobs for translation
+        /// </summary>
+        /// <param name="requireSameTranslator">
+        /// Wether the jobs may be split among several translators
+        /// </param>
+        /// <param name="allowTranslatorChange">
+        /// Wether Gengo may assign a new translator if the original
+        /// becomes unavailable
+        /// </param>
+        /// <param name="jobs">Jobs for translation</param>
+        /// <returns>Task yielding the resulting order
+        /// </returns>
         public async Task<Confirmation> Submit(
             bool requireSameTranslator,
             bool allowTranslatorChange,

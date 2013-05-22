@@ -36,6 +36,11 @@ namespace Winterday.External.Gengo.MethodGroups
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
+    /// <summary>
+    /// Provides access to methods in the
+    /// <a href="http://developers.gengo.com/v2/job/">Job</a>
+    /// method group.
+    /// </summary>
     public class JobMethodGroup
     {
         internal const string UriPartJob = "translate/job/";
@@ -60,6 +65,21 @@ namespace Winterday.External.Gengo.MethodGroups
             _client = client;
         }
 
+        /// <summary>
+        /// Approves a job currently in the 'Reviewable' state
+        /// </summary>
+        /// <param name="jobId">The job ID</param>
+        /// <param name="stars">Quality rating of translation work</param>
+        /// <param name="commentForTranslator">
+        /// Comments for translator (optional)
+        /// </param>
+        /// <param name="commentForGengo">
+        /// Comments for Gengo (optional)
+        /// </param>
+        /// <param name="gengoCommentIsPublic">
+        /// Wether Gengo may publish the comment on their public website
+        /// </param>
+        /// <returns>Task yielding no value</returns>
         public async Task Approve(int jobId, Stars stars,
             string commentForTranslator,
             string commentForGengo,
@@ -83,6 +103,15 @@ namespace Winterday.External.Gengo.MethodGroups
             await _client.PutJsonAsync<JObject>(uri, data);
         }
 
+        /// <summary>
+        /// Gets information about a submitted job
+        /// </summary>
+        /// <param name="jobId">The job ID</param>
+        /// <param name="includeMachineTranslation">
+        /// If a machine translated preview should be provided if a human-
+        /// made one is not yet avaible.
+        /// </param>
+        /// <returns>Task yielding job data</returns>
         public async Task<SubmittedJob> Get(int jobId,
             bool includeMachineTranslation)
         {
@@ -97,6 +126,11 @@ namespace Winterday.External.Gengo.MethodGroups
             return new SubmittedJob(obj["job"] as JObject);
         }
 
+        /// <summary>
+        /// Gets the submitted feedback for a job in the 'Approved' state
+        /// </summary>
+        /// <param name="jobId">The job ID</param>
+        /// <returns>Task yielding comment and rating</returns>
         public async Task<Feedback> GetFeedback(int jobId)
         {
             var uri = string.Format(UriPartFeedback, jobId);
@@ -106,6 +140,11 @@ namespace Winterday.External.Gengo.MethodGroups
             return new Feedback(obj["feedback"] as JObject);
         }
 
+        /// <summary>
+        /// Gets a raw JPEG with a preview of the translated work
+        /// </summary>
+        /// <param name="jobId">The job ID</param>
+        /// <returns>Task yielding image as byte array</returns>
         public Task<byte[]> GetPreviewImage(int jobId)
         {
             var uri = string.Format(UriPartPreview, jobId);
@@ -113,6 +152,12 @@ namespace Winterday.External.Gengo.MethodGroups
             return _client.GetByteArrayAsync(uri, true);
         }
 
+        /// <summary>
+        /// Gets a specific revision for a given job
+        /// </summary>
+        /// <param name="jobId">The job ID</param>
+        /// <param name="revisionId">The revision ID</param>
+        /// <returns>Task yielding revision data</returns>
         public async Task<Revision> GetRevision(int jobId, int revisionId)
         {
             var uri = string.Format(UriPartRevision, jobId, revisionId);
@@ -122,6 +167,11 @@ namespace Winterday.External.Gengo.MethodGroups
             return new Revision(rev);
         }
 
+        /// <summary>
+        /// Gets a list of revision available for a job
+        /// </summary>
+        /// <param name="jobId">The job ID</param>
+        /// <returns>Task yielding array of revision ids</returns>
         public async Task<TimestampedId[]> GetRevisions(int jobId)
         {
             var uri = string.Format(UriPartRevisions, jobId);
@@ -132,6 +182,18 @@ namespace Winterday.External.Gengo.MethodGroups
                 o => new TimestampedId(o, "rev_id", "ctime")).ToArray();
         }
         
+        /// <summary>
+        /// Rejects a job in the 'Reviewable' state
+        /// </summary>
+        /// <param name="jobId">The job ID</param>
+        /// <param name="reason">Reason for rejection (mandatory)</param>
+        /// <param name="comment">Elaboration on reason (mandatory)</param>
+        /// <param name="captcha">
+        /// Value of captcha image. The URL for this can be obtained through
+        /// the <see cref="Get"/> method.
+        /// </param>
+        /// <param name="requeueJob"></param>
+        /// <returns></returns>
         public async Task Reject(int jobId, RejectionReason reason,
             string comment, string captcha, bool requeueJob)
         {
@@ -159,6 +221,12 @@ namespace Winterday.External.Gengo.MethodGroups
             await _client.PutJsonAsync<JObject>(uri, data);
         }
 
+        /// <summary>
+        /// Returns a job in the 'Reviewable' state for a new revision
+        /// </summary>
+        /// <param name="jobId">The job ID</param>
+        /// <param name="comment">Reason for new revision (mandatory)</param>
+        /// <returns>Task yielding no value</returns>
         public async Task ReturnForRevision(int jobId, string comment)
         {
             var uri = UriPartJob + jobId;
@@ -174,6 +242,11 @@ namespace Winterday.External.Gengo.MethodGroups
             await _client.PutJsonAsync<JObject>(uri, data);
         }
 
+        /// <summary>
+        /// Cancels a job in the 'Available' state
+        /// </summary>
+        /// <param name="jobId">The job ID</param>
+        /// <returns>Task yielding no value</returns>
         public async Task Delete(int jobId)
         {
             var uri = UriPartJob + jobId;
@@ -181,6 +254,11 @@ namespace Winterday.External.Gengo.MethodGroups
             await _client.DeleteAsync<JObject>(uri);
         }
 
+        /// <summary>
+        /// Gets a list of comments for a given job
+        /// </summary>
+        /// <param name="jobID">The job ID</param>
+        /// <returns>Task yielding array of comments</returns>
         public async Task<Comment[]> GetComments(int jobID)
         {
             var uri = String.Format(UriPartComments, jobID);
@@ -190,6 +268,12 @@ namespace Winterday.External.Gengo.MethodGroups
                 o => new Comment(o)).ToArray();
         }
 
+        /// <summary>
+        /// Posts a new comment
+        /// </summary>
+        /// <param name="jobID">The job ID</param>
+        /// <param name="body">Comment body (mandatory)</param>
+        /// <returns>Task yielding no value</returns>
         public async Task PostComment(int jobID, string body)
         {
             if (String.IsNullOrWhiteSpace(body)) throw new ArgumentException("Comment body not provided", "body");

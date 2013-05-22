@@ -31,10 +31,24 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// A comment posted to a translation job
+    /// </summary>
     public class Comment
     {
+        /// <summary>
+        /// The comment body
+        /// </summary>
         public string Body { get; private set; }
+
+        /// <summary>
+        /// The comment author
+        /// </summary>
         public AuthorType Author { get; private set; }
+
+        /// <summary>
+        /// Time and date for when the comment as created
+        /// </summary>
         public DateTime Created { get; private set; }
 
         internal Comment(JObject obj)

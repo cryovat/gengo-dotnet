@@ -30,9 +30,19 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// A snapshot of the account credit balance
+    /// </summary>
     public class AccountBalance
     {
+        /// <summary>
+        /// Number of credits
+        /// </summary>
         public decimal Credits { get; private set;}
+
+        /// <summary>
+        /// The currency of the credits
+        /// </summary>
         public string Currency { get; private set;}
 
         internal AccountBalance(JObject obj)

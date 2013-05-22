@@ -30,9 +30,17 @@ namespace Winterday.External.Gengo.Payloads
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
+    /// <summary>
+    /// A read-only collection of values associated with a common
+    /// creation date
+    /// </summary>
+    /// <typeparam name="T">The type of item sin the collection</typeparam>
     public class TimestampedReadOnlyCollection<T>
         : ReadOnlyCollection<T>
     {
+        /// <summary>
+        /// The shared creation date
+        /// </summary>
         public DateTime Created { get; private set; }
 
         internal TimestampedReadOnlyCollection(

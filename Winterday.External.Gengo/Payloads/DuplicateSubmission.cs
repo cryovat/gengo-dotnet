@@ -30,9 +30,19 @@ namespace Winterday.External.Gengo.Payloads
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Encodes information about a duplicate job submission
+    /// </summary>
     public class DuplicateSubmission
     {
+        /// <summary>
+        /// The submitted job that was rejected as a duplicate
+        /// </summary>
         public Job DuplicateJob { get; private set; }
+
+        /// <summary>
+        /// The existing job(s)
+        /// </summary>
         public IReadOnlyList<SubmittedJob> ExistingJobs { get; private set; }
 
         internal DuplicateSubmission(Job duplicateJob, IEnumerable<SubmittedJob> existingJobs)

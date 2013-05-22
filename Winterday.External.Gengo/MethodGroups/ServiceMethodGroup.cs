@@ -36,6 +36,11 @@ namespace Winterday.External.Gengo.MethodGroups
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
+    /// <summary>
+    /// Provides access to methods in the
+    /// <a href="http://developers.gengo.com/v2/service/">Service</a>
+    /// method group.
+    /// </summary>
     public class ServiceMethodGroup
     {
         internal const string UriPartLanguages = "translate/service/languages";
@@ -54,6 +59,10 @@ namespace Winterday.External.Gengo.MethodGroups
             _client = client;
         }
 
+        /// <summary>
+        /// Gets the languages currently supported by Gengo
+        /// </summary>
+        /// <returns>Task yielding array of languages</returns>
         public async Task<Language[]> GetLanguages()
         {
             var json = await _client.GetJsonAsync<JArray>(UriPartLanguages, false);
@@ -61,6 +70,11 @@ namespace Winterday.External.Gengo.MethodGroups
             return json.Values<JObject>().Select(e => new Language(e)).ToArray();
         }
 
+        /// <summary>
+        /// Gets a list of source and target languages supported
+        /// by Gengo
+        /// </summary>
+        /// <returns>Task yielding array of language pairs</returns>
         public async Task<LanguagePair[]> GetLanguagePairs()
         {
             var json = await _client.GetJsonAsync<JArray>(UriPartLanguagePairs, false);
@@ -69,6 +83,14 @@ namespace Winterday.External.Gengo.MethodGroups
                 e => new LanguagePair(e)).ToArray();
         }
 
+        /// <summary>
+        /// Gets a price quote for a sequence of jobs
+        /// </summary>
+        /// <param name="requireSameTranslator">
+        /// Wether the jobs may be split among several translators
+        /// </param>
+        /// <param name="jobs">Jobs to get quote for</param>
+        /// <returns>Task yielding job quotes</returns>
         public Task<Quote[]> GetQuote(
             bool requireSameTranslator, params Job[] jobs)
         {
@@ -77,6 +99,14 @@ namespace Winterday.External.Gengo.MethodGroups
             return GetQuote(requireSameTranslator, (IEnumerable<Job>)jobs);
         }
 
+        /// <summary>
+        /// Gets a price quote for a sequence of jobs
+        /// </summary>
+        /// <param name="requireSameTranslator">
+        /// Wether the jobs may be split among several translators
+        /// </param>
+        /// <param name="jobs">Jobs to get quote for</param>
+        /// <returns>Task yielding job quotes</returns>
         public async Task<Quote[]> GetQuote(
                 bool requireSameTranslator, IEnumerable<Job> jobs)
         {
@@ -95,6 +125,12 @@ namespace Winterday.External.Gengo.MethodGroups
             return quotes.Select(o => new Quote((JObject)o)).ToArray();
         }
 
+        /// <summary>
+        /// Gets a price quote for a sequence of jobs where the source
+        /// text is contained in files
+        /// </summary>
+        /// <param name="jobs">File jobs to get quote for</param>
+        /// <returns>Task yielding file job quotes</returns>
         public Task<FileQuote[]> GetQuoteForFiles(
             params FileJob[] jobs)
         {
@@ -104,6 +140,12 @@ namespace Winterday.External.Gengo.MethodGroups
             return GetQuoteForFiles((IEnumerable<FileJob>)jobs);
         }
 
+        /// <summary>
+        /// Gets a price quote for a sequence of jobs where the source
+        /// text is contained in files
+        /// </summary>
+        /// <param name="jobs">File jobs to get quote for</param>
+        /// <returns>Task yielding file job quotes</returns>
         public async Task<FileQuote[]> GetQuoteForFiles(
             IEnumerable<FileJob> jobs)
         {

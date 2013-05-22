@@ -30,9 +30,19 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// A revision of the translated text of a job
+    /// </summary>
     public class Revision
     {
+        /// <summary>
+        /// When the revision was created
+        /// </summary>
         public DateTime Created { get; private set; }
+
+        /// <summary>
+        /// The text content of the revision
+        /// </summary>
         public string Body { get; private set; }
 
         internal Revision(JObject obj)

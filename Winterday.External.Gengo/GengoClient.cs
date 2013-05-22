@@ -41,6 +41,9 @@ namespace Winterday.External.Gengo
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
+    /// <summary>
+    /// Client for version 2 of the Gengo API
+    /// </summary>
     public class GengoClient : IGengoClient, IDisposable
     {
         internal const string ProductionBaseUri = "http://api.gengo.com/v2/";
@@ -71,11 +74,20 @@ namespace Winterday.External.Gengo
         public ServiceMethodGroup Service { get ; private set ; }
         public OrderMethodGroup Order { get ; private set ; }
 
+        /// <summary>
+        /// Used inside the class to call explicitly implemented interface
+        /// methods.
+        /// </summary>
         private IGengoClient that
         {
             get { return this as IGengoClient; }
         }
 
+        /// <summary>
+        /// Creates a new instance of the Gengo API client in production mode
+        /// </summary>
+        /// <param name="privateKey">API public key</param>
+        /// <param name="publicKey">API private key</param>
         public GengoClient(string privateKey, string publicKey)
         {
             if (string.IsNullOrWhiteSpace(privateKey))
@@ -92,6 +104,12 @@ namespace Winterday.External.Gengo
             initClient();
         }
 
+        /// <summary>
+        /// Creates a new instance of the Gengo API client with the specified mode
+        /// </summary>
+        /// <param name="privateKey">API public key</param>
+        /// <param name="publicKey">API private key</param>
+        /// <param name="mode">Wether to run in Production or Sandbox mdoe</param>
         public GengoClient(string privateKey, string publicKey, ClientMode mode)
         {
             if (string.IsNullOrWhiteSpace(privateKey))
@@ -110,6 +128,13 @@ namespace Winterday.External.Gengo
             initClient();
         }
 
+        /// <summary>
+        /// Creates a new instance of the Gengo API client with the specified base URI.
+        /// This should not be necessary to specify explicitly.
+        /// </summary>
+        /// <param name="privateKey">API public key</param>
+        /// <param name="publicKey">API private key</param>
+        /// <param name="baseUri">The absolute base URI for method calls</param>
         public GengoClient(string privateKey, string publicKey, String baseUri)
         {
             if (string.IsNullOrWhiteSpace(privateKey))

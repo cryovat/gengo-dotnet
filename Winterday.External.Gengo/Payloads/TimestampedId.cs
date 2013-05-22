@@ -30,10 +30,20 @@ namespace Winterday.External.Gengo.Payloads
     using System.Globalization;
 
     using Newtonsoft.Json.Linq;
-
+    
+    /// <summary>
+    /// An identifier paired with a created time
+    /// </summary>
     public class TimestampedId
     {
+        /// <summary>
+        /// The identifier
+        /// </summary>
         public int Id { get; private set; }
+
+        /// <summary>
+        /// The created date/time
+        /// </summary>
         public DateTime Created { get; private set; }
 
         internal TimestampedId(JObject obj, string idProp, string createdProp)

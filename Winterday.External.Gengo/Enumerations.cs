@@ -26,26 +26,57 @@
 
 namespace Winterday.External.Gengo
 {
+    /// <summary>
+    /// The author of a comment
+    /// </summary>
     public enum AuthorType
     {
+        /// <summary>
+        /// This value is the generic "undefined" one and should never be
+        /// returned by the service.
+        /// </summary>
         Unknown,
         Translator,
         SeniorTranslator,
         Customer
     }
 
+    /// <summary>
+    /// The type of job submission
+    /// </summary>
     public enum JobType
     {
+        /// <summary>
+        /// The text to be translated is/was submitted along with the job
+        /// description
+        /// </summary>
         Text,
+        /// <summary>
+        /// The text to be translated is/was submitted for a quote before
+        /// actual submission
+        /// </summary>
         File
     }
 
+    /// <summary>
+    /// The mode for the Gengo API client
+    /// </summary>
     public enum ClientMode
     {
+        /// <summary>
+        /// The client invokes API methods in the (for-money)
+        /// production service
+        /// </summary>
         Production,
+        /// <summary>
+        /// The client invokes API methods in the (free testing) Sandbox
+        /// </summary>
         Sandbox
     }
 
+    /// <summary>
+    /// Reason for rejecting a translation
+    /// </summary>
     public enum RejectionReason
     {
         Quality,
@@ -53,6 +84,9 @@ namespace Winterday.External.Gengo
         Other
     }
 
+    /// <summary>
+    /// Rating for a reviewable translation. Increasing scale
+    /// </summary>
     public enum Stars : int
     {
         Unspecified = 0,
@@ -63,6 +97,9 @@ namespace Winterday.External.Gengo
         Five = 5
     }
 
+    /// <summary>
+    /// The translation tier for a job. Decides price/time
+    /// </summary>
     public enum TranslationTier
     {
         Standard,
@@ -72,6 +109,11 @@ namespace Winterday.External.Gengo
         Unknown
     }
 
+    /// <summary>
+    /// The status of a given job. See the API documentation for
+    /// <a href="http://developers.gengo.com/overview/#job-statuses">
+    /// status meanings</a>
+    /// </summary>
     public enum TranslationStatus
     {
         Available,

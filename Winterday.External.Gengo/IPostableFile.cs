@@ -28,10 +28,24 @@ namespace Winterday.External.Gengo
 {
     using System.Net.Http;
 
+    /// <summary>
+    /// A generic source for files to be submitted to the service.
+    /// </summary>
     internal interface IPostableFile
     {
+        /// <summary>
+        /// The key used to link the job description to the file
+        /// </summary>
         string FileKey { get; }
+
+        /// <summary>
+        /// The name of the file
+        /// </summary>
         string FileName { get; }
+
+        /// <summary>
+        /// The raw content to submit to the server
+        /// </summary>
         HttpContent Content { get; }
     }
 }

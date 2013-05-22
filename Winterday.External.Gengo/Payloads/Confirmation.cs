@@ -33,6 +33,9 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// An order confirmation
+    /// </summary>
     public class Confirmation
     {
         int _groupId;
@@ -46,36 +49,59 @@ namespace Winterday.External.Gengo.Payloads
         readonly List<DuplicateSubmission> _dupes;
         readonly IReadOnlyList<DuplicateSubmission> _dupesRo;
 
+        /// <summary>
+        /// The group ID if the order was submitted with the requirement
+        /// of a single translator.
+        /// </summary>
         public int GroupId
         {
             get { return _groupId; }
         }
 
+        /// <summary>
+        /// Number of valid jobs contained in the order
+        /// </summary>
         public int JobCount
         {
             get { return _jobCount; }
         }
 
+        /// <summary>
+        /// The ID of the confirmed order
+        /// </summary>
         public int OrderId
         {
             get { return _orderId; }
         }
 
+        /// <summary>
+        /// The cost of the order in credits
+        /// </summary>
         public decimal CreditsUsed
         {
             get { return _creditsUsed; }
         }
 
+        /// <summary>
+        /// The currency code for the credits
+        /// </summary>
         public string Currency
         {
             get { return _currency; }
         }
 
+        /// <summary>
+        /// If the order has a valid <see cref="GroupID"/>
+        /// </summary>
         public bool HasGroupId
         {
             get { return _groupId != 0; }
         }
 
+        /// <summary>
+        /// List of duplicate jobs if the texts/files are already associated
+        /// with another job in an existing or the newly created order
+        /// </summary>
         public IReadOnlyList<DuplicateSubmission> Duplicates
         {
             get { return _dupesRo; }

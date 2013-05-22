@@ -30,22 +30,65 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// A submitted and confirmed order
+    /// </summary>
     public class Order
     {
+        /// <summary>
+        /// The order ID
+        /// </summary>
         public int OrderId { get; private set; }
+
+        /// <summary>
+        /// The currency code for order price
+        /// </summary>
         public string Currency { get; private set; }
 
+        /// <summary>
+        /// Total cost of order in credits
+        /// </summary>
         public decimal TotalCredits { get; private set; }
+
+        /// <summary>
+        /// The total number of translation units in order
+        /// </summary>
         public int TotalUnits { get; private set; }
 
+        /// <summary>
+        /// If the order was submitted with a requirement to use the same
+        /// translator for all jobs
+        /// </summary>
         public bool UseSameTranslator { get; private set; }
 
+        /// <summary>
+        /// Count of queued jobs
+        /// </summary>
         public int QueuedJobs { get; private set; }
+
+        /// <summary>
+        /// Count of all jobs in order 
+        /// </summary>
         public int TotalJobs { get; private set; }
 
+        /// <summary>
+        /// List of IDs of jobs in the 'Available' state
+        /// </summary>
         public IReadOnlyCollection<int> AvailableJobs { get; private set; }
+
+        /// <summary>
+        /// List of IDs of jobs in the 'Pending' state
+        /// </summary>
         public IReadOnlyCollection<int> PendingJobs { get; private set; }
+
+        /// <summary>
+        /// List of IDs of jobs in the 'Reviewable' state
+        /// </summary>
         public IReadOnlyCollection<int> ReviewableJobs { get; private set; }
+
+        /// <summary>
+        /// List of IDs of jobs in the 'Approved' state
+        /// </summary>
         public IReadOnlyCollection<int> ApprovedJobs { get; private set; }
 
         internal Order(JObject obj)

@@ -40,10 +40,14 @@ namespace Winterday.External.Gengo
 
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
-
-    public static class Extensions
+    
+    /// <summary>
+    /// Contains extension methods used internally to ease working with Json
+    /// content and enumerations.
+    /// </summary>
+    internal static class Extensions
     {
-        public static decimal ToDecimal(this string value)
+        internal static decimal ToDecimal(this string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -72,7 +76,7 @@ namespace Winterday.External.Gengo
             return i;
         }
 
-        public static string ToQueryString(this Dictionary<string, string> dict)
+        internal static string ToQueryString(this Dictionary<string, string> dict)
         {
             if (dict == null)
             {
@@ -118,12 +122,12 @@ namespace Winterday.External.Gengo
             return Uri.HexEscape(c);
         }
 
-        public static string ToTypeString(this JobType type)
+        internal static string ToTypeString(this JobType type)
         {
             return type.ToString().ToLowerInvariant();
         }
 
-        public static EnumT TryParseEnum<EnumT>(this string value, EnumT defaultValue, bool removeSpaces) where EnumT : struct
+        internal static EnumT TryParseEnum<EnumT>(this string value, EnumT defaultValue, bool removeSpaces) where EnumT : struct
         {
             EnumT result = defaultValue;
             
@@ -140,12 +144,12 @@ namespace Winterday.External.Gengo
             return defaultValue;
         }
 
-        public static AuthorType ToAuthorType(this string value)
+        internal static AuthorType ToAuthorType(this string value)
         {
             return value.TryParseEnum(AuthorType.Unknown, true); 
         }
 
-        public static string ToAuthorString(this AuthorType type)
+        internal static string ToAuthorString(this AuthorType type)
         {
             if (type == AuthorType.SeniorTranslator)
             {
@@ -157,42 +161,42 @@ namespace Winterday.External.Gengo
             }
         }
 
-        public static JobType ToJobType(this string value)
+        internal static JobType ToJobType(this string value)
         {
             return value.TryParseEnum(JobType.Text, false);
         }
 
-        public static string ToReasonString(this RejectionReason reason)
+        internal static string ToReasonString(this RejectionReason reason)
         {
             return reason.ToString().ToLowerInvariant();
         }
 
-        public static string ToTierString(this TranslationTier tier)
+        internal static string ToTierString(this TranslationTier tier)
         {
             return tier.ToString().ToLowerInvariant();
         }
 
-        public static TranslationTier ToTranslationTier(this string value)
+        internal static TranslationTier ToTranslationTier(this string value)
         {
             return value.TryParseEnum(TranslationTier.Unknown, false);
         }
 
-        public static string ToStatusString(this TranslationStatus status)
+        internal static string ToStatusString(this TranslationStatus status)
         {
             return status.ToString().ToLowerInvariant();
         }
 
-        public static TranslationStatus ToTranslationStatus(this string value)
+        internal static TranslationStatus ToTranslationStatus(this string value)
         {
             return value.TryParseEnum(TranslationStatus.Unknown, false);
         }
 
-        public static byte[] ToUTF8Bytes(this string value)
+        internal static byte[] ToUTF8Bytes(this string value)
         {
             return Encoding.UTF8.GetBytes(value);
         }
 
-        public static String SHA1Hash(this String privateKey, String value)
+        internal static String SHA1Hash(this String privateKey, String value)
         {
             var keybytes = privateKey.ToUTF8Bytes();
             var valuebytes = value.ToUTF8Bytes();

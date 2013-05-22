@@ -31,6 +31,9 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// A job that has been submitted and accepted by the Gengo service
+    /// </summary>
     public class SubmittedJob : Job
     {
         DateTime _created;
@@ -49,46 +52,75 @@ namespace Winterday.External.Gengo.Payloads
 
         Uri _captchaUrl;
 
+        /// <summary>
+        /// When the job was created
+        /// </summary>
         public DateTime Created
         {
             get { return _created; }
         }
 
+        /// <summary>
+        /// Current cost of job
+        /// </summary>
         public decimal Credits
         {
             get { return _credits; }
         }
 
+        /// <summary>
+        /// The unique job ID
+        /// </summary>
         public int Id
         {
             get { return _jobId; }
         }
 
+        /// <summary>
+        /// Number of translation units in job
+        /// </summary>
         public int UnitCount
         {
             get { return _unitCount; }
         }
 
+        /// <summary>
+        /// The currency code of the job cost
+        /// </summary>
         public string Currency
         {
             get { return _currency; }
         }
 
+        /// <summary>
+        /// The curremt translated body of the job (may be a preview
+        /// machine translation if the job is in the 'Available' or
+        /// 'Pending' state and was retreived requesting this)
+        /// </summary>
         public string BodyTranslated
         {
             get { return _bodyTranslated; }
         }
-
+        
+        /// <summary>
+        /// Estimated time remaining for translation work
+        /// </summary>
         public TimeSpan? EstimatedTimeToCompletion
         {
             get { return _eta; }
         }
 
+        /// <summary>
+        /// Current status of the job
+        /// </summary>
         public TranslationStatus Status
         {
             get { return _status; }
         }
 
+        /// <summary>
+        /// Url to captcha image necessary to reject a job
+        /// </summary>
         public Uri CaptchaUrl
         {
             get { return _captchaUrl; }

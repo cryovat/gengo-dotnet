@@ -36,6 +36,11 @@ namespace Winterday.External.Gengo.MethodGroups
     using Winterday.External.Gengo.Payloads;
     using Winterday.External.Gengo.Properties;
 
+    /// <summary>
+    /// Provides access to methods in the
+    /// <a href="http://developers.gengo.com/v2/account/">Account</a>
+    /// method group.
+    /// </summary>
     public class AccountMethodGroup
     {
         internal const string UriPartStats = "account/stats";
@@ -51,6 +56,10 @@ namespace Winterday.External.Gengo.MethodGroups
             _client = client;
         }
 
+        /// <summary>
+        /// Gets the account balance
+        /// </summary>
+        /// <returns>Current credits and currency</returns>
         public async Task<AccountBalance> GetBalance()
         {
             var json = await _client.GetJsonAsync<JObject>(UriPartBalance, true);
@@ -58,6 +67,10 @@ namespace Winterday.External.Gengo.MethodGroups
             return new AccountBalance(json);
         }
 
+        /// <summary>
+        /// Gets historyical statistics for the account
+        /// </summary>
+        /// <returns>Total credits spent and currency</returns>
         public async Task<AccountStats> GetStats()
         {
             var json = await _client.GetJsonAsync<JObject>(UriPartStats, true);

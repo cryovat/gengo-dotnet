@@ -28,11 +28,17 @@ namespace Winterday.External.Gengo
 {
     using System;
 
+    /// <summary>
+    /// Represents an exception raised by the Gengo service
+    /// </summary>
     public class GengoException : Exception
     {
         readonly string _opStat;
         readonly string _code;
 
+        /// <summary>
+        /// The raw operation status result returned by the service
+        /// </summary>
         public string OpStat
         {
             get
@@ -41,6 +47,11 @@ namespace Winterday.External.Gengo
             }
         }
 
+        /// <summary>
+        /// The error code returned by the service. See the API docs for an
+        /// <a href="http://developers.gengo.com/v2/error_codes/">exhaustive
+        /// reference.</a>.
+        /// </summary>
         public string ErrorCode
         {
             get
@@ -49,7 +60,7 @@ namespace Winterday.External.Gengo
             }
         }
 
-        public GengoException(string message, string opStat, string code)
+        internal GengoException(string message, string opStat, string code)
             : base(message ?? "An unknown error happened")
         {
             _opStat = opStat ?? "N/A";

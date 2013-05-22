@@ -31,9 +31,20 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// Quote for a file-based job
+    /// </summary>
     public class FileQuote : Quote
     {
+        /// <summary>
+        /// Text body extracted from file
+        /// </summary>
         public string Body { get; private set; }
+
+        /// <summary>
+        /// The title of the submitted job (undocumented,
+        /// appears to be file name)
+        /// </summary>
         public string Title  { get; private set; }
 
         internal FileQuote(JObject obj) : base(obj)
@@ -43,16 +54,44 @@ namespace Winterday.External.Gengo.Payloads
         }
     }
 
+    /// <summary>
+    /// Quote for a text-based job
+    /// </summary>
     public class Quote
     {
+        /// <summary>
+        /// The number of translation units within the job
+        /// </summary>
         public int UnitCount { get; private set; }
+
+        /// <summary>
+        /// The projected cost of the job
+        /// </summary>
         public decimal Credits  { get; private set; }
+
+        /// <summary>
+        /// The currency code for the cost
+        /// </summary>
         public string Currency  { get; private set; }
+
+        /// <summary>
+        /// The identifier of the source file (if applicable)
+        /// </summary>
         public string Identifier  { get; private set; }
+
+        /// <summary>
+        /// The source language of the job
+        /// </summary>
         public string SourceLanguage  { get; private set; }
 
+        /// <summary>
+        /// Projected time until job completion
+        /// </summary>
         public TimeSpan Eta { get; private set; }
 
+        /// <summary>
+        /// Wether the job was submitted as a text or file job
+        /// </summary>
         public JobType JobType  { get; private set; }
 
         internal Quote(JObject obj)

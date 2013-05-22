@@ -34,6 +34,9 @@ namespace Winterday.External.Gengo.Payloads
     using Winterday.External.Gengo;
     using Winterday.External.Gengo.Properties;
 
+    /// <summary>
+    /// Represents a submittable job.
+    /// </summary>
     public class Job
     {
         bool _autoApprove;
@@ -53,6 +56,10 @@ namespace Winterday.External.Gengo.Payloads
         JobType _type;
         TranslationTier _tier;
 
+        /// <summary>
+        /// If the job should be automatically approved upon translation.
+        /// Defaults to false
+        /// </summary>
         public bool AutoApprove
         {
             get { return _autoApprove; }
@@ -69,6 +76,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// If the job should skip duplicate checks. Defaults to false
+        /// </summary>
         public bool Force
         {
             get { return _force; }
@@ -85,11 +95,18 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// If the curent object is in a read-only state
+        /// </summary>
         public bool IsReadOnly
         {
             get { return _readOnly; }
         }
 
+        /// <summary>
+        /// The untranslated text body of the job (mandatory for Text
+        /// type job submissions)
+        /// </summary>
         public string Body
         {
             get { return _body; }
@@ -106,6 +123,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// Comment for translator (only used by during submissions)
+        /// </summary>
         public string Comment
         {
             get { return _comment; }
@@ -122,6 +142,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// Custom data associated with the submitted job
+        /// </summary>
         public string CustomData
         {
             get { return _customData; }
@@ -138,6 +161,10 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// ID of file previously submitted for quote that serves as source for the
+        /// body text of the job
+        /// </summary>
         public string FileId
         {
             get { return _fileId; }
@@ -154,6 +181,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// The (mandatory) title of the job
+        /// </summary>
         public string Slug
         {
             get { return _slug; }
@@ -170,6 +200,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// Code for source language
+        /// </summary>
         public string SourceLanguage
         {
             get { return _sourceLang; }
@@ -186,6 +219,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// Code for target language
+        /// </summary>
         public string TargetLanguage
         {
             get { return _targetLang; }
@@ -202,6 +238,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// Callback url that Gengo will use to notify about status changes
+        /// </summary>
         public Uri CallbackUrl
         {
             get { return _callbackUrl; }
@@ -223,6 +262,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// The job type
+        /// </summary>
         public virtual JobType JobType
         {
             get { return _type; }
@@ -239,6 +281,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// The pricing tier of the job
+        /// </summary>
         public TranslationTier TranslationTier
         {
             get { return _tier; }

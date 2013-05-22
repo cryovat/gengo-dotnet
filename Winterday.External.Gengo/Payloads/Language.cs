@@ -30,11 +30,30 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// A language supported by the Gengo service
+    /// </summary>
     public class Language
     {
+        /// <summary>
+        /// English name of language
+        /// </summary>
         public string Name { get; private set; }
+        
+        /// <summary>
+        /// Native name of language
+        /// </summary>
         public string LocalizedName { get; private set; }
+
+
+        /// <summary>
+        /// Language code (used in job submissions)
+        /// </summary>
         public string Code { get; private set; }
+
+        /// <summary>
+        /// The pricing unit for the language
+        /// </summary>
         public string UnitType { get; private set; }
 
         internal Language(JObject obj)

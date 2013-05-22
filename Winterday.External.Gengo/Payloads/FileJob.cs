@@ -37,13 +37,23 @@ namespace Winterday.External.Gengo.Payloads
 
     using Winterday.External.Gengo.Properties;
 
+    /// <summary>
+    /// Submittable job based on file in memory or the local file system
+    /// </summary>
     public class FileJob : Job, IDisposable, IPostableFile
     {
         readonly Lazy<HttpContent> _content;
 
         bool disposed;
 
+        /// <summary>
+        /// The key used to associate the transferred file with job metadata
+        /// </summary>
         public string FileKey { get; private set; }
+
+        /// <summary>
+        /// The name of the file
+        /// </summary>
         public string FileName { get; private set; }
 
         HttpContent IPostableFile.Content
@@ -60,6 +70,9 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// The type of job (always returns File, throws exception upon set)
+        /// </summary>
         public override JobType JobType
         {
             get
@@ -73,6 +86,13 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        /// <summary>
+        /// Creates a new file job based on a file in the local file system
+        /// </summary>
+        /// <param name="filePath">
+        /// Absolute or relative path of file to submit
+        /// </param>
+        /// <param name="fileKey">User specified file key (advanced)</param>
         public FileJob(string filePath, string fileKey = null)
         {
             if (!File.Exists(filePath))
@@ -84,22 +104,36 @@ namespace Winterday.External.Gengo.Payloads
             _content = LazyStream(FileName, () => File.OpenRead(filePath));
         }
 
-        public FileJob(string filePath, Stream stream, string fileKey = null)
+        /// <summary>
+        /// Creates a new file job based on a file contained in a Stream
+        /// </summary>
+        /// <param name="fileName">The name of the file</param>
+        /// <param name="stream">
+        /// An availble, readable stream with file data
+        /// </param>
+        /// <param name="fileKey">User specified file key (advanced)</param>
+        public FileJob(string fileName, Stream stream, string fileKey = null)
         {
-            if (String.IsNullOrWhiteSpace(filePath))
+            if (String.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentException(
                     Resources.FileNameNotProvided,
-                    "filePath");
+                    "fileName");
 
             if (stream == null)
                 throw new ArgumentNullException("stream");
 
             FileKey = fileKey ?? Guid.NewGuid().ToString();
-            FileName = Path.GetFileName(filePath);
+            FileName = fileName;
 
             _content = LazyStream(FileName, () => stream);
         }
 
+        /// <summary>
+        /// Creates a new file job based on file data stored in byte array
+        /// </summary>
+        /// <param name="fileName">The name of the file</param>
+        /// <param name="rawData">The raw file data as bytes</param>
+        /// <param name="fileKey">User specified file key (advanced)</param>
         public FileJob(string fileName, byte[] rawData, string fileKey = null)
         {
             if (String.IsNullOrWhiteSpace(fileName))
