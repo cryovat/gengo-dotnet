@@ -5,7 +5,7 @@ A .NET library for interfacing with the [Gengo](http://www.gengo.com)
 API for translation.
 
 * **License:** [MIT](COPYING)
-* **Stability:** Experimental (partial implementation)
+* **Stability:** Provisional
 * **Dependencies:** [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json/)
 * **Supported platforms:** .NET 4.5 (Mono to come)
 * **Gengo API version:** V2
@@ -54,40 +54,42 @@ Supported methods
 
 See http://developers.gengo.com/ for API overview/documentation
 
-* Account
-  * Get Balance
-  * Get Stats
-* Job
-  * Approve
-  * Get
-  * Delete (cancel)
-  * Preview
-  * Get revisions
-  * Get revision
-  * Get feedback
-  * Get comments
-  * Post comment
-  * Reject
-  * Return for revision
-* Jobs
-  * Submit Jobs
-  * Get recent jobs (search)
-  * Get jobs by ID
-* Order
- * Get order
- * Delete order
-* Service
-  * Get Languages
-  * Get Language Pairs
+* [Account](http://developers.gengo.com/v2/account/)
+  * [Get Balance](http://developers.gengo.com/v2/account/#balance-get)
+  * [Get Stats](http://developers.gengo.com/v2/account/#stats-get)
+* [Job](http://developers.gengo.com/v2/job/)
+  * [Approve](http://developers.gengo.com/v2/job/#job-put)
+  * [Get](http://developers.gengo.com/v2/job/#job-get)
+  * [Delete (cancel)](http://developers.gengo.com/v2/job/#job-delete)
+  * [Preview](http://developers.gengo.com/v2/job/#job-put)
+  * [Get revisions](http://developers.gengo.com/v2/job/#revisions-get)
+  * [Get revision](http://developers.gengo.com/v2/job/#revision-get)
+  * [Get feedback](http://developers.gengo.com/v2/job/#feedback-get)
+  * [Get comments](http://developers.gengo.com/v2/job/#comment-post)
+  * [Post comment](http://developers.gengo.com/v2/job/#comments-get)
+  * [Reject](http://developers.gengo.com/v2/job/#job-put)
+  * [Return for revision](http://developers.gengo.com/v2/job/#job-put)
+* [Jobs](http://developers.gengo.com/v2/jobs/)
+  * [Submit Jobs](http://developers.gengo.com/v2/jobs/#jobs-post)
+  * [Get recent jobs (search)](http://developers.gengo.com/v2/jobs/#jobs-get)
+  * [Get jobs by ID](http://developers.gengo.com/v2/jobs/#jobs-by-id-get)
+* [Order](http://developers.gengo.com/v2/order/)
+ * [Get order](http://developers.gengo.com/v2/order/#order-get)
+ * [Delete order](http://developers.gengo.com/v2/order/#order-delete)
+* [Service](http://developers.gengo.com/v2/service/)
+  * [Get Languages](http://developers.gengo.com/v2/service/#languages-get)
+  * [Get Language Pairs](http://developers.gengo.com/v2/service/#language-pairs-get)
+  * [Get quote](http://developers.gengo.com/v2/service/#quote-post)
+  * [Get quote based on file upload](http://developers.gengo.com/v2/service/#quote-files-post)
 
 Unimplemented methods
 ---------------------
 
-* Jobs
-  * Get job group
-* Glossaries
-  * Get glossaries
-  * Get glossary
+* [Jobs](http://developers.gengo.com/v2/jobs/)
+  * [Get job group](http://developers.gengo.com/v2/jobs/#job-group-get)
+* [Glossary](http://developers.gengo.com/v2/glossary/)
+  * [Get glossaries](http://developers.gengo.com/v2/glossary/#glossaries-get)
+  * [Get glossary](http://developers.gengo.com/v2/glossary/#glossary-get)
 
 Todo
 ----
