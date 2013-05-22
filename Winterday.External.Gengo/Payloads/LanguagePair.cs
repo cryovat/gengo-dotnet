@@ -30,11 +30,35 @@ namespace Winterday.External.Gengo.Payloads
 
     using Newtonsoft.Json.Linq;
 
+    /// <summary>
+    /// A possible combination of languages and translation quality offered
+    /// by the service, along with pricing information
+    /// </summary>
     public class LanguagePair
     {
+        /// <summary>
+        /// Language code of source language
+        /// </summary>
         public string FromLanguage  { get; private set; }
+
+        /// <summary>
+        /// Language code for target language
+        /// </summary>
         public string ToLanguage  { get; private set; }
+
+        /// <summary>
+        /// The translation quality tier
+        /// </summary>
         public TranslationTier Tier { get; private set; }
+
+        /// <summary>
+        /// The currency code for unit price
+        /// </summary>
+        public string Currency { get; private set; }
+
+        /// <summary>
+        /// The price per translation unit
+        /// </summary>
         public decimal UnitPrice { get; private set; }
 
         internal LanguagePair(JObject obj)
@@ -45,6 +69,7 @@ namespace Winterday.External.Gengo.Payloads
             FromLanguage = obj.Value<string>("lc_src");
             ToLanguage = obj.Value<string>("lc_tgt");
             Tier = obj.Value<string>("tier").ToTranslationTier();
+            Currency = obj.Value<string>("currency");
             UnitPrice = obj.DecValueStrict("unit_price");
         }
 
