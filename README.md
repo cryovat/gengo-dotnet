@@ -40,7 +40,7 @@ var confirmation = await _client.Service.GetQuoteForFiles(
     });
 
 // Get reviewable jobs
-var reviewable = _client.Jobs.GetRecentJobs(
+var reviewable = await _client.Jobs.GetRecentJobs(
     status: TranslationStatus.Reviewable,
     afterDateTime: lastMonday,
     maxCount: 40);
