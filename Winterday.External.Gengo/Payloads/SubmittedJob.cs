@@ -41,6 +41,7 @@ namespace Winterday.External.Gengo.Payloads
         int _unitCount;
 
         string _currency;
+        string _bodyTranslated;
 
         TimeSpan? _eta;
 
@@ -71,6 +72,11 @@ namespace Winterday.External.Gengo.Payloads
         public string Currency
         {
             get { return _currency; }
+        }
+
+        public string BodyTranslated
+        {
+            get { return _bodyTranslated; }
         }
 
         public TimeSpan? EstimatedTimeToCompletion
@@ -107,6 +113,7 @@ namespace Winterday.External.Gengo.Payloads
             Int32.TryParse(json.Value<string>("unit_count"), out _unitCount);
 
             _currency = json.Value<string>("currency");
+            _bodyTranslated = json.Value<string>("body_tgt");
 
             double eta = -1;
 

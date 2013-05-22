@@ -63,6 +63,12 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
             var job = await _client.Job.Get(availJob.Id, true);
 
             Assert.IsNotNull(job);
+            Assert.IsNotNull(job.BodyTranslated);
+
+            job = await _client.Job.Get(availJob.Id, false);
+
+            Assert.IsNotNull(job);
+            Assert.IsNull(job.BodyTranslated);
         }
 
         [TestMethod]
