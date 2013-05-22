@@ -46,14 +46,6 @@ namespace Winterday.External.Gengo
         Sandbox
     }
 
-    public enum HttpMethod
-    {
-        Get,
-        Post,
-        Delete,
-        Update
-    }
-
     public enum RejectionReason
     {
         Quality,
@@ -63,11 +55,11 @@ namespace Winterday.External.Gengo
 
     public enum Stars
     {
-        One,
-        Two,
-        Three,
-        Four,
-        Five
+        One = 1,
+        Two = 2,
+        Three = 3,
+        Four = 4,
+        Five = 5
     }
 
     public enum TranslationTier

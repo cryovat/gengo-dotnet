@@ -182,11 +182,6 @@ namespace Winterday.External.Gengo
             return value.TryParseEnum(TranslationStatus.Unknown, false);
         }
 
-        public static string ToMethodString(this HttpMethod method)
-        {
-            return method.ToString().ToUpperInvariant();
-        }
-
         public static byte[] ToUTF8Bytes(this string value)
         {
             return Encoding.UTF8.GetBytes(value);
