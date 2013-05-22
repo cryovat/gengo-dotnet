@@ -58,6 +58,7 @@ See http://developers.gengo.com/ for API overview/documentation
   * Get Balance
   * Get Stats
 * Job
+  * Approve
   * Get
   * Delete (cancel)
   * Preview
@@ -66,6 +67,8 @@ See http://developers.gengo.com/ for API overview/documentation
   * Get feedback
   * Get comments
   * Post comment
+  * Reject
+  * Return for revision
 * Jobs
   * Submit Jobs
   * Get recent jobs (search)
@@ -80,10 +83,6 @@ See http://developers.gengo.com/ for API overview/documentation
 Unimplemented methods
 ---------------------
 
-* Job
-  * Return for revision
-  * Approve
-  * Reject
 * Jobs
   * Get job group
 * Glossaries
