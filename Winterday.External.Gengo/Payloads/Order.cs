@@ -91,6 +91,11 @@ namespace Winterday.External.Gengo.Payloads
         /// </summary>
         public IReadOnlyCollection<int> ApprovedJobs { get; private set; }
 
+        /// <summary>
+        /// List of IDs of jobs in the 'Revising' state
+        /// </summary>
+        public IReadOnlyCollection<int> RevisingJobs { get; private set; }
+
         internal Order(JObject obj)
         {
             if (obj == null)
@@ -111,6 +116,7 @@ namespace Winterday.External.Gengo.Payloads
             PendingJobs = obj.ReadIntArrayAsRoList("jobs_pending");
             ReviewableJobs = obj.ReadIntArrayAsRoList("jobs_reviewable");
             ApprovedJobs = obj.ReadIntArrayAsRoList("jobs_approved");
+            RevisingJobs = obj.ReadIntArrayAsRoList("jobs_revising");
         }
     }
 }
