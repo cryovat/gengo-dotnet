@@ -105,7 +105,7 @@ namespace Winterday.External.Gengo.Payloads
         /// <summary>
         /// Estimated time remaining for translation work
         /// </summary>
-        public TimeSpan? EstimatedTimeToCompletion
+        public TimeSpan? Eta
         {
             get { return _eta; }
         }

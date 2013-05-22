@@ -43,7 +43,7 @@ namespace Winterday.External.Gengo.Payloads
         /// <summary>
         /// The text content of the revision
         /// </summary>
-        public string Body { get; private set; }
+        public string BodyTranslated { get; private set; }
 
         internal Revision(JObject obj)
         {
@@ -51,7 +51,7 @@ namespace Winterday.External.Gengo.Payloads
                 throw new ArgumentNullException("obj");
 
             Created = obj.DateValueStrict("ctime");
-            Body = obj.Value<string>("body_tgt");
+            BodyTranslated = obj.Value<string>("body_tgt");
         }
     }
 }
