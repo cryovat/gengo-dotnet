@@ -241,6 +241,24 @@ namespace Winterday.External.Gengo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Captcha text must be provided when rejecting a job..
+        /// </summary>
+        internal static string RejectionCaptchaNotSpecified {
+            get {
+                return ResourceManager.GetString("RejectionCaptchaNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A comment is mandatory when rejecting a job..
+        /// </summary>
+        internal static string RejectionCommentMandatory {
+            get {
+                return ResourceManager.GetString("RejectionCommentMandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A comment is mandatory when returning a job for revision..
         /// </summary>
         internal static string RevisionCommentMandatory {

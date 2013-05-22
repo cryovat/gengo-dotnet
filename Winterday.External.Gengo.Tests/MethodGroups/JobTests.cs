@@ -48,6 +48,14 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
         }
 
         [TestMethod]
+        public async Task TestApproveJob()
+        {
+            var availJob = await GetJobWithStatus(TranslationStatus.Reviewable);
+
+            await _client.Job.Approve(availJob.Id,Stars.Five, "Nice touches", "A+++", true);
+        }
+
+        [TestMethod]
         public async Task TestGetJob()
         {
             var availJob = await GetJobWithStatus(TranslationStatus.Available);

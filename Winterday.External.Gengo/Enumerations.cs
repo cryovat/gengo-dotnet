@@ -53,7 +53,7 @@ namespace Winterday.External.Gengo
         Other
     }
 
-    public enum Stars
+    public enum Stars : int
     {
         One = 1,
         Two = 2,

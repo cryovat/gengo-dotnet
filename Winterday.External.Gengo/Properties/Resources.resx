@@ -177,6 +177,12 @@
   <data name="PropertyNameNotProvided" xml:space="preserve">
     <value>Property name not provided.</value>
   </data>
+  <data name="RejectionCaptchaNotSpecified" xml:space="preserve">
+    <value>Captcha text must be provided when rejecting a job.</value>
+  </data>
+  <data name="RejectionCommentMandatory" xml:space="preserve">
+    <value>A comment is mandatory when rejecting a job.</value>
+  </data>
   <data name="RevisionCommentMandatory" xml:space="preserve">
     <value>A comment is mandatory when returning a job for revision.</value>
   </data>

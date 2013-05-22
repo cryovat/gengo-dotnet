@@ -162,6 +162,11 @@ namespace Winterday.External.Gengo
             return value.TryParseEnum(JobType.Text, false);
         }
 
+        public static string ToReasonString(this RejectionReason reason)
+        {
+            return reason.ToString().ToLowerInvariant();
+        }
+
         public static string ToTierString(this TranslationTier tier)
         {
             return tier.ToString().ToLowerInvariant();

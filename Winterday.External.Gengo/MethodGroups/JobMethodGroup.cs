@@ -63,7 +63,22 @@ namespace Winterday.External.Gengo.MethodGroups
             string commentForGengo,
             bool gengoCommentIsPublic)
         {
-            throw new NotImplementedException();
+            var uri = UriPartJob + jobId;
+
+            var data = new JObject();
+            data["action"] = "approve";
+            data["rating"] = ((int)stars).ToString();
+
+            if (!String.IsNullOrWhiteSpace(commentForTranslator))
+                data["for_translator"] = commentForTranslator;
+
+            if (!String.IsNullOrWhiteSpace(commentForGengo))
+            {
+                data["for_mygengo"] = commentForGengo;
+                data["public"] = Convert.ToInt32(gengoCommentIsPublic).ToString();
+            }
+
+            await _client.PutJsonAsync<JObject>(uri, data);
         }
 
         public async Task<SubmittedJob> Get(int jobId,
@@ -100,26 +115,46 @@ namespace Winterday.External.Gengo.MethodGroups
         {
             var uri = string.Format(UriPartRevision, jobId, revisionId);
 
-            var obj = await _client.GetJsonAsync<JObject>(uri, true);
+            var rev = await _client.GetJsonPropertyAsync<JObject>("revision", uri, true);
 
-            return new Revision(obj["revision"] as JObject);
+            return new Revision(rev);
         }
 
         public async Task<TimestampedId[]> GetRevisions(int jobId)
         {
             var uri = string.Format(UriPartRevisions, jobId);
 
-            var obj = await _client.GetJsonAsync<JObject>(uri, true);
-            var objs = obj.Value<JArray>("revisions").Values<JObject>();
+            var revs = await _client.GetJsonPropertyAsync<JArray>("revisions", uri, true);
 
-            return objs.Select(
+            return revs.Values<JObject>().Select(
                 o => new TimestampedId(o, "rev_id", "ctime")).ToArray();
         }
         
         public async Task Reject(int jobId, RejectionReason reason,
             string comment, string captcha, bool requeueJob)
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrWhiteSpace(comment))
+                throw new ArgumentException(
+                    Resources.RejectionCommentMandatory,
+                    "comment");
+
+            if (String.IsNullOrWhiteSpace(captcha))
+                throw new ArgumentException(
+                    Resources.RejectionCaptchaNotSpecified,
+                    "captcha");
+
+            var uri = UriPartJob + jobId;
+            
+            var data = new JObject();
+
+            data["action"] = "reject";
+
+            data["reason"] = reason.ToReasonString();
+            data["comment"] = comment;
+            data["captcha"] = captcha;
+            data["follow_up"] = requeueJob ? "requeue" : "cancel";
+
+            await _client.PutJsonAsync<JObject>(uri, data);
         }
 
         public async Task ReturnForRevision(int jobId, string comment)
@@ -146,11 +181,10 @@ namespace Winterday.External.Gengo.MethodGroups
 
         public async Task<Comment[]> GetComments(int jobID)
         {
-            var json = await _client.GetJsonAsync<JObject>(string.Format(UriPartComments, jobID), true);
+            var uri = String.Format(UriPartComments, jobID);
+            var thread = await _client.GetJsonPropertyAsync<JArray>("thread", uri, true);
 
-            var thread = json.Value<JArray>("thread");
-
-            return thread.Values<JObject>().Select(
+            return thread.SelectFromObjects(
                 o => new Comment(o)).ToArray();
         }
 

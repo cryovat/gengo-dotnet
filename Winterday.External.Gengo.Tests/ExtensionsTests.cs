@@ -79,6 +79,14 @@ namespace Winterday.External.Gengo.Tests
         }
 
         [TestMethod]
+        public void TestReasonConversions()
+        {
+            Assert.AreEqual("quality", RejectionReason.Quality.ToReasonString());
+            Assert.AreEqual("incomplete", RejectionReason.Incomplete.ToReasonString());
+            Assert.AreEqual("other", RejectionReason.Other.ToReasonString());
+        }
+
+        [TestMethod]
         public void TestAuthorTypeConversions()
         {
             Assert.AreEqual("customer", AuthorType.Customer.ToAuthorString());
