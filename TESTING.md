@@ -13,7 +13,7 @@ Tests requiring manual action
 
 Some tests require a job to be set in the reviewable status in the Gengo
 [Sandbox](https://sandbox.gengo.com/dashboard/) as there is currently now way
-of doing this programtically. These tests are specifically:
+of doing this programmatically. These tests are specifically:
 
  * TestApproveJob
  * TestGetPreview
