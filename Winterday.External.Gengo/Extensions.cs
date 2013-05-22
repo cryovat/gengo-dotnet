@@ -34,6 +34,7 @@ namespace Winterday.External.Gengo
     using System.Net;
     using System.Security.Cryptography;
     using System.Text;
+    using System.Threading.Tasks;
 
     using Newtonsoft.Json.Linq;
 
@@ -412,6 +413,38 @@ namespace Winterday.External.Gengo
         {
             return TimeSpan.FromSeconds(json.IntValueStrict(propName));
         }
+
+        internal static async Task<JsonT> GetJsonPropertyAsync<JsonT>(
+            this IGengoClient client, string propName, String uriPart, bool authenticated
+            ) where JsonT : JToken
+        {
+            var data = await client.GetJsonAsync<JObject>(uriPart, authenticated);
+
+            if (data == null) throw new Exception(
+                "Remote service did not return object.");
+
+            var result = data[propName] as JsonT;
+
+            if (result == null) throw new Exception(
+                "Object returned by remote service did not have property " + propName + " of type " + typeof(JsonT).Name);
+            return result;
+        }
+
+        internal static IEnumerable<JObject> Objects(this JArray arr)
+        {
+            return arr == null ?
+                Enumerable.Empty<JObject>() :
+                arr.OfType<JObject>();
+        }
+
+        internal static IEnumerable<T> SelectFromObjects<T>(
+            this JArray arr, Func<JObject, T> selector)
+        {
+            if (selector == null) throw new ArgumentNullException("func");
+
+            return arr.Objects().Select(selector);
+        }
+        
     }
 }
 
