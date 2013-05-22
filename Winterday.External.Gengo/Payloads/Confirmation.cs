@@ -71,6 +71,11 @@ namespace Winterday.External.Gengo.Payloads
             get { return _currency; }
         }
 
+        public bool HasGroupId
+        {
+            get { return _groupId != 0; }
+        }
+
         public IReadOnlyList<DuplicateSubmission> Duplicates
         {
             get { return _dupesRo; }

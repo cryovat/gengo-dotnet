@@ -61,6 +61,7 @@
     <Compile Include="Payloads\Revision.cs" />
     <Compile Include="Payloads\SubmittedJob.cs" />
     <Compile Include="Payloads\TimestampedId.cs" />
+    <Compile Include="Payloads\TimestampedReadOnlyCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GengoClient.cs" />
     <Compile Include="Extensions.cs" />

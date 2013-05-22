@@ -71,6 +71,7 @@ See http://developers.gengo.com/ for API overview/documentation
   * [Return for revision](http://developers.gengo.com/v2/job/#job-put)
 * [Jobs](http://developers.gengo.com/v2/jobs/)
   * [Submit Jobs](http://developers.gengo.com/v2/jobs/#jobs-post)
+  * [Get job group](http://developers.gengo.com/v2/jobs/#job-group-get)
   * [Get recent jobs (search)](http://developers.gengo.com/v2/jobs/#jobs-get)
   * [Get jobs by ID](http://developers.gengo.com/v2/jobs/#jobs-by-id-get)
 * [Order](http://developers.gengo.com/v2/order/)
@@ -85,8 +86,6 @@ See http://developers.gengo.com/ for API overview/documentation
 Unimplemented methods
 ---------------------
 
-* [Jobs](http://developers.gengo.com/v2/jobs/)
-  * [Get job group](http://developers.gengo.com/v2/jobs/#job-group-get)
 * [Glossary](http://developers.gengo.com/v2/glossary/)
   * [Get glossaries](http://developers.gengo.com/v2/glossary/#glossaries-get)
   * [Get glossary](http://developers.gengo.com/v2/glossary/#glossary-get)

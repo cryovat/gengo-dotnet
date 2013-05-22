@@ -86,6 +86,43 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
         }
 
         [TestMethod]
+        public async Task TestGetJobGroup()
+        {
+            var dt = DateTime.Now;
+
+            var job1 = new Job
+            {
+                Slug = "group job 1 - " + dt.ToTimeStamp(),
+                Body = "We are the wooooooorld - " + dt.ToString(),
+                SourceLanguage = "en",
+                TargetLanguage = "ja",
+            };
+
+            var job2 = new Job
+            {
+                Slug = "group job 2 - " + dt.ToTimeStamp(),
+                Body = "We are the chiiiildren - " + dt.ToString(),
+                SourceLanguage = "en",
+                TargetLanguage = "ja",
+                CallbackUrl = new Uri("http://www.zombo.com")
+            };
+
+            var res = await _client.Jobs.Submit(true, false, job1, job2);
+
+            Assert.AreEqual(0, res.Duplicates.Count);
+            Assert.AreEqual(true, res.HasGroupId);
+
+            // This seems excessively low, but at 5 seconds, this test will
+            // consistantly faily.
+            Thread.Sleep(TimeSpan.FromSeconds(10));
+
+            var group = await _client.Jobs.GetJobGroup(res.GroupId);
+
+            Assert.AreNotEqual(new DateTime(), group.Created);
+            Assert.AreEqual(res.JobCount, group.Count);
+        }
+
+        [TestMethod]
         public async Task TestGetRecentJobs()
         {
             var any = await _client.Jobs.GetRecentJobs(

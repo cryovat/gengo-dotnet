@@ -40,6 +40,7 @@ namespace Winterday.External.Gengo.MethodGroups
 
     public class JobsMethodGroup
     {
+        internal const string UriPartJobsGroup = "translate/jobs/group/";
         internal const string UriPartJobsEndpoint = "translate/jobs";
 
         readonly IGengoClient _client;
@@ -64,6 +65,33 @@ namespace Winterday.External.Gengo.MethodGroups
             {
                 return GetJobsByIds((IEnumerable<int>)jobIds);
             }
+        }
+
+        public async Task<TimestampedReadOnlyCollection<int>> GetJobGroup(
+            int groupId
+            )
+        {
+            var uri = UriPartJobsGroup + groupId;
+
+            var json = await _client.GetJsonAsync<JObject>(uri, true);
+
+            if (json == null)
+                throw new Exception(
+                    Resources.ServiceDidNotReturnExpectedValue);
+
+            var created = json.DateValueStrict("ctime");
+            var jobs = json["jobs"] as JArray;
+            var ids = new List<int>();
+
+            if (jobs != null)
+            {
+                foreach (JObject obj in jobs)
+                {
+                    ids.Add(obj.IntValueStrict("job_id"));
+                }
+            }
+
+            return new TimestampedReadOnlyCollection<int>(created, ids);
         }
 
         public async Task<SubmittedJob[]> GetJobsByIds(IEnumerable<int> jobIds)
