@@ -223,6 +223,11 @@ namespace Winterday.External.Gengo
             return UnpackJson<JsonT>(responseStr);
         }
 
+        Task<byte[]> IGengoClient.GetByteArrayAsync(String uriPart, bool authenticated)
+        {
+            return _client.GetByteArrayAsync(BuildUri(uriPart, authenticated));
+        }
+
         Task<string> IGengoClient.GetStringAsync(String uriPart, bool authenticated)
         {
             return _client.GetStringAsync(BuildUri(uriPart, authenticated));

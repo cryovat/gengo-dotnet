@@ -1,5 +1,5 @@
 ﻿//
-// IGengoClient.cs
+// Revision.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -24,38 +24,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Winterday.External.Gengo
+namespace Winterday.External.Gengo.Payloads
 {
     using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     using Newtonsoft.Json.Linq;
 
-    internal interface IGengoClient
+    public class Revision
     {
-        bool IsDisposed { get; }
+        public DateTime Created { get; private set; }
+        public string Body { get; private set; }
 
-        Task<JsonT> DeleteAsync<JsonT>(string uripart) where JsonT : JToken;
+        internal Revision(JObject obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
 
-        Task<byte[]> GetByteArrayAsync(String uriPart, bool authenticated);
-
-        Task<string> GetStringAsync(string uriPart, bool authenticated);
-
-        Task<string> GetStringAsync(string uriPart, Dictionary<string, string> values, bool authenticated);
-
-        Task<JsonT> GetJsonAsync<JsonT>(string uriPart, bool authenticated) where JsonT : JToken;
-
-        Task<JsonT> GetJsonAsync<JsonT>(string uriPart, Dictionary<string, string> values, bool authenticated) where JsonT : JToken;
-
-        Task<JsonT> PostFormAsync<JsonT>(String uriPart, Dictionary<string, string> values) where JsonT : JToken;
-
-        Task<JsonT> PostJsonAsync<JsonT>(String uriPart, JToken json) where JsonT : JToken;
-
-        Task<JsonT> PostJsonAsync<JsonT>(
-            String uriPart, JToken json, IEnumerable<IPostableFile> files
-            ) where JsonT : JToken;
-
-        Task<JsonT> PutJsonAsync<JsonT>(String uriPart, JToken json) where JsonT : JToken;
+            Created = obj.DateValueStrict("ctime");
+            Body = obj.Value<string>("body_tgt");
+        }
     }
 }

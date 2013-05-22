@@ -57,6 +57,22 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
             Assert.IsNotNull(job);
         }
 
+        [TestMethod]
+        public async Task TestGetPreview()
+        {
+            var availJob = await GetJobWithStatus(TranslationStatus.Reviewable);
+
+            var preview = await _client.Job.GetPreviewImage(availJob.Id);
+
+            Assert.AreNotEqual(0, preview.Length, "Empty image returned");
+
+            Assert.IsTrue(preview.Length > 4, "Image was less than four bytes?");
+
+            Assert.AreEqual(preview[0], 0xFF, "Start of data is not JPEG magic number");
+            Assert.AreEqual(preview[1], 0xD8, "Start of data is not JPEG magic number");
+            Assert.AreEqual(preview[preview.Length - 2], 0xFF, "End of data is not JPEG magic number");
+            Assert.AreEqual(preview[preview.Length - 1], 0xD9, "End of data is not JPEG magic number");
+        }
 
         [TestMethod]
         public async Task TestDeleteJob()
@@ -102,6 +118,18 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
             var feedback = await _client.Job.GetFeedback(availJob.Id);
 
             Assert.IsNotNull(feedback);
+        }
+
+        [TestMethod]
+        public async Task TestGetRevisions()
+        {
+            var availJob = await GetJobWithStatus(TranslationStatus.Approved);
+
+            var revs = await _client.Job.GetRevisions(availJob.Id);
+
+            Assert.AreNotEqual(0, revs.Length, "Reviewable job did not have revision?");
+
+            var rev = await _client.Job.GetRevision(availJob.Id, revs[0].Id);
         }
 
         private async Task<TimestampedId> GetJobWithStatus(TranslationStatus status)

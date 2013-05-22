@@ -57,6 +57,7 @@
     <Compile Include="Payloads\Job.cs" />
     <Compile Include="Payloads\Order.cs" />
     <Compile Include="Payloads\Quote.cs" />
+    <Compile Include="Payloads\Revision.cs" />
     <Compile Include="Payloads\SubmittedJob.cs" />
     <Compile Include="Payloads\TimestampedId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -43,6 +43,11 @@ namespace Winterday.External.Gengo.MethodGroups
         internal const string UriPartComment = "translate/job/{0}/comment";
         internal const string UriPartComments = "translate/job/{0}/comments";
 
+        internal const string UriPartPreview = "translate/job/{0}/preview";
+
+        internal const string UriPartRevision = "translate/job/{0}/revision/{1}";
+        internal const string UriPartRevisions = "translate/job/{0}/revisions";
+
         readonly IGengoClient _client;
 
         internal JobMethodGroup(IGengoClient client)
@@ -84,11 +89,33 @@ namespace Winterday.External.Gengo.MethodGroups
             return new Feedback(obj["feedback"] as JObject);
         }
 
-        public async Task<byte[]> GetPreviewImage(int jobId)
+        public Task<byte[]> GetPreviewImage(int jobId)
         {
-            throw new NotImplementedException();
+            var uri = string.Format(UriPartPreview, jobId);
+
+            return _client.GetByteArrayAsync(uri, true);
         }
 
+        public async Task<Revision> GetRevision(int jobId, int revisionId)
+        {
+            var uri = string.Format(UriPartRevision, jobId, revisionId);
+
+            var obj = await _client.GetJsonAsync<JObject>(uri, true);
+
+            return new Revision(obj["revision"] as JObject);
+        }
+
+        public async Task<TimestampedId[]> GetRevisions(int jobId)
+        {
+            var uri = string.Format(UriPartRevisions, jobId);
+
+            var obj = await _client.GetJsonAsync<JObject>(uri, true);
+            var objs = obj.Value<JArray>("revisions").Values<JObject>();
+
+            return objs.Select(
+                o => new TimestampedId(o, "rev_id", "ctime")).ToArray();
+        }
+        
         public async Task Reject(int jobId, RejectionReason reason,
             string comment, string captcha, bool requeueJob)
         {
