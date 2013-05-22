@@ -42,6 +42,11 @@ namespace Winterday.External.Gengo.Payloads
         public string Body { get; private set; }
 
         /// <summary>
+        /// The identifier of the source file
+        /// </summary>
+        public string Identifier { get; private set; }
+
+        /// <summary>
         /// The title of the submitted job (undocumented,
         /// appears to be file name)
         /// </summary>
@@ -51,6 +56,7 @@ namespace Winterday.External.Gengo.Payloads
         {
             Body = obj.Value<string>("body");
             Title = obj.Value<string>("title");
+            Identifier = obj.Value<string>("identifier");
         }
     }
 
@@ -75,11 +81,6 @@ namespace Winterday.External.Gengo.Payloads
         public string Currency  { get; private set; }
 
         /// <summary>
-        /// The identifier of the source file (if applicable)
-        /// </summary>
-        public string Identifier  { get; private set; }
-
-        /// <summary>
         /// The source language of the job
         /// </summary>
         public string SourceLanguage  { get; private set; }
@@ -102,7 +103,6 @@ namespace Winterday.External.Gengo.Payloads
             Credits = obj.DecValueStrict("credits");
 
             Currency = obj.Value<string>("currency");
-            Identifier = obj.Value<string>("identifier");
             SourceLanguage = obj.Value<string>("lc_src");
 
             Eta = obj.TsValueStrict("eta");
