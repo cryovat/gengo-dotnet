@@ -33,7 +33,7 @@ namespace Winterday.External.Gengo.Payloads
     public class Feedback
     {
         public string CommentForTranslator { get; private set; }
-        public decimal Rating { get; private set; }
+        public Stars Rating { get; private set; }
 
         internal Feedback(JObject obj)
         {
@@ -41,7 +41,7 @@ namespace Winterday.External.Gengo.Payloads
                 throw new ArgumentNullException("obj");
 
             CommentForTranslator = obj.Value<string>("for_translator");
-            Rating = obj.DecValueStrict("rating");
+            Rating = (Stars)(int)obj.DecValueStrict("rating");
         }
     }
 }

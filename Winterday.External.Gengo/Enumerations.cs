@@ -55,6 +55,7 @@ namespace Winterday.External.Gengo
 
     public enum Stars : int
     {
+        Unspecified = 0,
         One = 1,
         Two = 2,
         Three = 3,

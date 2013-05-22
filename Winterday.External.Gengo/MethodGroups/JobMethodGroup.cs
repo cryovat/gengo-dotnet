@@ -43,6 +43,8 @@ namespace Winterday.External.Gengo.MethodGroups
         internal const string UriPartComment = "translate/job/{0}/comment";
         internal const string UriPartComments = "translate/job/{0}/comments";
 
+        internal const string UriPartFeedback = "translate/job/{0}/feedback";
+
         internal const string UriPartPreview = "translate/job/{0}/preview";
 
         internal const string UriPartRevision = "translate/job/{0}/revision/{1}";
@@ -97,7 +99,7 @@ namespace Winterday.External.Gengo.MethodGroups
 
         public async Task<Feedback> GetFeedback(int jobId)
         {
-            var uri = UriPartJob + jobId;
+            var uri = string.Format(UriPartFeedback, jobId);
 
             var obj = await _client.GetJsonAsync<JObject>(uri, true);
 
