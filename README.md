@@ -21,7 +21,9 @@ var client = new GengoClient(
     ClientMode.Production);
         
 // Submit a text for translation
-var confirmation = await _client.Jobs.Submit(true, false,
+var confirmation = await _client.Jobs.Submit(
+    true,  // Require same translator on all jobs
+    false, // Do not allow translator change
     new Job()
     {
         Slug = "Sample job",
