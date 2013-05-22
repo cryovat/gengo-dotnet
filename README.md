@@ -2,7 +2,7 @@ Winterday.External.Gengo
 ========================
 
 A .NET library for interfacing with the [Gengo](http://www.gengo.com)
-API for translation.
+API for translation with decent [unit test coverage](TESTING.md).
 
 * **License:** [MIT](COPYING)
 * **Stability:** Provisional
