@@ -52,6 +52,7 @@ namespace Winterday.External.Gengo.Payloads
         string _targetLang;
 
         Uri _callbackUrl;
+        Uri _fileUrl;
 
         JobType _type;
         TranslationTier _tier;
@@ -300,6 +301,8 @@ namespace Winterday.External.Gengo.Payloads
             }
         }
 
+        public Uri FileUrl { get { return _fileUrl; }}
+
         public Job()
         {
             _readOnly = false;
@@ -330,9 +333,12 @@ namespace Winterday.External.Gengo.Payloads
             _type = json.Value<string>("type").ToJobType();
             _tier = json.Value<string>("tier").ToTranslationTier();
 
-            var callback = json.Value<string>("callback_url ");
+            var callback = json.Value<string>("callback_url");
 
             Uri.TryCreate(callback, UriKind.Absolute, out _callbackUrl);
+
+            var fileUrl = json.Value<string>("tgt_file_link");
+            Uri.TryCreate(fileUrl, UriKind.Absolute, out _fileUrl);
         }
 
         internal virtual JObject ToJObject()
