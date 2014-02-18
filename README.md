@@ -5,7 +5,7 @@ A .NET library for interfacing with the [Gengo](http://www.gengo.com)
 API for translation with decent [unit test coverage](TESTING.md).
 
 * **License:** [MIT](COPYING)
-* **Contributors:** [See CONTRIBUTORS.md](CONTRIBUTORS.md)
+* **Contributors:** [See list](CONTRIBUTORS.md)
 * **Stability:** Provisional
 * **Dependencies:** [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json/)
 * **Supported platforms:** .NET 4.5 (Mono to come)
