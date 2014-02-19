@@ -14,7 +14,7 @@ API for translation with decent [unit test coverage](TESTING.md).
 Nuget
 -----
 
-The library is finally available on [https://www.nuget.org/packages/gengo-dotnet/](NuGet)! Install through *Manage Nuget Packages* in  Visual Studio or the following command in the package manger console:
+The library is finally available on [NuGet](https://www.nuget.org/packages/gengo-dotnet/)! Install through *Manage Nuget Packages* in  Visual Studio or the following command in the package manger console:
 
 ```powershell
 PM> Install-Package gengo-dotnet
