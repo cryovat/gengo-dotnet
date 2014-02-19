@@ -1,5 +1,5 @@
-//
-// AccountTests.cs
+﻿//
+// GlossaryTests.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -24,51 +24,62 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace Winterday.External.Gengo.Tests.MethodGroups
 {
     using System;
+    using System.Linq;
+    using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Winterday.External.Gengo.Payloads;
+
     [TestClass]
-    public class AccountTests
+    public class GlossaryTests
     {
-        GengoClient client;
+        GengoClient _client;
 
         [TestInitialize]
         public void SetUpAttribute()
         {
-            client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
+            _client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
         }
 
         [TestMethod]
-        public async Task TestGetStats()
+        public void TestGroupExists()
         {
-            var stats = await client.Account.GetStats();
+            Assert.IsNotNull(_client.Glossary);
+        }
 
-            Assert.IsNotNull(stats);
-            Assert.AreNotEqual(new DateTime(), stats.UserSince);
-            Assert.IsTrue(0 != stats.CreditsSpent);
+
+        [TestMethod]
+        public async Task TestGetAll()
+        {
+            var list = await _client.Glossary.GetAll();
+
+            Assert.IsNotNull(list);
         }
 
         [TestMethod]
-        public async Task TestGetBalance()
+        public async Task TestGetOne()
         {
-            var balance = await client.Account.GetBalance();
+            var list = await _client.Glossary.GetAll();
 
-            Assert.IsNotNull(balance);
-            Assert.IsTrue(balance.Credits > 0);
-            Assert.IsNotNull(balance.Currency);
+            if (list.Length == 0)
+            {
+                Assert.Inconclusive("This test requires at least one glossary");
+            }
+
+            var single = await _client.Glossary.Get(list[0].GlossaryId);
+
+            Assert.AreEqual(list[0].GlossaryId, single.GlossaryId, "Ids don't match");
+            Assert.AreEqual(list[0].Title, single.Title, "Titles don't match");
+            Assert.AreEqual(list[0].CreatedTime, single.CreatedTime, "Dates don't match");
         }
-
-        [TestMethod]
-        public async Task TestGetPreferredTranslators()
-        {
-            var groups = await client.Account.GetPreferredTranslators();
-
-            Assert.IsNotNull(groups);
-        }
-
     }
 }
-

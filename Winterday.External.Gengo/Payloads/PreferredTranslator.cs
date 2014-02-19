@@ -1,5 +1,5 @@
-//
-// AccountTests.cs
+﻿//
+// PreferredTranslator.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -24,51 +24,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Winterday.External.Gengo.Tests.MethodGroups
+namespace Winterday.External.Gengo.Payloads
 {
     using System;
-    using System.Threading.Tasks;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
-    public class AccountTests
+    using Newtonsoft.Json.Linq;
+
+    /// <summary>
+    /// A preferred translator
+    /// </summary>
+    public class PreferredTranslator
     {
-        GengoClient client;
+        /// <summary>
+        /// Translator id
+        /// </summary>
+        public int Id { get; private set; }
 
-        [TestInitialize]
-        public void SetUpAttribute()
+        /// <summary>
+        /// Last login date/time
+        /// </summary>
+        public DateTime LastLogin { get; private set; }
+
+        /// <summary>
+        /// Number of jobs completed
+        /// </summary>
+        public int NumberOfJobs { get; private set; }
+
+        internal PreferredTranslator(JObject json)
         {
-            client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
+            Id = json.Value<int>("id");
+            LastLogin = json.Value<long>("last_login").ToDateFromTimestamp();
+            NumberOfJobs = json.Value<int>("number_of_jobs");
         }
-
-        [TestMethod]
-        public async Task TestGetStats()
-        {
-            var stats = await client.Account.GetStats();
-
-            Assert.IsNotNull(stats);
-            Assert.AreNotEqual(new DateTime(), stats.UserSince);
-            Assert.IsTrue(0 != stats.CreditsSpent);
-        }
-
-        [TestMethod]
-        public async Task TestGetBalance()
-        {
-            var balance = await client.Account.GetBalance();
-
-            Assert.IsNotNull(balance);
-            Assert.IsTrue(balance.Credits > 0);
-            Assert.IsNotNull(balance.Currency);
-        }
-
-        [TestMethod]
-        public async Task TestGetPreferredTranslators()
-        {
-            var groups = await client.Account.GetPreferredTranslators();
-
-            Assert.IsNotNull(groups);
-        }
-
     }
 }
-

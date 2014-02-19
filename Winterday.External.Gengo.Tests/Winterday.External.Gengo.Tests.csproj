@@ -61,6 +61,7 @@
     <Compile Include="MethodGroups\JobsTests.cs" />
     <Compile Include="MethodGroups\OrderTests.cs" />
     <Compile Include="MethodGroups\ServiceTests.cs" />
+    <Compile Include="MethodGroups\GlossaryTests.cs" />
     <Compile Include="TestKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

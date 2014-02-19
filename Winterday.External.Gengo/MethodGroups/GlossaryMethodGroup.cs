@@ -1,5 +1,5 @@
 ﻿//
-// AccountMethodGroup.cs
+// GlossaryMethodGroup.cs
 //
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
@@ -28,29 +28,25 @@
 namespace Winterday.External.Gengo.MethodGroups
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using Newtonsoft.Json.Linq;
 
     using Winterday.External.Gengo.Payloads;
-    using Winterday.External.Gengo.Properties;
 
     /// <summary>
     /// Provides access to methods in the
-    /// <a href="http://developers.gengo.com/v2/account/">Account</a>
+    /// <a href="http://developers.gengo.com/v2/api_methods/glossary/">Glossary</a>
     /// method group.
     /// </summary>
-    public class AccountMethodGroup
+    public class GlossaryMethodGroup
     {
-        internal const string UriPartStats = "account/stats";
-        internal const string UriPartBalance = "account/balance";
-        internal const string UriPartPreferredTranslators = "account/preferred_translators";
+        internal const string UriPartGlossary = "translate/glossary/";
 
         readonly IGengoClient _client;
 
-        internal AccountMethodGroup(IGengoClient client)
+        internal GlossaryMethodGroup(IGengoClient client)
         {
             if (client == null)
                 throw new ArgumentNullException("client");
@@ -59,36 +55,28 @@ namespace Winterday.External.Gengo.MethodGroups
         }
 
         /// <summary>
-        /// Gets the account balance
+        /// Gets all glossaries belonging to the authenticated user
         /// </summary>
-        /// <returns>Current credits and currency</returns>
-        public async Task<AccountBalance> GetBalance()
+        /// <returns>Task yielding glossaries</returns>
+        public async Task<Glossary[]> GetAll()
         {
-            var json = await _client.GetJsonAsync<JObject>(UriPartBalance, true);
+            var arr = await _client.GetJsonAsync<JArray>(UriPartGlossary, true);
 
-            return new AccountBalance(json);
+            return arr.Values<JObject>().Select(obj => new Glossary(obj)).ToArray();
         }
 
         /// <summary>
-        /// Gets historyical statistics for the account
+        /// Gets a specific glossary
         /// </summary>
-        /// <returns>Total credits spent and currency</returns>
-        public async Task<AccountStats> GetStats()
+        /// <param name="glossaryId">The glossary ID</param>
+        /// <returns>Task yielding glossary</returns>
+        public async Task<Glossary> Get(int glossaryId)
         {
-            var json = await _client.GetJsonAsync<JObject>(UriPartStats, true);
+            var uri = UriPartGlossary + glossaryId;
 
-            return new AccountStats(json);
-        }
+            var obj = await _client.GetJsonAsync<JObject>(uri, true);
 
-        /// <summary>
-        /// Gets preferred translators grouped by source and target languages, as well as tier
-        /// </summary>
-        /// <returns>Task yielding preferred translators</returns>
-        public async Task<PreferredTranslatorGroup[]> GetPreferredTranslators()
-        {
-            var array = await _client.GetJsonAsync<JArray>(UriPartPreferredTranslators, true);
-
-            return array.Values<JObject>().Select(obj => new PreferredTranslatorGroup(obj)).ToArray();
+            return new Glossary(obj);
         }
     }
 }

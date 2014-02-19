@@ -4,7 +4,7 @@
 // Author:
 //       Jarl Erik Schmidt <github@jarlerik.com>
 //
-// Copyright (c) 2013 Jarl Erik Schmidt
+// Copyright (c) 2014 Jarl Erik Schmidt
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,6 +69,7 @@ namespace Winterday.External.Gengo
         }
 
         public AccountMethodGroup Account { get ; private set ; }
+        public GlossaryMethodGroup Glossary { get; private set; }
         public JobMethodGroup Job { get ; private set ; }
         public JobsMethodGroup Jobs { get ; private set ; }
         public ServiceMethodGroup Service { get ; private set ; }
@@ -160,6 +161,7 @@ namespace Winterday.External.Gengo
         private void initClient()
         {
             Account = new AccountMethodGroup(this);
+            Glossary = new GlossaryMethodGroup(this);
             Job = new JobMethodGroup(this);
             Jobs = new JobsMethodGroup(this);
             Service = new ServiceMethodGroup(this);

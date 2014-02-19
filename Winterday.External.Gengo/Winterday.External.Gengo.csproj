@@ -46,6 +46,7 @@
     <Compile Include="IGengoClient.cs" />
     <Compile Include="IPostableFile.cs" />
     <Compile Include="MethodGroups\AccountMethodGroup.cs" />
+    <Compile Include="MethodGroups\GlossaryMethodGroup.cs" />
     <Compile Include="MethodGroups\JobMethodGroup.cs" />
     <Compile Include="MethodGroups\JobsMethodGroup.cs" />
     <Compile Include="MethodGroups\OrderMethodGroup.cs" />
@@ -56,8 +57,11 @@
     <Compile Include="Payloads\DuplicateSubmission.cs" />
     <Compile Include="Payloads\Feedback.cs" />
     <Compile Include="Payloads\FileJob.cs" />
+    <Compile Include="Payloads\Glossary.cs" />
     <Compile Include="Payloads\Job.cs" />
     <Compile Include="Payloads\Order.cs" />
+    <Compile Include="Payloads\PreferredTranslator.cs" />
+    <Compile Include="Payloads\PreferredTranslatorGroup.cs" />
     <Compile Include="Payloads\Quote.cs" />
     <Compile Include="Payloads\Revision.cs" />
     <Compile Include="Payloads\SubmittedJob.cs" />
