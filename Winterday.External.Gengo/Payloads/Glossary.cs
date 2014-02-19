@@ -53,6 +53,11 @@ namespace Winterday.External.Gengo.Payloads
             Id = id;
             Code = code;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Id: {0}, code: {1}", Id, Code);
+        }
     }
 
     /// <summary>
@@ -80,7 +85,7 @@ namespace Winterday.External.Gengo.Payloads
         /// <summary>
         /// A list of IDs and codes for target languages
         /// </summary>
-        public IReadOnlyCollection<LanguageIdAndCodePair> TargetLanguages { get; private set; }
+        public IReadOnlyList<LanguageIdAndCodePair> TargetLanguages { get; private set; }
 
         /// <summary>
         /// The unit count

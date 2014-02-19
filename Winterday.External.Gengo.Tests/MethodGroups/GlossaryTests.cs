@@ -37,7 +37,9 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Winterday.External.Gengo.MethodGroups;
     using Winterday.External.Gengo.Payloads;
+    using Winterday.External.Gengo.Tests.Mocks;
 
     [TestClass]
     public class GlossaryTests
@@ -56,9 +58,84 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
             Assert.IsNotNull(_client.Glossary);
         }
 
+        [TestMethod]
+        public async Task TestGetAllMocked()
+        {
+            var mockedClient = new MockedGengoClient();
+            var group = new GlossaryMethodGroup(mockedClient);
+
+            mockedClient.Json[GlossaryMethodGroup.UriPartGlossary] = @"
+[
+    {
+      ""customer_user_id"": 50110,
+      ""source_language_id"": 8,
+      ""target_languages"": [
+        [
+          14,
+          ""ja""
+        ]
+      ],
+      ""id"": 115,
+      ""is_public"": false,
+      ""unit_count"": 2,
+      ""description"": null,
+      ""source_language_code"": ""en-US"",
+      ""ctime"": ""2012-07-19 02:57:10.526565"",
+      ""title"": ""1342666627_50110_en_ja_glossary.csv"",
+      ""status"": 1
+    }
+]
+";
+            var list = await group.GetAll();
+
+            Assert.AreEqual(1, list.Length, "Length does not match");
+            Assert.AreEqual(115, list[0].GlossaryId, "Ids don't match");
+            Assert.AreEqual(50110, list[0].CustomerUserId, "Customer Ids don't match");
+            Assert.AreEqual("1342666627_50110_en_ja_glossary.csv", list[0].Title, "Titles don't match");
+
+            var dt = list[0].CreatedTime;
+            Assert.AreEqual(new DateTime(2012, 07, 19, 2, 57, 10), new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second), "Dates don't match");
+        }
 
         [TestMethod]
-        public async Task TestGetAll()
+        public async Task TestGetOneMocked()
+        {
+            var mockedClient = new MockedGengoClient();
+            var group = new GlossaryMethodGroup(mockedClient);
+
+            mockedClient.Json[GlossaryMethodGroup.UriPartGlossary + 115] = @"
+{
+    ""customer_user_id"": 50110,
+    ""source_language_id"": 8,
+    ""target_languages"": [
+    [
+        14,
+        ""ja""
+    ]
+    ],
+    ""id"": 115,
+    ""is_public"": false,
+    ""unit_count"": 2,
+    ""description"": null,
+    ""source_language_code"": ""en-US"",
+    ""ctime"": ""2012-07-19 02:57:10.526565"",
+    ""title"": ""1342666627_50110_en_ja_glossary.csv"",
+    ""status"": 1
+}
+";
+            var glossary = await group.Get(115);
+
+            Assert.IsNotNull(glossary);
+            Assert.AreEqual(115, glossary.GlossaryId, "Ids don't match");
+            Assert.AreEqual(50110, glossary.CustomerUserId, "Customer Ids don't match");
+            Assert.AreEqual("1342666627_50110_en_ja_glossary.csv", glossary.Title, "Titles don't match");
+
+            var dt = glossary.CreatedTime;
+            Assert.AreEqual(new DateTime(2012, 07, 19, 2, 57, 10), new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second), "Dates don't match");
+        }
+
+        [TestMethod]
+        public async Task TestGetAllLive()
         {
             var list = await _client.Glossary.GetAll();
 
@@ -66,7 +143,7 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
         }
 
         [TestMethod]
-        public async Task TestGetOne()
+        public async Task TestGetOneLive()
         {
             var list = await _client.Glossary.GetAll();
 

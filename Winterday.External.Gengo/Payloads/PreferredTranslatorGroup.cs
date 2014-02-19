@@ -55,7 +55,7 @@ namespace Winterday.External.Gengo.Payloads
         /// <summary>
         /// The translators within the group
         /// </summary>
-        public IReadOnlyCollection<PreferredTranslator> Translators { get; set; }
+        public IReadOnlyList<PreferredTranslator> Translators { get; set; }
 
         internal PreferredTranslatorGroup(JObject json)
         {

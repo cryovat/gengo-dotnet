@@ -74,27 +74,27 @@ namespace Winterday.External.Gengo.Payloads
         /// <summary>
         /// List of IDs of jobs in the 'Available' state
         /// </summary>
-        public IReadOnlyCollection<int> AvailableJobs { get; private set; }
+        public IReadOnlyList<int> AvailableJobs { get; private set; }
 
         /// <summary>
         /// List of IDs of jobs in the 'Pending' state
         /// </summary>
-        public IReadOnlyCollection<int> PendingJobs { get; private set; }
+        public IReadOnlyList<int> PendingJobs { get; private set; }
 
         /// <summary>
         /// List of IDs of jobs in the 'Reviewable' state
         /// </summary>
-        public IReadOnlyCollection<int> ReviewableJobs { get; private set; }
+        public IReadOnlyList<int> ReviewableJobs { get; private set; }
 
         /// <summary>
         /// List of IDs of jobs in the 'Approved' state
         /// </summary>
-        public IReadOnlyCollection<int> ApprovedJobs { get; private set; }
+        public IReadOnlyList<int> ApprovedJobs { get; private set; }
 
         /// <summary>
         /// List of IDs of jobs in the 'Revising' state
         /// </summary>
-        public IReadOnlyCollection<int> RevisingJobs { get; private set; }
+        public IReadOnlyList<int> RevisingJobs { get; private set; }
 
         internal Order(JObject obj)
         {

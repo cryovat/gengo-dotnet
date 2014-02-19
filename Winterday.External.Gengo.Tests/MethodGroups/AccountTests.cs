@@ -30,6 +30,9 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Winterday.External.Gengo.MethodGroups;
+    using Winterday.External.Gengo.Tests.Mocks;
+
     [TestClass]
     public class AccountTests
     {
@@ -64,9 +67,58 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
         [TestMethod]
         public async Task TestGetPreferredTranslators()
         {
-            var groups = await client.Account.GetPreferredTranslators();
+            var mockedClient = new MockedGengoClient();
+            var group = new AccountMethodGroup(mockedClient);
 
-            Assert.IsNotNull(groups);
+            mockedClient.Json["account/preferred_translators"] = @"
+[
+    {
+      ""translators"": [
+        {
+          ""last_login"": 1375824155,
+          ""number_of_jobs"": 5,
+          ""id"": 8596
+        },
+        {
+          ""last_login"": 1372822132,
+          ""number_of_jobs"": 2,
+          ""id"": 24123
+        }
+      ],
+      ""lc_tgt"": ""ja"",
+      ""lc_src"": ""en"",
+      ""tier"": ""standard""
+    },
+    {
+      ""translators"": [
+        {
+          ""last_login"": 1375825234,
+          ""number_of_jobs"": 10,
+          ""id"": 14765
+        },
+        {
+          ""last_login"": 1372822132,
+          ""number_of_jobs"": 1,
+          ""id"": 3627
+        }
+      ],
+      ""lc_tgt"": ""en"",
+      ""lc_src"": ""ja"",
+      ""tier"": ""pro""
+    }
+]
+";
+
+            var preferences = await group.GetPreferredTranslators();
+
+            Assert.IsNotNull(preferences);
+            Assert.AreEqual(2, preferences.Length, "Lengths does not match");
+
+            Assert.AreEqual(new DateTime(2013, 7, 3), preferences[0].Translators[1].LastLogin.Date, "Login dates don't match");
+            Assert.AreEqual(TranslationTier.Standard, preferences[0].Tier, "First tier don't match");
+            Assert.AreEqual(TranslationTier.Pro, preferences[1].Tier, "Second tier don't match");
+            Assert.AreEqual(2, preferences[0].Translators[1].NumberOfJobs, "Number of jobs don't match");
+            Assert.AreEqual(3627, preferences[1].Translators[1].Id, "Translator Ids don't match");
         }
 
     }

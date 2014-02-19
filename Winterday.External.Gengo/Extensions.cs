@@ -266,7 +266,7 @@ namespace Winterday.External.Gengo
             return Tuple.Create(jobsObj, mapping);
         }
 
-        internal static IReadOnlyCollection<int>
+        internal static IReadOnlyList<int>
             ReadIntArrayAsRoList(this JObject obj, string propName)
         {
             if (string.IsNullOrWhiteSpace(propName))
