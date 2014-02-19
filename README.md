@@ -82,8 +82,10 @@ See http://developers.gengo.com/ for API overview/documentation
   * [Get quote](http://developers.gengo.com/v2/api_methods/service/#quote-post)
   * [Get quote based on file upload](http://developers.gengo.com/v2/api_methods/service/#quote-files-post)
 
-Unimplemented methods
----------------------
+Implemented but needs proper testing
+------------------------------------
+
+The following methods have experimental support but need mocks for proper testing:
 
 * [Account](http://developers.gengo.com/v2/api_methods/account/)
   * [Get preferred translators](http://developers.gengo.com/v2/api_methods/account/#preferred-translators-get)
