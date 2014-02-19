@@ -89,6 +89,5 @@ See http://developers.gengo.com/ for API overview/documentation
 Todo
 ----
 
-* Implement missing methods
 * Refactor out some redundancy
 * Inclue StyleCop in build process and get rid of any errors
