@@ -42,6 +42,7 @@ namespace Winterday.External.Gengo.Payloads
         bool _autoApprove;
         bool _force;
         bool _readOnly;
+        bool? _usePreferredTranslator;
 
         string _body;
         string _comment;
@@ -50,6 +51,10 @@ namespace Winterday.External.Gengo.Payloads
         string _slug;
         string _sourceLang;
         string _targetLang;
+        
+        string _glossaryId;
+        string _purpose;
+        string _tone;
 
         Uri _callbackUrl;
         Uri _fileUrl;
@@ -92,6 +97,25 @@ namespace Winterday.External.Gengo.Payloads
                 else if (_force != value)
                 {
                     _force = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// If a translator from the preferred translator list is to be used
+        /// </summary>
+        public bool? UsePreferredTranslator
+        {
+            get { return _usePreferredTranslator; }
+            set
+            {
+                if (_readOnly)
+                {
+                    throw new InvalidOperationException(Resources.JobIsReadOnly);
+                }
+                else if (_usePreferredTranslator != value)
+                {
+                    _usePreferredTranslator = value;
                 }
             }
         }
@@ -240,6 +264,63 @@ namespace Winterday.External.Gengo.Payloads
         }
 
         /// <summary>
+        /// Optional id for the glossary to use
+        /// </summary>
+        public string GlossaryId
+        {
+            get { return _glossaryId; }
+            set
+            {
+                if (_readOnly)
+                {
+                    throw new InvalidOperationException(Resources.JobIsReadOnly);
+                }
+                else if (_glossaryId != value)
+                {
+                    _glossaryId = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Description of the intended purpose of the translation: "Personal use/Business/Online content/Web or app localization/Other..."
+        /// </summary>
+        public string Purpose
+        {
+            get { return _purpose; }
+            set
+            {
+                if (_readOnly)
+                {
+                    throw new InvalidOperationException(Resources.JobIsReadOnly);
+                }
+                else if (_purpose != value)
+                {
+                    _purpose = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Description of the intented tone of the translation: "Informal/Friendly/Business/Formal/Other..."
+        /// </summary>
+        public string Tone
+        {
+            get { return _tone; }
+            set
+            {
+                if (_readOnly)
+                {
+                    throw new InvalidOperationException(Resources.JobIsReadOnly);
+                }
+                else if (_tone != value)
+                {
+                    _tone = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Callback url that Gengo will use to notify about status changes
         /// </summary>
         public Uri CallbackUrl
@@ -369,17 +450,29 @@ namespace Winterday.External.Gengo.Payloads
             obj["auto_approve"] = Convert.ToInt32(_autoApprove);
             obj["force"] = Convert.ToInt32(_force);
 
+            if (_usePreferredTranslator.HasValue)
+                obj["use_preferred"] = Convert.ToInt32(_usePreferredTranslator);
+
             obj["slug"] = _slug;
             obj["body_src"] = _body;
 
-            if (_comment != null)
+            if (!string.IsNullOrWhiteSpace(_comment))
                 obj["comment"] = _comment;
 
-            if (_customData != null)
+            if (!string.IsNullOrWhiteSpace(_customData))
                 obj["custom_data"] = _customData;
             
-            if (_fileId != null)
+            if (!string.IsNullOrWhiteSpace(_fileId))
                 obj["identifier"] = _fileId;
+
+            if (!string.IsNullOrWhiteSpace(_glossaryId))
+                obj["glossary_id"] = _glossaryId;
+
+            if (!string.IsNullOrWhiteSpace(_purpose))
+                obj["purpose"] = _purpose;
+
+            if (!string.IsNullOrWhiteSpace(_tone))
+                obj["tone"] = _tone;
 
             obj["lc_src"] = _sourceLang;
             obj["lc_tgt"] = _targetLang;

@@ -38,6 +38,8 @@ namespace Winterday.External.Gengo.Payloads
     {
         DateTime _created;
 
+        bool? _isMachineTranslation;
+
         decimal _credits;
 
         int _jobId;
@@ -58,6 +60,14 @@ namespace Winterday.External.Gengo.Payloads
         public DateTime Created
         {
             get { return _created; }
+        }
+
+        /// <summary>
+        /// If the included body text is a machine translation
+        /// </summary>
+        public bool? IsMachineTranslation
+        {
+            get { return _isMachineTranslation; }
         }
 
         /// <summary>
@@ -133,6 +143,13 @@ namespace Winterday.External.Gengo.Payloads
             if (Int64.TryParse(json.Value<string>("ctime"), out createdRaw))
             {
                 _created = createdRaw.ToDateFromTimestamp();
+            }
+
+            JToken mt;
+            
+            if (json.TryGetValue("mt", out mt))
+            {
+                _isMachineTranslation = mt.ToString() == "1";
             }
 
             Decimal.TryParse(

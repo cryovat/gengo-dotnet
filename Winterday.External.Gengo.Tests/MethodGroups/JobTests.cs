@@ -34,6 +34,8 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Newtonsoft.Json.Linq;
+
     using Winterday.External.Gengo.Payloads;
 
     [TestClass]
@@ -45,6 +47,25 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
         public void SetUpAttribute()
         {
             _client = new GengoClient(TestKeys.PrivateKey, TestKeys.PublicKey, ClientMode.Sandbox);
+        }
+
+        [TestMethod]
+        public void TestJsonNetBehavior()
+        {
+            var obj = new JObject();
+
+            obj["mt"] = 1;
+
+            JToken token;
+
+            if (obj.TryGetValue("mt", out token))
+            {
+                Assert.AreEqual("1", token.ToString());
+            }
+            else
+            {
+                Assert.Fail("Behavior not as expected");
+            }
         }
 
         [TestMethod]
