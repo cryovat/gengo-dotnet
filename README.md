@@ -11,6 +11,15 @@ API for translation with decent [unit test coverage](TESTING.md).
 * **Supported platforms:** .NET 4.5 (Mono to come)
 * **Gengo API version:** V2
 
+Nuget
+-----
+
+The library is finally available on [https://www.nuget.org/packages/gengo-dotnet/](NuGet)! Install through *Manage Nuget Packages* in  Visual Studio or the following command in the package manger console:
+
+```powershell
+PM> Install-Package gengo-dotnet
+```
+
 Sample usage
 ------------
 
