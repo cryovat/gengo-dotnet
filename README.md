@@ -58,6 +58,10 @@ See http://developers.gengo.com/ for API overview/documentation
 * [Account](http://developers.gengo.com/v2/api_methods/account/)
   * [Get Balance](http://developers.gengo.com/v2/api_methods/account/#balance-get)
   * [Get Stats](http://developers.gengo.com/v2/api_methods/account/#stats-get)
+  * [Get Preferred Translators](http://developers.gengo.com/v2/api_methods/account/#preferred-translators-get)
+* [Glossary](http://developers.gengo.com/v2/api_methods/glossary/)
+  * [Get glossaries](http://developers.gengo.com/v2/api_methods/glossary/#glossaries-get)
+  * [Get glossary](http://developers.gengo.com/v2/api_methods/glossary/#glossary-get)
 * [Job](http://developers.gengo.com/v2/api_methods/job/)
   * [Approve](http://developers.gengo.com/v2/api_methods/job/#job-put)
   * [Get](http://developers.gengo.com/v2/api_methods/job/#job-get)
@@ -81,15 +85,6 @@ See http://developers.gengo.com/ for API overview/documentation
   * [Get Language Pairs](http://developers.gengo.com/v2/api_methods/service/#language-pairs-get)
   * [Get quote](http://developers.gengo.com/v2/api_methods/service/#quote-post)
   * [Get quote based on file upload](http://developers.gengo.com/v2/api_methods/service/#quote-files-post)
-
-Unimplemented methods
----------------------
-
-* [Account](http://developers.gengo.com/v2/api_methods/account/)
-  * [Get preferred translators](http://developers.gengo.com/v2/api_methods/account/#preferred-translators-get)
-* [Glossary](http://developers.gengo.com/v2/api_methods/glossary/)
-  * [Get glossaries](http://developers.gengo.com/v2/api_methods/glossary/#glossaries-get)
-  * [Get glossary](http://developers.gengo.com/v2/api_methods/glossary/#glossary-get)
 
 Todo
 ----
