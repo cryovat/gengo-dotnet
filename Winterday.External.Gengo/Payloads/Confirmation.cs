@@ -150,17 +150,13 @@ namespace Winterday.External.Gengo.Payloads
             {
                 foreach (var pair in dupesObj)
                 {
-                    Job dupe = null;
-                    var raw = pair.Value as JArray;
+                    var duplicateKey = pair.Value.Value<string>("duplicate");
+                    if(duplicateKey == null || !submitted.ContainsKey(duplicateKey))
+                        continue;
 
-                    if (raw != null && submitted.TryGetValue(pair.Key, out dupe))
-                    {
-                        _dupes.Add(
-                            new DuplicateSubmission(
-                                dupe,
-                                raw.Values<JObject>().Select((o) => 
-                                    new SubmittedJob(o))));
-                    }
+                    _dupes.Add(new DuplicateSubmission(
+                        submitted[pair.Key],
+                        submitted[duplicateKey]));
                 }
             }
         }
