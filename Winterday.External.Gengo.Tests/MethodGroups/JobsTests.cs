@@ -213,5 +213,24 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
 
             Assert.AreEqual(job1.Slug, second.Duplicates[0].ExistingJob.Slug);
         }
+
+        [TestMethod]
+        public async Task TestMaximumCharacters()
+        {
+            var dateTime = DateTime.Now;
+
+            var job = new Job
+            {
+                Slug = "job 1 - " + dateTime.ToTimeStamp(),
+                Body = "Max characters test" + dateTime,
+                SourceLanguage = "ja",
+                TargetLanguage = "en",
+                MaximumCharacters = 20
+            };
+
+            var result = await _client.Jobs.Submit(false, true, job);
+
+            Assert.AreEqual(1, result.JobCount);
+        }
     }
 }
