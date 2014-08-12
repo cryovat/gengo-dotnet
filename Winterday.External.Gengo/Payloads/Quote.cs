@@ -95,6 +95,11 @@ namespace Winterday.External.Gengo.Payloads
         /// </summary>
         public JobType JobType  { get; private set; }
 
+        /// <summary>
+        /// Custom data field of the job
+        /// </summary>
+        public string CustomData { get; private set; }
+
         internal Quote(JObject obj)
         {
             if (obj == null) throw new ArgumentNullException("obj");
@@ -104,6 +109,7 @@ namespace Winterday.External.Gengo.Payloads
 
             Currency = obj.Value<string>("currency");
             SourceLanguage = obj.Value<string>("lc_src");
+            CustomData = obj.Value<string>("custom_data");
 
             Eta = obj.TsValueStrict("eta");
             JobType = obj.Value<string>("type").ToJobType();
