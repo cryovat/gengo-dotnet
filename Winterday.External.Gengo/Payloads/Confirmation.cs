@@ -150,7 +150,10 @@ namespace Winterday.External.Gengo.Payloads
             {
                 foreach (var pair in dupesObj)
                 {
-                    var duplicateKey = pair.Value.Value<string>("duplicate");
+                    var duplicateKey = pair.Value.SelectToken("duplicate") != null
+                        ? pair.Value.Value<string>("duplicate")
+                        : null;
+
                     if(duplicateKey == null || !submitted.ContainsKey(duplicateKey))
                         continue;
 
