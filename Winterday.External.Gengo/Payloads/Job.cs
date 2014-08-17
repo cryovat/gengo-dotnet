@@ -56,6 +56,8 @@ namespace Winterday.External.Gengo.Payloads
         string _purpose;
         string _tone;
 
+        int _maximumCharacters;
+
         Uri _callbackUrl;
         Uri _fileUrl;
 
@@ -321,6 +323,27 @@ namespace Winterday.External.Gengo.Payloads
         }
 
         /// <summary>
+        /// Maximum length of translated text
+        /// </summary>
+        public int MaximumCharacters
+        {
+            get { return _maximumCharacters; }
+            set
+            {
+                if (_readOnly)
+                    throw new InvalidOperationException(Resources.JobIsReadOnly);
+
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException("MaximumCharacters cannot be less than 0");
+
+                if (_maximumCharacters != value)
+                {
+                    _maximumCharacters = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Callback url that Gengo will use to notify about status changes
         /// </summary>
         public Uri CallbackUrl
@@ -410,6 +433,11 @@ namespace Winterday.External.Gengo.Payloads
             _slug = json.Value<string>("slug");
             _sourceLang = json.Value<string>("lc_src");
             _targetLang = json.Value<string>("lc_tgt");
+
+            if (json.SelectToken("max_chars") != null)
+            {
+                _maximumCharacters = json.Value<int>("max_chars");
+            }
 
             _type = json.Value<string>("type").ToJobType();
             _tier = json.Value<string>("tier").ToTranslationTier();

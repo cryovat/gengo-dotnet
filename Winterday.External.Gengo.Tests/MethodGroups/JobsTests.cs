@@ -202,28 +202,35 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
                 TargetLanguage = "ja",
             };
 
-
-            var job2Dt = DateTime.Now;
-
-            var job2 = new Job
-            {
-                Slug = "job 2 - " + job2Dt.ToTimeStamp(),
-                Body = "Unrelated fooo~~~~ " + job2Dt.Ticks,
-                SourceLanguage = "en",
-                TargetLanguage = "ja",
-            };
-
-
             var first = await _client.Jobs.Submit(false, true, job1);
 
             Thread.Sleep(TimeSpan.FromSeconds(5));
 
-            var second = await _client.Jobs.Submit(false, true, job1, job2);
+            var second = await _client.Jobs.Submit(false, true, job1, job1);
 
             Assert.AreEqual(0, first.Duplicates.Count);
             Assert.AreEqual(1, second.Duplicates.Count);
 
-            Assert.AreEqual(job1.Slug, second.Duplicates[0].ExistingJobs[0].Slug);
+            Assert.AreEqual(job1.Slug, second.Duplicates[0].ExistingJob.Slug);
+        }
+
+        [TestMethod]
+        public async Task TestMaximumCharacters()
+        {
+            var dateTime = DateTime.Now;
+
+            var job = new Job
+            {
+                Slug = "job 1 - " + dateTime.ToTimeStamp(),
+                Body = "Max characters test" + dateTime,
+                SourceLanguage = "ja",
+                TargetLanguage = "en",
+                MaximumCharacters = 20
+            };
+
+            var result = await _client.Jobs.Submit(false, true, job);
+
+            Assert.AreEqual(1, result.JobCount);
         }
     }
 }

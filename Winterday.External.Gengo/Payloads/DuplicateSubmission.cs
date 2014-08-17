@@ -41,20 +41,20 @@ namespace Winterday.External.Gengo.Payloads
         public Job DuplicateJob { get; private set; }
 
         /// <summary>
-        /// The existing job(s)
+        /// The existing job
         /// </summary>
-        public IReadOnlyList<SubmittedJob> ExistingJobs { get; private set; }
+        public Job ExistingJob { get; private set; }
 
-        internal DuplicateSubmission(Job duplicateJob, IEnumerable<SubmittedJob> existingJobs)
+        internal DuplicateSubmission(Job duplicateJob, Job existingJob)
         {
             if (duplicateJob == null)
                 throw new ArgumentNullException("duplicateJob");
 
-            if (existingJobs == null)
-                throw new ArgumentNullException("existingJobs");
+            if (existingJob == null)
+                throw new ArgumentNullException("existingJob");
 
             DuplicateJob = duplicateJob;
-            ExistingJobs = existingJobs.ToList().AsReadOnly();
+            ExistingJob = existingJob;
 
         }
     }
