@@ -31,6 +31,8 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\Winterday.External.Gengo.XML</DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -91,4 +93,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if "$(ConfigurationName)" == "Release" (
+  echo "Copying to NuGet deploy folder"
+  copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)$(TargetName).NuGet.Packager\lib\net45\$(TargetName).dll"
+  copy /Y "$(TargetDir)$(TargetName).XML" "$(SolutionDir)$(TargetName).NuGet.Packager\lib\net45\$(TargetName).XML"
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
