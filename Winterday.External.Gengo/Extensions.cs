@@ -52,7 +52,7 @@ namespace Winterday.External.Gengo
     {
         internal static decimal ToDecimal(this string value)
         {
-            if (String.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(value))
             {
                 return 0;
             }
@@ -67,7 +67,7 @@ namespace Winterday.External.Gengo
 
         internal static long ToLong(this string value)
         {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 return 0;
             }
@@ -83,14 +83,14 @@ namespace Winterday.External.Gengo
         {
             if (dict == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             var sb = new StringBuilder();
 
             foreach (var pair in dict)
             {
-                if (!String.IsNullOrWhiteSpace(pair.Key))
+                if (!string.IsNullOrWhiteSpace(pair.Key))
                 {
                     if (sb.Length == 0)
                     {
@@ -139,7 +139,7 @@ namespace Winterday.External.Gengo
                 value = (value ?? String.Empty).Replace(" ", "");
             }
 
-            if (Enum.TryParse(value, true, out result))
+            if (Enum.TryParse<EnumT>(value, true, out result))
             {
                 return result;
             }
@@ -269,9 +269,10 @@ namespace Winterday.External.Gengo
             return Tuple.Create(jobsObj, mapping);
         }
 
-        internal static IReadOnlyList<int> ReadIntArrayAsRoList(this JObject obj, string propName)
+        internal static IReadOnlyList<int>
+            ReadIntArrayAsRoList(this JObject obj, string propName)
         {
-            if (String.IsNullOrWhiteSpace(propName))
+            if (string.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
 
             var list = new List<int>();
@@ -283,7 +284,7 @@ namespace Winterday.External.Gengo
 
         internal static void ReadIntArrayIntoList(this JObject obj, string propName, IList<int> ints)
         {
-            if (String.IsNullOrWhiteSpace(propName))
+            if (string.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
             
             if (ints == null)
@@ -334,7 +335,7 @@ namespace Winterday.External.Gengo
             if (json == null)
                 throw new ArgumentNullException("json");
 
-            if (String.IsNullOrWhiteSpace(propName))
+            if (string.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
 
             decimal i;
@@ -349,7 +350,7 @@ namespace Winterday.External.Gengo
             }
             else
             {
-                var err = String.Format
+                var err = string.Format
                     (Resources.NamedPropertyNotFound,
                     propName);
 
@@ -363,7 +364,7 @@ namespace Winterday.External.Gengo
             if (json == null)
                 throw new ArgumentNullException("json");
 
-            if (String.IsNullOrWhiteSpace(propName))
+            if (string.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
 
             int i;
@@ -377,7 +378,7 @@ namespace Winterday.External.Gengo
                 return i;
             }
             else {
-                var err = String.Format
+                var err = string.Format
                     (Resources.NamedPropertyNotFound,
                     propName);
 
@@ -391,7 +392,7 @@ namespace Winterday.External.Gengo
             if (json == null)
                 throw new ArgumentNullException("json");
 
-            if (String.IsNullOrWhiteSpace(propName))
+            if (string.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
 
             long i;
@@ -406,7 +407,7 @@ namespace Winterday.External.Gengo
             }
             else
             {
-                var err = String.Format
+                var err = string.Format
                     (Resources.NamedPropertyNotFound,
                     propName);
 
