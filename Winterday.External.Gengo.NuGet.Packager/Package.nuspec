@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>gengo-dotnet</id>
-    <version>0.9.4</version>
+    <version>0.9.5</version>
     <title>Gengo.com Client Library</title>
     <authors>Jarl Erik Schmidt</authors>
     <owners></owners>
@@ -12,8 +12,7 @@
       This client is unofficial and provided under the terms of the MIT license.
     </description>
     <releaseNotes>
-      Includes a series of improvements contributed by github.com/arzul: Improvements to duplicate detection, added support for custom_data in
-      Quote payloads, and max_chars in Job payloads.
+      Bug fix contributed by github.com/arzul: Exception was thrown when submitting large text files
     </releaseNotes>
     <summary>
       .NET client library for Gengo.com API.
