@@ -24,9 +24,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Net.Http;
-using System.Net.Http.Headers;
-
 namespace Winterday.External.Gengo
 {
     using System;
@@ -38,6 +35,8 @@ namespace Winterday.External.Gengo
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
 
     using Newtonsoft.Json.Linq;
 
