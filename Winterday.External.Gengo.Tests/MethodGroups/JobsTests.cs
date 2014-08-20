@@ -244,7 +244,6 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
                 Body = new string('a', 500000),
                 SourceLanguage = "ja",
                 TargetLanguage = "en",
-                MaximumCharacters = 20
             };
 
             var result = await _client.Jobs.Submit(false, true, job);

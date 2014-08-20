@@ -24,6 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Net.Http;
+using System.Net.Http.Headers;
+
 namespace Winterday.External.Gengo
 {
     using System;
@@ -49,7 +52,7 @@ namespace Winterday.External.Gengo
     {
         internal static decimal ToDecimal(this string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            if (String.IsNullOrWhiteSpace(value))
             {
                 return 0;
             }
@@ -64,7 +67,7 @@ namespace Winterday.External.Gengo
 
         internal static long ToLong(this string value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (String.IsNullOrEmpty(value))
             {
                 return 0;
             }
@@ -80,14 +83,14 @@ namespace Winterday.External.Gengo
         {
             if (dict == null)
             {
-                return string.Empty;
+                return String.Empty;
             }
 
             var sb = new StringBuilder();
 
             foreach (var pair in dict)
             {
-                if (!string.IsNullOrWhiteSpace(pair.Key))
+                if (!String.IsNullOrWhiteSpace(pair.Key))
                 {
                     if (sb.Length == 0)
                     {
@@ -136,7 +139,7 @@ namespace Winterday.External.Gengo
                 value = (value ?? String.Empty).Replace(" ", "");
             }
 
-            if (Enum.TryParse<EnumT>(value, true, out result))
+            if (Enum.TryParse(value, true, out result))
             {
                 return result;
             }
@@ -266,10 +269,9 @@ namespace Winterday.External.Gengo
             return Tuple.Create(jobsObj, mapping);
         }
 
-        internal static IReadOnlyList<int>
-            ReadIntArrayAsRoList(this JObject obj, string propName)
+        internal static IReadOnlyList<int> ReadIntArrayAsRoList(this JObject obj, string propName)
         {
-            if (string.IsNullOrWhiteSpace(propName))
+            if (String.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
 
             var list = new List<int>();
@@ -281,7 +283,7 @@ namespace Winterday.External.Gengo
 
         internal static void ReadIntArrayIntoList(this JObject obj, string propName, IList<int> ints)
         {
-            if (string.IsNullOrWhiteSpace(propName))
+            if (String.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
             
             if (ints == null)
@@ -332,7 +334,7 @@ namespace Winterday.External.Gengo
             if (json == null)
                 throw new ArgumentNullException("json");
 
-            if (string.IsNullOrWhiteSpace(propName))
+            if (String.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
 
             decimal i;
@@ -347,7 +349,7 @@ namespace Winterday.External.Gengo
             }
             else
             {
-                var err = string.Format
+                var err = String.Format
                     (Resources.NamedPropertyNotFound,
                     propName);
 
@@ -361,7 +363,7 @@ namespace Winterday.External.Gengo
             if (json == null)
                 throw new ArgumentNullException("json");
 
-            if (string.IsNullOrWhiteSpace(propName))
+            if (String.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
 
             int i;
@@ -375,7 +377,7 @@ namespace Winterday.External.Gengo
                 return i;
             }
             else {
-                var err = string.Format
+                var err = String.Format
                     (Resources.NamedPropertyNotFound,
                     propName);
 
@@ -389,7 +391,7 @@ namespace Winterday.External.Gengo
             if (json == null)
                 throw new ArgumentNullException("json");
 
-            if (string.IsNullOrWhiteSpace(propName))
+            if (String.IsNullOrWhiteSpace(propName))
                 throw new ArgumentException(Resources.PropertyNameNotProvided);
 
             long i;
@@ -404,7 +406,7 @@ namespace Winterday.External.Gengo
             }
             else
             {
-                var err = string.Format
+                var err = String.Format
                     (Resources.NamedPropertyNotFound,
                     propName);
 
@@ -448,7 +450,47 @@ namespace Winterday.External.Gengo
 
             return arr.Objects().Select(selector);
         }
-        
+
+        internal static HttpContent GetFormUrlEncodedContent(Dictionary<string, string> data)
+        {
+            var builder = new StringBuilder();
+            foreach (var dataPart in data)
+            {
+                builder.Append(dataPart.Key + "=");
+                builder.Append((string) EncodeLargeData(dataPart.Value));
+                builder.Append("&");
+            }
+
+            builder.Remove(builder.Length - 1, 1);
+
+            var content = new StringContent(builder.ToString(), Encoding.UTF8);
+            content.Headers.ContentType = 
+                new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+            return content;
+        }
+
+        private static string EncodeLargeData(string data)
+        {
+            const int LARGE_DATA_LIMIT = 2000;
+
+            var builder = new StringBuilder();
+            var loopCount = data.Length/LARGE_DATA_LIMIT;
+
+            for (var i = 0; i <= loopCount; i++)
+            {
+                if (i < loopCount)
+                {
+                    builder.Append(Uri.EscapeDataString(data.Substring(LARGE_DATA_LIMIT*i, LARGE_DATA_LIMIT)));
+                }
+                else
+                {
+                    builder.Append(Uri.EscapeDataString(data.Substring(LARGE_DATA_LIMIT * i)));
+                }
+            }
+
+            return builder.ToString();
+        }
     }
 }
 

@@ -310,7 +310,7 @@ namespace Winterday.External.Gengo
             data.Add("data", json.ToString());
             
             AddAuthData(data);
-            return HttpHelper.GetFormUrlEncodedContent(data);
+            return Extensions.GetFormUrlEncodedContent(data);
         }
 
         HttpContent getContent(

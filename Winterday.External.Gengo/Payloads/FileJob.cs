@@ -99,7 +99,7 @@ namespace Winterday.External.Gengo.Payloads
                 throw new FileNotFoundException();
 
             FileKey = fileKey ?? Guid.NewGuid().ToString();
-            FileName = Path.GetFileName(FileName);
+            FileName = Path.GetFileName(filePath);
 
             _content = LazyStream(FileName, () => File.OpenRead(filePath));
         }

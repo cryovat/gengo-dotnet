@@ -43,7 +43,6 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpHelper.cs" />
     <Compile Include="IGengoClient.cs" />
     <Compile Include="IPostableFile.cs" />
     <Compile Include="MethodGroups\AccountMethodGroup.cs" />
