@@ -35,6 +35,8 @@ namespace Winterday.External.Gengo
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
 
     using Newtonsoft.Json.Linq;
 
@@ -448,7 +450,47 @@ namespace Winterday.External.Gengo
 
             return arr.Objects().Select(selector);
         }
-        
+
+        internal static HttpContent GetFormUrlEncodedContent(Dictionary<string, string> data)
+        {
+            var builder = new StringBuilder();
+            foreach (var dataPart in data)
+            {
+                builder.Append(dataPart.Key + "=");
+                builder.Append((string) EncodeLargeData(dataPart.Value));
+                builder.Append("&");
+            }
+
+            builder.Remove(builder.Length - 1, 1);
+
+            var content = new StringContent(builder.ToString(), Encoding.UTF8);
+            content.Headers.ContentType = 
+                new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+            return content;
+        }
+
+        private static string EncodeLargeData(string data)
+        {
+            const int LARGE_DATA_LIMIT = 2000;
+
+            var builder = new StringBuilder();
+            var loopCount = data.Length/LARGE_DATA_LIMIT;
+
+            for (var i = 0; i <= loopCount; i++)
+            {
+                if (i < loopCount)
+                {
+                    builder.Append(Uri.EscapeDataString(data.Substring(LARGE_DATA_LIMIT*i, LARGE_DATA_LIMIT)));
+                }
+                else
+                {
+                    builder.Append(Uri.EscapeDataString(data.Substring(LARGE_DATA_LIMIT * i)));
+                }
+            }
+
+            return builder.ToString();
+        }
     }
 }
 

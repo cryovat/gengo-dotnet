@@ -232,5 +232,23 @@ namespace Winterday.External.Gengo.Tests.MethodGroups
 
             Assert.AreEqual(1, result.JobCount);
         }
+
+        [TestMethod]
+        public async Task TestSubmitVeryLargeText()
+        {
+            var dateTime = DateTime.Now;
+
+            var job = new Job
+            {
+                Slug = "job 1 - " + dateTime.ToTimeStamp(),
+                Body = new string('a', 500000),
+                SourceLanguage = "ja",
+                TargetLanguage = "en",
+            };
+
+            var result = await _client.Jobs.Submit(false, true, job);
+
+            Assert.AreEqual(1, result.JobCount);
+        }
     }
 }
