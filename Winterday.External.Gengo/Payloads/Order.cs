@@ -59,6 +59,7 @@ namespace Winterday.External.Gengo.Payloads
         /// If the order was submitted with a requirement to use the same
         /// translator for all jobs
         /// </summary>
+        [Obsolete("This property appears to have been removed from the API.", true)]
         public bool UseSameTranslator { get; private set; }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace Winterday.External.Gengo.Payloads
         public int QueuedJobs { get; private set; }
 
         /// <summary>
-        /// Count of all jobs in order 
+        /// Count of all jobs in order
         /// </summary>
         public int TotalJobs { get; private set; }
 
@@ -106,8 +107,6 @@ namespace Winterday.External.Gengo.Payloads
 
             TotalCredits = obj.DecValueStrict("total_credits");
             TotalUnits = obj.IntValueStrict("total_units");
-
-            UseSameTranslator = obj.BoolValueStrict("as_group");
 
             QueuedJobs = obj.IntValueStrict("jobs_queued");
             TotalJobs = obj.IntValueStrict("total_jobs");
